@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,6 +23,24 @@ public class Customer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customerId;
+    @Column(nullable = false, length = 75, unique = true)
+    private String email;
+    @Column(nullable = false, length = 16)
+    private String password;
+    @Column(nullable = false, length = 8)
+    private String phoneNumber;
+    @Column(nullable = false, length = 9)
+    private String passportNumber;
+
+    public Customer() {
+    }
+
+    public Customer(String email, String password, String phoneNumber, String passportNumber) {
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.passportNumber = passportNumber;
+    }
 
     public Long getCustomerId() {
         return customerId;
@@ -54,6 +73,62 @@ public class Customer implements Serializable {
     @Override
     public String toString() {
         return "entity.Customer[ id=" + customerId + " ]";
+    }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * @return the phoneNumber
+     */
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    /**
+     * @param phoneNumber the phoneNumber to set
+     */
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    /**
+     * @return the passportNumber
+     */
+    public String getPassportNumber() {
+        return passportNumber;
+    }
+
+    /**
+     * @param passportNumber the passportNumber to set
+     */
+    public void setPassportNumber(String passportNumber) {
+        this.passportNumber = passportNumber;
     }
     
 }
