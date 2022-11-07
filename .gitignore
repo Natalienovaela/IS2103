@@ -42,3 +42,8 @@ CaRMSLibrary/dist/
 
 # virtual machine catch logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/CaRMSReservationClient/nbproject/private/
+/CaRMSManagementClient/nbproject/private/
+/CaRMS-ejb/nbproject/private/
+/nbproject/private/
+/CaRMSLibrary/nbproject/private/
