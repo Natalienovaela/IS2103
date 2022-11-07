@@ -11,6 +11,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import util.enumeration.CarStatus;
 
 /**
  *
@@ -28,6 +32,20 @@ public class Car implements Serializable {
     private String colour;
     @Column(nullable = false)
     private Boolean disabled;
+    private CarStatus status;
+    
+    @OneToOne(mappedBy = "car")
+    private TransitDriverDispatch transit;
+    
+    @JoinColumn(nullable = false)
+    @ManyToOne(optional = false)
+    private Model model;
+    
+    @ManyToOne
+    private Outlet currOutlet;
+    
+    @ManyToOne
+    private Customer customer;
 
     public Long getCarId() {
         return carId;

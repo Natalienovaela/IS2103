@@ -6,11 +6,17 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import util.enumeration.EmployeeRole;
+import util.enumeration.EmployeeStatus;
 
 /**
  *
@@ -25,7 +31,17 @@ public class Employee implements Serializable {
     private Long employeeId;
     @Column(length = 128, unique = true)
     private String email;
+    @Column(length = 16)
     private String password;
+    private EmployeeStatus status;
+    private EmployeeRole role;
+    
+    @OneToOne(mappedBy = "employee")
+    private TransitDriverDispatch transit;
+    
+    @JoinColumn(nullable = false)
+    @ManyToOne(optional = false)
+    private Outlet outlet;
 
     public Long getEmployeeId() {
         return employeeId;

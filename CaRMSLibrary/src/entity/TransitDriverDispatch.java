@@ -11,6 +11,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -25,6 +28,18 @@ public class TransitDriverDispatch implements Serializable {
     private Long transitId;
     private Long travelDuration;
     private Date transitDate;
+    
+    @JoinColumn(nullable = false)
+    @OneToOne(optional = false)
+    private Employee transitDriver;
+    
+    @JoinColumn(nullable = false)
+    @ManyToOne(optional = false)
+    private Outlet outlet;
+    
+    @JoinColumn(nullable = false)
+    @OneToOne(optional = false)
+    private Car car;
 
     public Long getTransitId() {
         return transitId;

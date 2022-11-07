@@ -6,11 +6,14 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -30,6 +33,8 @@ public class Model implements Serializable {
     @Column(unique = true)
     private String model;
     
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "model")
+    private List<Car> cars;
 
     public Long getModelId() {
         return modelId;
