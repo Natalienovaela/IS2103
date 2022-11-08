@@ -8,6 +8,7 @@ package carmsmanagementclient;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import entity.Employee;
 import java.util.Scanner;
+import util.exception.EmployeeNotExistException;
 
 /**
  *
@@ -22,19 +23,37 @@ public class MainApp {
     }
     
     
-    public void run() {
+    public void run() throws EmployeeNotExistException {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Welcome to Car Rental Management System!");
-        
-        if( employee == null) {
-            System.out.println("Please login before continuing..");
-            System.out.println("email: ");
-            String email = sc.next();
-            /*employeeSessionBeanRemote.check(email);*/
+        while(true) {
+            System.out.println("Welcome to Car Rental Management System!");
+
+            if( employee == null) {
+                doLogin();    
+            } else {
+                
+            }
+        }
+    }
+    
+    public void doLogin() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Please login before continuing..");
+        System.out.println("email: ");
+        String email = sc.next();
+
+        try{
+            Employee employees = employeeSessionBeanRemote.retrieveEmployeeByEmail(email);
             System.out.println("password: ");
             String password = sc.next();
-
-            
+            if(password.equals(employees.getPassword())) {
+                employee = employees;
+            } else {
+                System.out.println("Wrong password!\n");
+            }
+        }  
+        catch(EmployeeNotExistException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 }
