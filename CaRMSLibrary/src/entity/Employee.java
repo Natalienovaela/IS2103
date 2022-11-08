@@ -36,7 +36,7 @@ public class Employee implements Serializable {
     private EmployeeStatus status;
     private EmployeeRole role;
     
-    @OneToOne(mappedBy = "employee")
+    @OneToOne(mappedBy = "transitDriver")
     private TransitDriverDispatch transit;
     
     @JoinColumn(nullable = false)
