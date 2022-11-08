@@ -79,60 +79,76 @@ public class DataInitSessionBean {
         query3.setParameter("name", "Outlet C");
         Outlet outletC = (Outlet)query3.getSingleResult();
 
-        Employee employeeA1 = new Employee("Employee A1", "a1@gmail.com", "a1", EmployeeRole.values()[0]);
+        Employee employeeA1 = new Employee("Employee A1", "a1@gmail.com", "a1", EmployeeRole.SALESMANAGER);
         em.persist(employeeA1);
         employeeA1.setOutlet(outletA);
+        outletA.getEmployees().add(employeeA1);
         em.flush();
 
-        Employee employeeA2 = new Employee("Employee A2", "a2@gmail.com", "a2", EmployeeRole.values()[1]);
+        Employee employeeA2 = new Employee("Employee A2", "a2@gmail.com", "a2", EmployeeRole.OPERATIONMANAGER);
         em.persist(employeeA2);
         employeeA2.setOutlet(outletA);
+        outletA.getEmployees().add(employeeA2);
         em.flush();
 
-        Employee employeeA3 = new Employee("Employee A3", "a3@gmail.com", "a3", EmployeeRole.values()[2]);
+        Employee employeeA3 = new Employee("Employee A3", "a3@gmail.com", "a3", EmployeeRole.CUSTOMERSERVICEEXECUTIVE);
         em.persist(employeeA3);
         employeeA3.setOutlet(outletA);
+        outletA.getEmployees().add(employeeA3);
         em.flush();
 
         Employee employeeA4 = new Employee("Employee A4", "a4@gmail.com", "a4", null);
         em.persist(employeeA4);
         employeeA4.setOutlet(outletA);
+        outletA.getEmployees().add(employeeA4);
         em.flush();
 
         Employee employeeA5 = new Employee("Employee A5", "a5@gmail.com", "a5", null);
         em.persist(employeeA5);
         employeeA5.setOutlet(outletA);
+        outletA.getEmployees().add(employeeA5);
         em.flush();
 
-        Employee employeeB1 = new Employee("Employee B1", "b1@gmail.com", "b1", EmployeeRole.values()[0]);
+        Employee employeeB1 = new Employee("Employee B1", "b1@gmail.com", "b1", EmployeeRole.SALESMANAGER);
         em.persist(employeeB1);
         employeeB1.setOutlet(outletB);
+        outletB.getEmployees().add(employeeB1);
         em.flush();
 
-        Employee employeeB2 = new Employee("Employee B2", "b2@gmail.com", "b2", EmployeeRole.values()[1]);
+        Employee employeeB2 = new Employee("Employee B2", "b2@gmail.com", "b2", EmployeeRole.OPERATIONMANAGER);
         em.persist(employeeB2);
         employeeB2.setOutlet(outletB);
+        outletB.getEmployees().add(employeeB2);
         em.flush();
 
-        Employee employeeB3 = new Employee("Employee B3", "b3@gmail.com", "b3", EmployeeRole.values()[2]);
+        Employee employeeB3 = new Employee("Employee B3", "b3@gmail.com", "b3", EmployeeRole.CUSTOMERSERVICEEXECUTIVE);
         em.persist(employeeB3);
         employeeB3.setOutlet(outletB);
+        outletB.getEmployees().add(employeeB3);
         em.flush();
 
-        Employee employeeC1 = new Employee("Employee C1", "c1@gmail.com", "c1", EmployeeRole.values()[0]);
+        Employee employeeC1 = new Employee("Employee C1", "c1@gmail.com", "c1", EmployeeRole.SALESMANAGER);
         em.persist(employeeC1);
         employeeC1.setOutlet(outletC);
+        outletC.getEmployees().add(employeeC1);
         em.flush();
 
-        Employee employeeC2 = new Employee("Employee C2", "c2@gmail.com", "c2", EmployeeRole.values()[1]);
+        Employee employeeC2 = new Employee("Employee C2", "c2@gmail.com", "c2", EmployeeRole.OPERATIONMANAGER);
         em.persist(employeeC2);
         employeeC2.setOutlet(outletC);
+        outletC.getEmployees().add(employeeC2);
         em.flush();
 
-        Employee employeeC3 = new Employee("Employee C3", "c3@gmail.com", "c3", EmployeeRole.values()[2]);
+        Employee employeeC3 = new Employee("Employee C3", "c3@gmail.com", "c3", EmployeeRole.CUSTOMERSERVICEEXECUTIVE);
         em.persist(employeeC3);
         employeeC3.setOutlet(outletC);
+        outletC.getEmployees().add(employeeC3);
         em.flush();
+        
+        /*Employee systemAdmin = new Employee("SystemAdmin", "systemAdmin@gmail.com", "admin", EmployeeRole.SYSTEMADMINISTRATOR);
+        em.persist(systemAdmin);
+        systemAdmin.setOutlet(outletA);
+        em.flush();*/
     }
     
     public void initialisePartner() {

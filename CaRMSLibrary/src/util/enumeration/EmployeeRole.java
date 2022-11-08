@@ -9,6 +9,7 @@ package util.enumeration;
  *
  * @author Natalienovaela
  */
+
 public enum EmployeeRole {
     SALESMANAGER,
     OPERATIONMANAGER,
