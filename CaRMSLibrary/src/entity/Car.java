@@ -15,7 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import util.enumeration.CarStatus;
-import util.enumeration.CarAvailabilityStatus;
 
 /**
  *
@@ -34,7 +33,6 @@ public class Car implements Serializable {
     @Column(nullable = false)
     private Boolean disabled;
     private CarStatus status;
-    private CarAvailabilityStatus availStatus;
     
     @OneToOne(mappedBy = "car")
     private TransitDriverDispatch transit;
