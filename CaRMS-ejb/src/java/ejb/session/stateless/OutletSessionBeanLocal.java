@@ -3,14 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package util.enumeration;
+package ejb.session.stateless;
+
+import entity.Outlet;
+import javax.ejb.Local;
 
 /**
  *
  * @author Natalienovaela
  */
-public enum CarStatus {
-    INOUTLET,
-    INTRANSIT,
-    ONRENTAL
+@Local
+public interface OutletSessionBeanLocal {
+
+    public Outlet retrieveOutletByName(String name);
+    
 }

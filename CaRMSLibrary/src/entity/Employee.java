@@ -16,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import util.enumeration.EmployeeRole;
-import util.enumeration.EmployeeStatus;
 
 /**
  *
@@ -29,11 +28,11 @@ public class Employee implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long employeeId;
+    private String name;
     @Column(length = 128, unique = true)
     private String email;
     @Column(length = 16)
     private String password;
-    private EmployeeStatus status;
     private EmployeeRole role;
     
     @OneToOne(mappedBy = "transitDriver")
@@ -42,6 +41,16 @@ public class Employee implements Serializable {
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
     private Outlet outlet;
+
+    public Employee() {
+    }
+
+    public Employee(String name,String email, String password, EmployeeRole role) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 
     public Long getEmployeeId() {
         return employeeId;
@@ -74,6 +83,54 @@ public class Employee implements Serializable {
     @Override
     public String toString() {
         return "entity.Employee[ id=" + employeeId + " ]";
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public EmployeeRole getRole() {
+        return role;
+    }
+
+    public void setRole(EmployeeRole role) {
+        this.role = role;
+    }
+
+    public TransitDriverDispatch getTransit() {
+        return transit;
+    }
+
+    public void setTransit(TransitDriverDispatch transit) {
+        this.transit = transit;
+    }
+
+    public Outlet getOutlet() {
+        return outlet;
+    }
+
+    public void setOutlet(Outlet outlet) {
+        this.outlet = outlet;
     }
     
 }

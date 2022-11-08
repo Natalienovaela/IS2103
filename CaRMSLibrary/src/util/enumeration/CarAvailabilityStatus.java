@@ -9,7 +9,7 @@ package util.enumeration;
  *
  * @author Natalienovaela
  */
-public enum EmployeeStatus {
-    DISPATCHED,
-    AVAILABLE
+public enum CarAvailabilityStatus {
+    AVAILABLE,
+    REPAIR
 }
