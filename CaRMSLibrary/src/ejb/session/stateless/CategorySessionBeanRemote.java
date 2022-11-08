@@ -16,6 +16,6 @@ import util.exception.CategoryNotExistException;
 @Remote
 public interface CategorySessionBeanRemote {
 
-    public Category retrieveEmployeeByName(String name) throws CategoryNotExistException;
+    public Category retrieveCategoryByName(String name) throws CategoryNotExistException;
     
 }

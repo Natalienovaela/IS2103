@@ -43,6 +43,8 @@ public class Model implements Serializable {
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
     private Category category;
+    
+    
 
     public Model() {
     }
@@ -94,6 +96,38 @@ public class Model implements Serializable {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Boolean getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public String getMake() {
+        return make;
+    }
+
+    public void setMake(String make) {
+        this.make = make;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public List<Car> getCars() {
+        return cars;
+    }
+
+    public void setCars(List<Car> cars) {
+        this.cars = cars;
     }
     
 }

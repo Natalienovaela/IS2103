@@ -69,12 +69,12 @@ public class MainApp {
         Scanner sc = new Scanner(System.in);
         System.out.println("Please login before continuing..");
         System.out.println("email: ");
-        String email = sc.next();
+        String email = sc.nextLine();
 
         try{
             Employee employees = employeeSessionBeanRemote.retrieveEmployeeByEmail(email);
             System.out.println("password: ");
-            String password = sc.next();
+            String password = sc.nextLine();
             if(password.equals(employees.getPassword())) {
                 employee = employees;
             } else {

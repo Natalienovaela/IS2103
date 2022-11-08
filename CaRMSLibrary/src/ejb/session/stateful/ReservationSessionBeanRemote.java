@@ -12,6 +12,6 @@ import javax.ejb.Remote;
  * @author Natalienovaela
  */
 @Remote
-public interface SalesManagementSessionBeanRemote {
+public interface ReservationSessionBeanRemote {
     
 }

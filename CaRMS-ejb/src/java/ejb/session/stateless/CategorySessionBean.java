@@ -25,12 +25,13 @@ public class CategorySessionBean implements CategorySessionBeanRemote, CategoryS
     // "Insert Code > Add Business Method")
     
     @Override
-    public Category retrieveEmployeeByName(String name) throws CategoryNotExistException {
-        Query query = em.createQuery("SELECT cs FROM Category c WHERE c.categoryName = :name");
+    public Category retrieveCategoryByName(String name) throws CategoryNotExistException {
+        Query query = em.createQuery("SELECT c FROM Category c WHERE c.categoryName = :name");
         query.setParameter("name", name);
         
         try{
             Category category = (Category)query.getSingleResult();
+            category.getModels().size();
             return category;
         }
         catch (Exception ex) {

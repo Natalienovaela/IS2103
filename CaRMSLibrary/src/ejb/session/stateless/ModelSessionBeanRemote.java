@@ -6,9 +6,12 @@
 package ejb.session.stateless;
 
 import entity.Model;
+import java.util.List;
 import javax.ejb.Remote;
+import util.exception.DeleteModelException;
 import util.exception.InputDataValidationException;
 import util.exception.MakeOrModelExistException;
+import util.exception.ModelNotExistException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -19,5 +22,13 @@ import util.exception.UnknownPersistenceException;
 public interface ModelSessionBeanRemote {
 
     public void createModel(Model model, Long categoryId) throws MakeOrModelExistException, UnknownPersistenceException, InputDataValidationException;
+
+    public List<Model> retrieveAllModel();
+
+    public Model retrieveModelbyId(Long modelId) throws ModelNotExistException;
+
+    public void updateModel(Model model) throws InputDataValidationException, ModelNotExistException;
+
+    public void deleteModel(Long modelId) throws ModelNotExistException, DeleteModelException;
     
 }

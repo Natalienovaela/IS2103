@@ -5,19 +5,26 @@
  */
 package ejb.session.stateless;
 
+import ejb.session.stateful.ReservationSessionBeanLocal;
 import entity.Category;
 import entity.Model;
+import entity.Reservation;
+import java.util.List;
 import java.util.Set;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.DeleteModelException;
 import util.exception.InputDataValidationException;
 import util.exception.MakeOrModelExistException;
+import util.exception.ModelNotExistException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -27,8 +34,13 @@ import util.exception.UnknownPersistenceException;
 @Stateless
 public class ModelSessionBean implements ModelSessionBeanRemote, ModelSessionBeanLocal {
 
+    @EJB
+    private ReservationSessionBeanLocal reservationSessionBean;
+
     @PersistenceContext(unitName = "CaRMS-ejbPU")
     private EntityManager em;
+    
+    
     
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
@@ -73,6 +85,68 @@ public class ModelSessionBean implements ModelSessionBeanRemote, ModelSessionBea
            throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
        }
     }
+    
+    @Override
+    public List<Model> retrieveAllModel() {
+        Query query = em.createQuery("SELECT m FROM Model m ORDER BY m.category.categoryName, m.make, m.model ASC");
+        return query.getResultList();
+    }
+    
+    @Override
+    public Model retrieveModelbyId(Long modelId) throws ModelNotExistException{
+        Model model = em.find(Model.class, modelId);
+        
+        if(model == null) {
+            throw new ModelNotExistException("Model with Model ID " + modelId + " does not exist");
+        }
+        else {
+            return model;
+        }
+    }
+    
+    @Override
+    public void updateModel(Model model) throws InputDataValidationException, ModelNotExistException {
+        if(model != null && model.getModelId()!= null)
+        {
+            Set<ConstraintViolation<Model>>constraintViolations = validator.validate(model);
+        
+            if(constraintViolations.isEmpty())
+            {
+                Model modelToUpdate = retrieveModelbyId(model.getModelId());
+                modelToUpdate.setMake(model.getMake());
+                modelToUpdate.setModel(model.getModel());
+                modelToUpdate.getCategory().getModels().remove(modelToUpdate);
+                modelToUpdate.setCategory(model.getCategory());
+                modelToUpdate.getCategory().getModels().add(modelToUpdate);
+            }
+            else
+            {
+                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+            }
+        }
+        else
+        {
+            throw new ModelNotExistException("Model ID not provided for model to be updated");
+        }
+    }
+    
+    @Override
+    public void deleteModel(Long modelId) throws ModelNotExistException, DeleteModelException
+    {
+        Model modelToRemove = retrieveModelbyId(modelId);
+        List<Reservation> reservations = reservationSessionBean.retrieveReservationByModelId(modelId);
+        
+        if(reservations.isEmpty())
+        {
+            modelToRemove.getCategory().getModels().remove(modelToRemove);
+            em.remove(modelToRemove);
+        }
+        else
+        {
+            modelToRemove.setDisabled(Boolean.TRUE);
+            throw new DeleteModelException("Model ID " + modelId + " is in use and cannot be deleted! It will be disabled");
+        }
+    } 
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Model>>constraintViolations)
     {

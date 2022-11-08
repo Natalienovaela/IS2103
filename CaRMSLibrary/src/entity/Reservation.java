@@ -41,6 +41,9 @@ public class Reservation implements Serializable {
     @Column(nullable = false, length = 8)
     private BigDecimal totalAmount;
 
+    @ManyToOne
+    private Model model;
+            
     public Reservation() {
     }
 
@@ -153,6 +156,14 @@ public class Reservation implements Serializable {
      */
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public Model getModel() {
+        return model;
+    }
+
+    public void setModel(Model model) {
+        this.model = model;
     }
     
 }

@@ -34,6 +34,7 @@ public class OutletSessionBean implements OutletSessionBeanRemote, OutletSession
         Query query = em.createQuery("SELECT o FROM Outlet o WHERE o.name = :name");
         query.setParameter("name", name);
         Outlet outlet = (Outlet)query.getSingleResult();
+        outlet.getEmployees().size();
         return outlet;
     }
 }
