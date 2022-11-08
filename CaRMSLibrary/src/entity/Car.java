@@ -79,5 +79,61 @@ public class Car implements Serializable {
     public String toString() {
         return "entity.Car[ id=" + carId + " ]";
     }
+
+    /**
+     * @return the licensePlateNumber
+     */
+    public String getLicensePlateNumber() {
+        return licensePlateNumber;
+    }
+
+    /**
+     * @param licensePlateNumber the licensePlateNumber to set
+     */
+    public void setLicensePlateNumber(String licensePlateNumber) {
+        this.licensePlateNumber = licensePlateNumber;
+    }
+
+    /**
+     * @return the colour
+     */
+    public String getColour() {
+        return colour;
+    }
+
+    /**
+     * @param colour the colour to set
+     */
+    public void setColour(String colour) {
+        this.colour = colour;
+    }
+
+    /**
+     * @return the disabled
+     */
+    public Boolean getDisabled() {
+        return disabled;
+    }
+
+    /**
+     * @param disabled the disabled to set
+     */
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    /**
+     * @return the status
+     */
+    public CarStatus getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(CarStatus status) {
+        this.status = status;
+    }
     
 }
