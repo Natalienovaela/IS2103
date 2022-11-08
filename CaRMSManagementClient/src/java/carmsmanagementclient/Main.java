@@ -5,17 +5,21 @@
  */
 package carmsmanagementclient;
 
+import ejb.session.stateless.EmployeeSessionBeanRemote;
+
 /**
  *
  * @author Natalienovaela
  */
 public class Main {
-
+    EmployeeSessionBeanRemote employeeSessionBeanRemote;
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public void main(String[] args) {
         // TODO code application logic here
+        MainApp mainApp = new MainApp(employeeSessionBeanRemote);
+        mainApp.run();
     }
     
 }
