@@ -29,7 +29,7 @@ public class MainApp {
             System.out.println("Welcome to Car Rental Management System!");
 
             if( employee == null) {
-                doLogin();    
+                doLogin(); 
             } else {
                 
             }
@@ -55,5 +55,9 @@ public class MainApp {
         catch(EmployeeNotExistException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+    
+    public void doLogout() {
+        employee = null;
     }
 }

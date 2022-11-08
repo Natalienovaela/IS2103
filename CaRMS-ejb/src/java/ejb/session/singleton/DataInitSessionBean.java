@@ -5,6 +5,7 @@
  */
 package ejb.session.singleton;
 
+import entity.Category;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import entity.Employee;
 import entity.Outlet;
+import entity.Partner;
 import javax.persistence.Query;
 import util.enumeration.EmployeeRole;
 
@@ -43,13 +45,13 @@ public class DataInitSessionBean {
             initialiseEmployee();
         }
         
-        /*if(em.find(Partner.class, 1l) == null) {
+        if(em.find(Partner.class, 1l) == null) {
             initialisePartner();
         }
         
         if(em.find(Category.class, 1l) == null) {
             initialiseCategory();
-        }*/
+        }
     }
     
     public void initialiseOutlet() {
@@ -130,6 +132,26 @@ public class DataInitSessionBean {
         Employee employeeC3 = new Employee("Employee C3", "c3@gmail.com", "c3", EmployeeRole.values()[2]);
         em.persist(employeeC3);
         employeeC3.setOutlet(outletC);
+        em.flush();
+    }
+    
+    public void initialisePartner() {
+        Partner partner = new Partner("Holiday.com", "holiday@gmail.com", "holiday");
+        em.persist(partner);
+        em.flush();
+    }
+    
+    public void initialiseCategory() {
+        Category category = new Category("Standard Sedan");
+        em.persist(category);
+        em.flush();
+        category = new Category("Family Sedan");
+        em.persist(category);
+        category = new Category("Luxury Sedan");
+        em.persist(category);
+        em.flush();
+        category = new Category("SUV and Minivan");
+        em.persist(category);
         em.flush();
     }
 }

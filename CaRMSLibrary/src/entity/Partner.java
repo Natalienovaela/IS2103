@@ -27,11 +27,14 @@ public class Partner implements Serializable {
     private String email;
     @Column(nullable = false, length = 16)
     private String password;
+    @Column(nullable = false)
+    private String name;
 
     public Partner() {
     }
 
-    public Partner(String email, String password) {
+    public Partner(String name, String email, String password) {
+        this.name = name;
         this.email = email;
         this.password = password;
     }
@@ -95,6 +98,14 @@ public class Partner implements Serializable {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
     
 }
