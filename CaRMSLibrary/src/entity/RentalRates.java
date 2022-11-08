@@ -7,11 +7,17 @@ package entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -30,8 +36,16 @@ public class RentalRates implements Serializable {
     private String validityPeriod;
     @Column(nullable = false, length = 8)
     private BigDecimal ratePerDay;
+    
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private Category category;
+    @ManyToMany
+    @JoinColumn(nullable = false)
+    private List<Reservation> reservations;
 
     public RentalRates() {
+        reservations = new ArrayList<>();
     }
 
     public RentalRates(String name, String validityPeriod, BigDecimal ratePerDay) {
@@ -113,6 +127,34 @@ public class RentalRates implements Serializable {
      */
     public void setRatePerDay(BigDecimal ratePerDay) {
         this.ratePerDay = ratePerDay;
+    }
+
+    /**
+     * @return the category
+     */
+    public Category getCategory() {
+        return category;
+    }
+
+    /**
+     * @param category the category to set
+     */
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    /**
+     * @return the reservations
+     */
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    /**
+     * @param reservations the reservations to set
+     */
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
     
 }

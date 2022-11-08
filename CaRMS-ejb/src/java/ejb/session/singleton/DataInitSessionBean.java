@@ -170,4 +170,5 @@ public class DataInitSessionBean {
         em.persist(category);
         em.flush();
     }
+
 }

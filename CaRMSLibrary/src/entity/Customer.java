@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,7 +35,11 @@ public class Customer implements Serializable {
     @Column(nullable = false, length = 9)
     private String passportNumber;
     
+    @OneToMany(mappedBy = "customer")
+    private List<Reservation> reservations;
+    
     public Customer() {
+        reservations = new ArrayList<>();
     }
 
     public Customer(String email, String password, String phoneNumber, String passportNumber) {
@@ -131,6 +136,20 @@ public class Customer implements Serializable {
      */
     public void setPassportNumber(String passportNumber) {
         this.passportNumber = passportNumber;
+    }
+
+    /**
+     * @return the reservations
+     */
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    /**
+     * @param reservations the reservations to set
+     */
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
     
 }

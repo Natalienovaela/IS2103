@@ -33,7 +33,7 @@ public class MainApp {
     }
     
     
-    public void run() {
+    public void run() throws EmployeeNotExistException {
         Scanner sc = new Scanner(System.in);
         while(true) {
             System.out.println("Welcome to Car Rental Management System!");

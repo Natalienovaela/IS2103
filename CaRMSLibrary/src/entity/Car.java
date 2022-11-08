@@ -48,6 +48,9 @@ public class Car implements Serializable {
     
     @ManyToOne
     private Customer customer;
+    
+    @OneToOne(optional = false)
+    private Reservation reservation;
 
     public Long getCarId() {
         return carId;
