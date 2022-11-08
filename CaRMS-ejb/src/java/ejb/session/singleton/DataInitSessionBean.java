@@ -85,7 +85,7 @@ public class DataInitSessionBean {
         outletA.getEmployees().add(employeeA1);
         em.flush();
 
-        Employee employeeA2 = new Employee("Employee A2", "a2@gmail.com", "a2", EmployeeRole.OPERATIONMANAGER);
+        Employee employeeA2 = new Employee("Employee A2", "a2@gmail.com", "a2", EmployeeRole.OPERATIONSMANAGER);
         em.persist(employeeA2);
         employeeA2.setOutlet(outletA);
         outletA.getEmployees().add(employeeA2);
@@ -115,7 +115,7 @@ public class DataInitSessionBean {
         outletB.getEmployees().add(employeeB1);
         em.flush();
 
-        Employee employeeB2 = new Employee("Employee B2", "b2@gmail.com", "b2", EmployeeRole.OPERATIONMANAGER);
+        Employee employeeB2 = new Employee("Employee B2", "b2@gmail.com", "b2", EmployeeRole.OPERATIONSMANAGER);
         em.persist(employeeB2);
         employeeB2.setOutlet(outletB);
         outletB.getEmployees().add(employeeB2);
@@ -133,7 +133,7 @@ public class DataInitSessionBean {
         outletC.getEmployees().add(employeeC1);
         em.flush();
 
-        Employee employeeC2 = new Employee("Employee C2", "c2@gmail.com", "c2", EmployeeRole.OPERATIONMANAGER);
+        Employee employeeC2 = new Employee("Employee C2", "c2@gmail.com", "c2", EmployeeRole.OPERATIONSMANAGER);
         em.persist(employeeC2);
         employeeC2.setOutlet(outletC);
         outletC.getEmployees().add(employeeC2);

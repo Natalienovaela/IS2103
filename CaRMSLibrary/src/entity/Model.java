@@ -13,7 +13,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -26,6 +29,7 @@ public class Model implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long modelId;
+    @NotNull
     @Column(nullable = false)
     private Boolean disabled;
     @Column(unique = true)
@@ -35,7 +39,22 @@ public class Model implements Serializable {
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "model")
     private List<Car> cars;
+    
+    @JoinColumn(nullable = false)
+    @ManyToOne(optional = false)
+    private Category category;
 
+    public Model() {
+    }
+
+    public Model(String make, String model, Boolean disabled, Category category) {
+        this.disabled = disabled;
+        this.make = make;
+        this.model = model;
+        this.category = category;
+    }
+
+    
     public Long getModelId() {
         return modelId;
     }
@@ -67,6 +86,14 @@ public class Model implements Serializable {
     @Override
     public String toString() {
         return "entity.Model[ id=" + modelId + " ]";
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
     
 }
