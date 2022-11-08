@@ -7,15 +7,19 @@ package entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -38,10 +42,33 @@ public class Reservation implements Serializable {
     private Boolean pickedUp;
     @Column(nullable = false)
     private Boolean returned;
-    @Column(nullable = false, length = 8)
+    @Column(nullable = false, precision = 11, scale = 2)
     private BigDecimal totalAmount;
+    
+    @ManyToMany(mappedBy = "reservations")
+    private List<RentalRates> rentalRates;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private Category category;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private Customer customer;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private Outlet pickupOutlet;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private Outlet returnOutlet;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Partner partner;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Model model;
+    @OneToOne(mappedBy = "reservation", fetch = FetchType.LAZY)
+    private Car car;
 
     public Reservation() {
+        this.totalAmount = new BigDecimal("0.00");
+        rentalRates = new ArrayList<>();
     }
 
     public Reservation(Date pickUpDate, Date returnDate, Boolean pickedUp, Boolean returned, BigDecimal totalAmount) {
@@ -153,6 +180,48 @@ public class Reservation implements Serializable {
      */
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    /**
+     * @return the rentalRates
+     */
+    public List<RentalRates> getRentalRates() {
+        return rentalRates;
+    }
+
+    /**
+     * @param rentalRates the rentalRates to set
+     */
+    public void setRentalRates(List<RentalRates> rentalRates) {
+        this.rentalRates = rentalRates;
+    }
+
+    /**
+     * @return the category
+     */
+    public Category getCategory() {
+        return category;
+    }
+
+    /**
+     * @param category the category to set
+     */
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    /**
+     * @return the partner
+     */
+    public Partner getPartner() {
+        return partner;
+    }
+
+    /**
+     * @param partner the partner to set
+     */
+    public void setPartner(Partner partner) {
+        this.partner = partner;
     }
     
 }
