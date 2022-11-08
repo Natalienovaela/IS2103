@@ -5,18 +5,17 @@
  */
 package ejb.session.singleton;
 
-import ejb.session.stateless.OutletSessionBeanLocal;
-import entity.Employee;
-import entity.Outlet;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
 import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import entity.Employee;
+import entity.Outlet;
 import javax.persistence.Query;
 import util.enumeration.EmployeeRole;
+
 
 /**
  *

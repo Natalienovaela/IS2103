@@ -8,6 +8,10 @@
     <class>entity.Model</class>
     <class>entity.Outlet</class>
     <class>entity.TransitDriverDispatch</class>
+    <class>entity.Category</class>
+    <class>entity.Partner</class>
+    <class>entity.RentalRates</class>
+    <class>entity.Reservation</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>

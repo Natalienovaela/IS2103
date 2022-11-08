@@ -6,8 +6,7 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,18 +41,15 @@ public class Outlet implements Serializable {
     private List<TransitDriverDispatch> transits;
 
     public Outlet() {
-        employees = new ArrayList<>();
-        transits = new ArrayList<>();
     }
 
     public Outlet(String outletName, String address, String openingHours, String closingHours) {
-        this();
         this.outletName = outletName;
         this.address = address;
         this.openingHours = openingHours;
         this.closingHours = closingHours;
     }
-    
+
     public Long getOutletId() {
         return outletId;
     }
@@ -86,10 +82,10 @@ public class Outlet implements Serializable {
     public String toString() {
         return "entity.Outlet[ id=" + outletId + " ]";
     }
-
+    
     public String getOutletName() {
         return outletName;
-    }
+}
 
     public void setOutletName(String outletName) {
         this.outletName = outletName;

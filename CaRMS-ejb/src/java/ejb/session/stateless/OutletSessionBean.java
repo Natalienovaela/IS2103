@@ -5,12 +5,12 @@
  */
 package ejb.session.stateless;
 
+import javax.ejb.Stateless;
 import entity.Outlet;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 /**
  *
  * @author Natalienovaela
@@ -18,6 +18,8 @@ import javax.persistence.Query;
 @Stateless
 public class OutletSessionBean implements OutletSessionBeanRemote, OutletSessionBeanLocal {
 
+    // Add business logic below. (Right-click in editor and choose
+    // "Insert Code > Add Business Method")
     @PersistenceContext(unitName = "CaRMS-ejbPU")
     private EntityManager em;
 
@@ -26,7 +28,7 @@ public class OutletSessionBean implements OutletSessionBeanRemote, OutletSession
     public void createOutlet(Outlet outlet) {
         em.persist(outlet);
     }
-    
+
     @Override
     public Outlet retrieveOutletByName(String name) {
         Query query = em.createQuery("SELECT o FROM Outlet o WHERE o.name = :name");
