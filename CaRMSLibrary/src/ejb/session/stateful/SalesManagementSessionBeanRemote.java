@@ -3,16 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package util.enumeration;
+package ejb.session.stateful;
+
+import javax.ejb.Remote;
 
 /**
  *
  * @author Natalienovaela
  */
-
-public enum EmployeeRole {
-    SALESMANAGER,
-    OPERATIONSMANAGER,
-    CUSTOMERSERVICEEXECUTIVE,
-    SYSTEMADMINISTRATOR
+@Remote
+public interface SalesManagementSessionBeanRemote {
+    
 }
