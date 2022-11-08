@@ -31,6 +31,8 @@ public class Partner implements Serializable {
     private String email;
     @Column(nullable = false, length = 16)
     private String password;
+     @Column(nullable = false)
+    private String name;
     
     @OneToMany(mappedBy = "partner")
     private List<Reservation> reservations;
@@ -39,7 +41,8 @@ public class Partner implements Serializable {
         reservations = new ArrayList<>();
     }
 
-    public Partner(String email, String password) {
+    public Partner(String name, String email, String password) {
+        this.name = name;
         this.email = email;
         this.password = password;
     }
@@ -117,6 +120,13 @@ public class Partner implements Serializable {
      */
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
     
 }

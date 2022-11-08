@@ -40,8 +40,6 @@ public class Category implements Serializable {
     public Category(String categoryName) {
         this.categoryName = categoryName;
     }
-    
-    
 
     public Long getCategoryId() {
         return categoryId;
