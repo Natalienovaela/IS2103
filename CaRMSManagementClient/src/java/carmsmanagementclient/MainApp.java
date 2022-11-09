@@ -10,8 +10,10 @@ import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.ModelSessionBeanRemote;
 import entity.Employee;
 import java.util.Scanner;
+import util.exception.CarNotExistException;
 import util.exception.CategoryNotExistException;
 import util.exception.EmployeeNotExistException;
+import util.exception.ModelNotExistException;
 
 /**
  *
@@ -33,7 +35,7 @@ public class MainApp {
     }
     
     
-    public void run() throws EmployeeNotExistException {
+    public void run() throws EmployeeNotExistException, ModelNotExistException, CarNotExistException {
         Scanner sc = new Scanner(System.in);
         while(true) {
             System.out.println("Welcome to Car Rental Management System!");

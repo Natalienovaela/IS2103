@@ -4,8 +4,10 @@
  * and open the template in the editor.
  */
 package carmsmanagementclient;
+import ejb.session.stateless.CarSessionBeanRemote;
 import ejb.session.stateless.CategorySessionBeanRemote;
 import ejb.session.stateless.ModelSessionBeanRemote;
+import entity.Car;
 import entity.Model;
 import entity.Category;
 import java.util.Collections;
@@ -16,9 +18,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.validation.ConstraintViolation;
 import java.util.List;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.enumeration.CarAvailabilityStatus;
+import util.exception.CarExistException;
+import util.exception.CarNotExistException;
 import util.exception.CategoryNotExistException;
 import util.exception.DeleteModelException;
 import util.exception.InputDataValidationException;
@@ -32,6 +40,7 @@ import util.exception.UnknownPersistenceException;
  */
 
 public class OperationsManagementModule {
+    private CarSessionBeanRemote carSessionBeanRemote;
     private ModelSessionBeanRemote modelSessionBeanRemote;
     private CategorySessionBeanRemote categorySessionBeanRemote;
     private final ValidatorFactory validatorFactory;
@@ -44,7 +53,7 @@ public class OperationsManagementModule {
         validator = validatorFactory.getValidator();
     }
     
-    public void menuOperationsManagement() {
+    public void menuOperationsManagement() throws ModelNotExistException, CarNotExistException {
         Scanner sc = new Scanner(System.in);
         Integer number;
         
@@ -188,7 +197,71 @@ public class OperationsManagementModule {
         }
     }
     
-    public void doCar(Integer umber) {
+    public void doCar(Integer number) throws ModelNotExistException, CarNotExistException {
+        Scanner sc = new Scanner(System.in);
+        if(number == 5) {
+            System.out.println("Enter license plate number: ");
+            String licensePlateNumber = sc.nextLine();
+            System.out.println("Enter make: ");
+            String make = sc.nextLine();
+            System.out.println("Enter model: ");
+            String model = sc.nextLine();
+            System.out.println("Enter Status: ");
+            String status = sc.nextLine();
+            System.out.println("Enter outlet: ");
+            String outlet = sc.nextLine();
+            
+            try{
+               Model models = modelSessionBeanRemote.retrieveModelbyMakeandModel(make, model);
+               Car newCar = new Car(licensePlateNumber, make, model, outlet);
+                if(status.equals("Available"))
+                {
+                    newCar.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
+                }
+                else
+                {
+                    System.out.println("Invalid option for Status, please fill again!\n");
+                }
+                
+                Set<ConstraintViolation<Car>>constraintViolations = validator.validate(newCar);
+            
+                
+                
+                if(constraintViolations.isEmpty()) {
+                    try {
+                        carSessionBeanRemote.createCar(newCar, models.getModelId());
+                        System.out.println("Car is created successfully!\n");
+                    } 
+                    catch(UnknownPersistenceException ex){
+                        System.out.println("An unknown error has occurred while creating the new model!: " + ex.getMessage() + "\n");
+                    }
+                    catch(InputDataValidationException ex){
+                        System.out.println(ex.getMessage() + "\n");
+                    } 
+                    catch(CarExistException ex) {
+                       System.out.println("An error has occurred while creating the new car!: The car already exist\n");
+                   }
+                }
+
+            } 
+            catch(ModelNotExistException ex) {
+                System.out.println(ex.getMessage());
+            }
+        } else if(number == 6) {
+            List<Car> cars = carSessionBeanRemote.retrieveAllCar();
+            for(Car car: cars) {
+                System.out.println("Car ID: " + car.getCarId() + "Model: " + car.getModel().getModel() + " Make: " + car.getModel().getMake() + "Status: " + car.getStatus() + "License Plate NUmber: " + car.getLicensePlateNumber());
+            }
+            
+        } else if(number == 7) {
+           System.out.println("Enter Car Id: ");
+            String carId = sc.nextLine();
+           Car car = carSessionBeanRemote.retrieveCarById(Long.parseLong(carId));
+           System.out.println("Car ID : " + car.getCarId() + "model" + car.getModel());
+            
+            
         
+        }
+
     }
 }

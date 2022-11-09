@@ -5,7 +5,9 @@
  */
 package ejb.session.stateful;
 
+import entity.Car;
 import entity.Model;
+import entity.RentalRates;
 import entity.Reservation;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,7 +17,9 @@ import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.CarNotExistException;
 import util.exception.ModelNotExistException;
+import util.exception.RentalRateNotExistException;
 
 /**
  *
@@ -42,6 +46,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         }
     }
     
+    @Override
     public List<Reservation> retrieveCurrentDateReservation(Date date) {
         Calendar todayCalendar = Calendar.getInstance();
         todayCalendar.setTime(date);
@@ -64,5 +69,29 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
         return returnedReservation;
         
+    }
+    
+    @Override
+    public List<Reservation> retrieveReservationByCarId(Long carId) throws CarNotExistException {
+        Car car = em.find(Car.class, carId);
+        if(car == null) {
+            throw new CarNotExistException("Car with Car ID " + carId + " does not exist");
+        } else {
+            Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.car = :car");
+            query.setParameter("car", car);
+            return query.getResultList();
+        }
+    }
+    
+    @Override
+    public List<Reservation> retrieveReservationByRentalRateId(Long rentalRateId) throws RentalRateNotExistException {
+        RentalRates rentalRate = em.find(RentalRates.class, rentalRateId);
+        if(rentalRate == null) {
+            throw new RentalRateNotExistException("Rental Rate with Rental Rate ID " + rentalRateId + " does not exist");
+        } else {
+            Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.rentalRates = :rentalRate");
+            query.setParameter("rentalRate", rentalRate);
+            return query.getResultList();
+        }
     }
 }
