@@ -107,6 +107,22 @@ public class ModelSessionBean implements ModelSessionBeanRemote, ModelSessionBea
     }
     
     @Override
+    public Model retrieveModelbyMakeandModel(String make, String model) throws ModelNotExistException{
+        Query query = em.createQuery("SELECT m FROM Model m WHERE m.getMake() = :make, m.getModel() = :model");
+        query.setParameter("make", make);
+        query.setParameter("model", model);
+        
+        Model retrieveModel = (Model)query.getSingleResult();
+        
+        if(retrieveModel == null) {
+            throw new ModelNotExistException("Model with the make " + make + "and model" + model + " does not exist");
+        }
+        else {
+            return retrieveModel;
+        }
+    }
+    
+    @Override
     public void updateModel(Model model) throws InputDataValidationException, ModelNotExistException {
         if(model != null && model.getModelId()!= null)
         {
