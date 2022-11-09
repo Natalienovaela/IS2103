@@ -7,6 +7,9 @@ package ejb.session.stateful;
 
 import entity.Model;
 import entity.Reservation;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -37,5 +40,29 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             query.setParameter("model", model);
             return query.getResultList();
         }
+    }
+    
+    public List<Reservation> retrieveCurrentDateReservation(Date date) {
+        Calendar todayCalendar = Calendar.getInstance();
+        todayCalendar.setTime(date);
+        
+        Calendar pickUpCalendar = Calendar.getInstance();
+        
+        Query query = em.createQuery("SELECT r From Reservation r");
+        List<Reservation> reservations = query.getResultList();
+        
+        List<Reservation> returnedReservation = new ArrayList<>();
+        
+        for(Reservation reservation: reservations) {
+            pickUpCalendar.setTime(reservation.getPickUpDate());
+            if(pickUpCalendar.get(Calendar.YEAR) == todayCalendar.get(Calendar.YEAR)
+                    && pickUpCalendar.get(Calendar.MONTH) == todayCalendar.get(Calendar.MONTH)
+                    && pickUpCalendar.get(Calendar.DAY_OF_MONTH) == todayCalendar.get(Calendar.DAY_OF_MONTH)){
+                returnedReservation.add(reservation);
+            }
+        }
+        
+        return returnedReservation;
+        
     }
 }

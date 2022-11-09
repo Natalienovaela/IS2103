@@ -5,9 +5,7 @@
  */
 package ejb.session.stateless;
 
-import entity.Car;
-import entity.Outlet;
-import java.util.List;
+import entity.TransitDriverDispatch;
 import javax.ejb.Local;
 
 /**
@@ -15,7 +13,8 @@ import javax.ejb.Local;
  * @author Natalienovaela
  */
 @Local
-public interface ModelSessionBeanLocal {
+public interface TransitDriverDispatchSessionBeanLocal {
 
+    public void createDispatch(TransitDriverDispatch dispatch, Long outletId, Long carId);
     
 }

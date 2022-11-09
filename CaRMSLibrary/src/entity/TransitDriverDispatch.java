@@ -26,11 +26,9 @@ public class TransitDriverDispatch implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transitId;
-    private Long travelDuration;
     private Date transitDate;
     
-    @JoinColumn(nullable = false)
-    @OneToOne(optional = false)
+    @OneToOne
     private Employee transitDriver;
     
     @JoinColumn(nullable = false)
@@ -40,6 +38,17 @@ public class TransitDriverDispatch implements Serializable {
     @JoinColumn(nullable = false)
     @OneToOne(optional = false)
     private Car car;
+
+    public TransitDriverDispatch(Date transitDate, Outlet outlet, Car car) {
+        this.transitDate = transitDate;
+        this.outlet = outlet;
+        this.car = car;
+    }
+
+    public TransitDriverDispatch() {
+    }
+    
+    
 
     public Long getTransitId() {
         return transitId;
@@ -72,6 +81,38 @@ public class TransitDriverDispatch implements Serializable {
     @Override
     public String toString() {
         return "entity.TransitDriverDispatch[ id=" + transitId + " ]";
+    }
+
+    public Date getTransitDate() {
+        return transitDate;
+    }
+
+    public void setTransitDate(Date transitDate) {
+        this.transitDate = transitDate;
+    }
+
+    public Employee getTransitDriver() {
+        return transitDriver;
+    }
+
+    public void setTransitDriver(Employee transitDriver) {
+        this.transitDriver = transitDriver;
+    }
+
+    public Outlet getOutlet() {
+        return outlet;
+    }
+
+    public void setOutlet(Outlet outlet) {
+        this.outlet = outlet;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
     }
     
 }

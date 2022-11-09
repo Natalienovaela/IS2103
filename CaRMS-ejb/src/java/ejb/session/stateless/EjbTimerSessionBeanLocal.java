@@ -5,9 +5,6 @@
  */
 package ejb.session.stateless;
 
-import entity.Car;
-import entity.Outlet;
-import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -15,7 +12,7 @@ import javax.ejb.Local;
  * @author Natalienovaela
  */
 @Local
-public interface ModelSessionBeanLocal {
-
+public interface EjbTimerSessionBeanLocal {
     
+    public void allocateCars();
 }

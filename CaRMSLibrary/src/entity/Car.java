@@ -8,6 +8,8 @@ package entity;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,7 +35,9 @@ public class Car implements Serializable {
     private String colour;
     @Column(nullable = false)
     private Boolean disabled;
+    @Enumerated(EnumType.STRING)
     private CarStatus status;
+    @Enumerated(EnumType.STRING)
     private CarAvailabilityStatus availStatus;
     
     @OneToOne(mappedBy = "car")
@@ -51,6 +55,7 @@ public class Car implements Serializable {
     
     @OneToOne(optional = false)
     private Reservation reservation;
+    
 
     public Long getCarId() {
         return carId;
@@ -139,6 +144,54 @@ public class Car implements Serializable {
      */
     public void setStatus(CarStatus status) {
         this.status = status;
+    }
+
+    public CarAvailabilityStatus getAvailStatus() {
+        return availStatus;
+    }
+
+    public void setAvailStatus(CarAvailabilityStatus availStatus) {
+        this.availStatus = availStatus;
+    }
+
+    public TransitDriverDispatch getTransit() {
+        return transit;
+    }
+
+    public void setTransit(TransitDriverDispatch transit) {
+        this.transit = transit;
+    }
+
+    public Model getModel() {
+        return model;
+    }
+
+    public void setModel(Model model) {
+        this.model = model;
+    }
+
+    public Outlet getCurrOutlet() {
+        return currOutlet;
+    }
+
+    public void setCurrOutlet(Outlet currOutlet) {
+        this.currOutlet = currOutlet;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
     }
     
 }

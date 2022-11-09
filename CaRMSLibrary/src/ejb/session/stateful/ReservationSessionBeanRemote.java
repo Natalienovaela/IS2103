@@ -5,6 +5,9 @@
  */
 package ejb.session.stateful;
 
+import entity.Reservation;
+import java.util.Date;
+import java.util.List;
 import javax.ejb.Remote;
 
 /**
@@ -13,5 +16,7 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface ReservationSessionBeanRemote {
+
+    public List<Reservation> retrieveCurrentDateReservation(Date date);
     
 }

@@ -5,17 +5,15 @@
  */
 package ejb.session.stateless;
 
-import entity.Car;
-import entity.Outlet;
-import java.util.List;
-import javax.ejb.Local;
+import entity.TransitDriverDispatch;
+import javax.ejb.Remote;
 
 /**
  *
  * @author Natalienovaela
  */
-@Local
-public interface ModelSessionBeanLocal {
-
+@Remote
+public interface TransitDriverDispatchSessionBeanRemote {
     
+    public void createDispatch(TransitDriverDispatch dispatch, Long outletId, Long carId);
 }

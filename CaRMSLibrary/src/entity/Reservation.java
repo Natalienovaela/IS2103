@@ -231,5 +231,37 @@ public class Reservation implements Serializable {
     public void setPartner(Partner partner) {
         this.partner = partner;
     }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Outlet getPickupOutlet() {
+        return pickupOutlet;
+    }
+
+    public void setPickupOutlet(Outlet pickupOutlet) {
+        this.pickupOutlet = pickupOutlet;
+    }
+
+    public Outlet getReturnOutlet() {
+        return returnOutlet;
+    }
+
+    public void setReturnOutlet(Outlet returnOutlet) {
+        this.returnOutlet = returnOutlet;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
     
 }

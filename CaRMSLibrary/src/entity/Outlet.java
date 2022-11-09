@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import java.util.List;
 import javax.persistence.Column;
@@ -41,9 +42,12 @@ public class Outlet implements Serializable {
     private List<TransitDriverDispatch> transits;
 
     public Outlet() {
+        transits = new ArrayList<>();
+        employees = new ArrayList<>();
     }
 
     public Outlet(String outletName, String address, String openingHours, String closingHours) {
+        this();
         this.outletName = outletName;
         this.address = address;
         this.openingHours = openingHours;

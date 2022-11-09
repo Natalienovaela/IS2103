@@ -6,8 +6,10 @@
 package ejb.session.stateless;
 
 import ejb.session.stateful.ReservationSessionBeanLocal;
+import entity.Car;
 import entity.Category;
 import entity.Model;
+import entity.Outlet;
 import entity.Reservation;
 import java.util.List;
 import java.util.Set;

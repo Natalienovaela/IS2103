@@ -5,17 +5,14 @@
  */
 package ejb.session.stateless;
 
-import entity.Car;
-import entity.Outlet;
-import java.util.List;
-import javax.ejb.Local;
+import javax.ejb.Remote;
 
 /**
  *
  * @author Natalienovaela
  */
-@Local
-public interface ModelSessionBeanLocal {
-
+@Remote
+public interface EjbTimerSessionBeanRemote {
     
+    public void allocateCars();
 }
