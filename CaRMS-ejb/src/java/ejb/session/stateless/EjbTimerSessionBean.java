@@ -126,6 +126,83 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }    
             }
             else {
+                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservation IS NULL AND c.currOutlet = :outlet AND c.reservation.model = :model");
+                query.setParameter("outlet", reservation.getPickupOutlet());
+                query.setParameter("model", reservation.getModel());
+                List<Car> carsWithNoReservation = query.getResultList();
+                    
+                for(Car car: carsWithNoReservation) {
+                        reservation.setCar(car);
+                        car.setReservation(reservation);
+                        car.setCustomer(car.getReservation().getCustomer());
+                        reserved = Boolean.TRUE;
+                        break;
+                } 
+                
+                if(!reserved) {
+                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservation IS NOT NULL AND c.reservation.returnOutlet = :outlet AND c.reservation.model = :model");
+                    query.setParameter("outlet", reservation.getPickupOutlet());
+                    query.setParameter("model", reservation.getModel());
+                    List<Car> carsWithReservation = query.getResultList();
+
+                    for(Car car: carsWithReservation) {
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(car.getReservation().getReturnDate());
+
+                        Calendar cal2 = Calendar.getInstance();
+                        cal2.setTime(reservation.getPickUpDate());
+
+                        if(cal.get(Calendar.HOUR) * 60 + cal.get(Calendar.MINUTE) <= cal2.get(Calendar.HOUR) * 60 + cal2.get(Calendar.MINUTE)){
+                            reservation.setCar(car);
+                            car.setReservation(reservation);
+                            car.setCustomer(car.getReservation().getCustomer());
+                            reserved = Boolean.TRUE;
+                            break;
+                        }
+                    }   
+                }
+                
+                if(!reserved) {
+                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservation IS NULL AND c.currOutlet != :outlet AND c.reservation.model = :model");
+                    query.setParameter("outlet", reservation.getPickupOutlet());
+                    query.setParameter("model", reservation.getModel());
+                    List<Car> carsWithNoReservationNotTheSameOutlet = query.getResultList();
+                    
+                    for(Car car: carsWithNoReservationNotTheSameOutlet) {
+                            reservation.setCar(car);
+                            car.setReservation(reservation);
+                            car.setCustomer(car.getReservation().getCustomer());
+                            reserved = Boolean.TRUE;
+                            TransitDriverDispatch dispatch = new TransitDriverDispatch(new Date(), reservation.getPickupOutlet(), car);
+                            transitDriverDispatchSessionBean.createDispatch(dispatch, reservation.getPickupOutlet().getOutletId(), car.getCarId());
+                            break;
+                    }
+
+                }
+
+                if(!reserved) {
+                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservation IS NOT NULL AND c.reservation.returnOutlet != :outlet AND c.reservation.model = :model");
+                    query.setParameter("outlet", reservation.getPickupOutlet());
+                    query.setParameter("model", reservation.getModel());
+                    List<Car> carsWithReservationNotTheSameOutlet = query.getResultList();
+
+                    for(Car car: carsWithReservationNotTheSameOutlet) {
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(car.getReservation().getReturnDate());
+
+                        Calendar cal2 = Calendar.getInstance();
+                        cal2.setTime(reservation.getPickUpDate());
+
+                        if(cal.get(Calendar.HOUR) * 60 + cal.get(Calendar.MINUTE) + 120 <= cal2.get(Calendar.HOUR) * 60 + cal2.get(Calendar.MINUTE)){
+                            reservation.setCar(car);
+                            car.setReservation(reservation);
+                            car.setCustomer(car.getReservation().getCustomer());
+                            TransitDriverDispatch dispatch = new TransitDriverDispatch(new Date(), reservation.getPickupOutlet(), car);
+                            transitDriverDispatchSessionBean.createDispatch(dispatch, reservation.getPickupOutlet().getOutletId(), car.getCarId());
+                            break;
+                        }
+                    }
+                }    
                 
             }
         }
