@@ -34,8 +34,10 @@ public class RentalRates implements Serializable {
     private String name;
     @Column(nullable = false, length = 10)
     private String validityPeriod;
-    @Column(nullable = false, length = 8)
+    @Column(precision = 5, scale = 2)
     private BigDecimal ratePerDay;
+    @Column
+    private Boolean disabled;
     
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -155,6 +157,20 @@ public class RentalRates implements Serializable {
      */
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    /**
+     * @return the disabled
+     */
+    public Boolean getDisabled() {
+        return disabled;
+    }
+
+    /**
+     * @param disabled the disabled to set
+     */
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
     }
     
 }

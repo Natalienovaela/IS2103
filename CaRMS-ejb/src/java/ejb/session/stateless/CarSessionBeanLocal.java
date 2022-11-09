@@ -5,17 +5,13 @@
  */
 package ejb.session.stateless;
 
-import entity.Model;
 import javax.ejb.Local;
-import util.exception.ModelNotExistException;
 
 /**
  *
- * @author Natalienovaela
+ * @author PERSONAL
  */
 @Local
-public interface ModelSessionBeanLocal {
-
-    public Model retrieveModelbyModelandMake(String model, String make) throws ModelNotExistException;
+public interface CarSessionBeanLocal {
     
 }

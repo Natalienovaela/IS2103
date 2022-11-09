@@ -8,7 +8,9 @@ package ejb.session.stateful;
 import entity.Reservation;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.CarNotExistException;
 import util.exception.ModelNotExistException;
+import util.exception.RentalRatesNotExistException;
 
 /**
  *
@@ -18,5 +20,9 @@ import util.exception.ModelNotExistException;
 public interface ReservationSessionBeanLocal {
 
     public List<Reservation> retrieveReservationByModelId(Long modelId) throws ModelNotExistException;
+
+    public List<Reservation> retrieveReservationByRentalRateId(Long rentalRateId) throws RentalRatesNotExistException;
+
+    public List<Reservation> retrieveReservationByCarId(Long carId) throws CarNotExistException;
     
 }

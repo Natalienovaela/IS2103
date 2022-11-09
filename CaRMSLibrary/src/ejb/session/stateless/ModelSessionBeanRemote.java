@@ -31,4 +31,5 @@ public interface ModelSessionBeanRemote {
 
     public void deleteModel(Long modelId) throws ModelNotExistException, DeleteModelException;
     
+    public Model retrieveModelbyModelandMake(String model, String make) throws ModelNotExistException;
 }

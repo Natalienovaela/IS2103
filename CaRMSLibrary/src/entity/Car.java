@@ -26,7 +26,7 @@ public class Car implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long carId;
     @Column(length = 7, unique = true)
     private String licensePlateNumber;
@@ -51,6 +51,10 @@ public class Car implements Serializable {
     
     @OneToOne(optional = false)
     private Reservation reservation;
+
+    public Car(String licensePlateNumber, String make, String model, String outlet) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     public Long getCarId() {
         return carId;
@@ -139,6 +143,94 @@ public class Car implements Serializable {
      */
     public void setStatus(CarStatus status) {
         this.status = status;
+    }
+
+    /**
+     * @return the model
+     */
+    public Model getModel() {
+        return model;
+    }
+
+    /**
+     * @param model the model to set
+     */
+    public void setModel(Model model) {
+        this.model = model;
+    }
+
+    public void setStatus(CarAvailabilityStatus carAvailabilityStatus) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * @return the availStatus
+     */
+    public CarAvailabilityStatus getAvailStatus() {
+        return availStatus;
+    }
+
+    /**
+     * @param availStatus the availStatus to set
+     */
+    public void setAvailStatus(CarAvailabilityStatus availStatus) {
+        this.availStatus = availStatus;
+    }
+
+    /**
+     * @return the transit
+     */
+    public TransitDriverDispatch getTransit() {
+        return transit;
+    }
+
+    /**
+     * @param transit the transit to set
+     */
+    public void setTransit(TransitDriverDispatch transit) {
+        this.transit = transit;
+    }
+
+    /**
+     * @return the currOutlet
+     */
+    public Outlet getCurrOutlet() {
+        return currOutlet;
+    }
+
+    /**
+     * @param currOutlet the currOutlet to set
+     */
+    public void setCurrOutlet(Outlet currOutlet) {
+        this.currOutlet = currOutlet;
+    }
+
+    /**
+     * @return the customer
+     */
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    /**
+     * @param customer the customer to set
+     */
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    /**
+     * @return the reservation
+     */
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    /**
+     * @param reservation the reservation to set
+     */
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
     }
     
 }
