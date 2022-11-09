@@ -5,12 +5,15 @@
  */
 package carmsmanagementclient;
 import ejb.session.stateless.CategorySessionBeanRemote;
+import ejb.session.stateless.EjbTimerSessionBeanRemote;
 import ejb.session.stateless.ModelSessionBeanRemote;
 import ejb.session.stateless.TransitDriverDispatchSessionBeanRemote;
 import entity.Model;
 import entity.Category;
 import entity.Employee;
 import entity.TransitDriverDispatch;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -24,6 +27,12 @@ import util.exception.InputDataValidationException;
 import util.exception.MakeOrModelExistException;
 import util.exception.ModelNotExistException;
 import util.exception.UnknownPersistenceException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import util.exception.EmployeeNotExistException;
+import util.exception.TransitDriverDispatchNotExistException;
 
 /**
  *
@@ -34,15 +43,17 @@ public class OperationsManagementModule {
     private ModelSessionBeanRemote modelSessionBeanRemote;
     private CategorySessionBeanRemote categorySessionBeanRemote;
     private TransitDriverDispatchSessionBeanRemote transitDriverDispatchSessionBeanRemote;
+    private EjbTimerSessionBeanRemote ejbTimerSessionBeanRemote;
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
     private final Employee employee;
     
-    public OperationsManagementModule(Employee employee, ModelSessionBeanRemote modelSessionBeanRemote, CategorySessionBeanRemote categorySessionBeanRemote, TransitDriverDispatchSessionBeanRemote transitDriverDispatchSessionBeanRemote) {
+    public OperationsManagementModule(Employee employee, ModelSessionBeanRemote modelSessionBeanRemote, CategorySessionBeanRemote categorySessionBeanRemote, TransitDriverDispatchSessionBeanRemote transitDriverDispatchSessionBeanRemote, EjbTimerSessionBeanRemote ejbTimerSessionBeanRemote) {
         this.employee = employee;
         this.modelSessionBeanRemote = modelSessionBeanRemote;
         this.categorySessionBeanRemote = categorySessionBeanRemote;
         this.transitDriverDispatchSessionBeanRemote = transitDriverDispatchSessionBeanRemote;
+        this.ejbTimerSessionBeanRemote = ejbTimerSessionBeanRemote;
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
@@ -63,7 +74,8 @@ public class OperationsManagementModule {
             System.out.println("8. View Transit Driver Dispatch Records for Current Day Reservations");
             System.out.println("9. Assign Transit Driver");
             System.out.println("10. Update Transit As Completed");
-            System.out.println("11. Back");
+            System.out.println("11. Allocate Cars Manually");
+            System.out.println("12. Back");
             
             number = sc.nextInt();
             
@@ -73,10 +85,10 @@ public class OperationsManagementModule {
             } else if(number <= 7 && number >= 5) {
                 System.out.println();
                 doCar(number);
-            } else if(number <= 10 && number >= 8) {
+            } else if(number <= 11 && number >= 8) {
                 doTransit(number);
             }
-            else if(number == 11) {
+            else if(number == 12) {
                 break;
             }
             else{
@@ -198,12 +210,57 @@ public class OperationsManagementModule {
     }
     
     public void doTransit(Integer number) {
+        Scanner sc = new Scanner(System.in);
         if(number == 8) {
             List<TransitDriverDispatch> transits = transitDriverDispatchSessionBeanRemote.retrieveAllDispatch(employee.getOutlet().getOutletId());
-             
+            System.out.println();
+            
             for(TransitDriverDispatch transit : transits) {
                 System.out.println("Transit ID " + transit.getTransitId() + "with car license plate number of " + transit.getCar().getLicensePlateNumber());
             }
+        }
+        else if(number == 9){
+            System.out.println("Enter transit driver dispatch record ID: ");
+            Long transitId = sc.nextLong();
+            try{
+                Long employeeId = employee.getOutlet().getEmployees().get(0).getEmployeeId();
+                transitDriverDispatchSessionBeanRemote.assignTransitDriver(transitId, employeeId);
+                System.out.println("Employee with the ID " + employeeId + " is assigned as transit driver for the transit ID " + transitId + "\n");
+            }
+            catch(EmployeeNotExistException ex) {
+                System.out.println(ex.getMessage());
+            }
+            catch(TransitDriverDispatchNotExistException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+        else if(number == 10) {
+            System.out.println("Enter transit driver dispatch record ID: ");
+            Long transitId = sc.nextLong();
+            try {
+                transitDriverDispatchSessionBeanRemote.updateTransitAsCompleted(transitId);
+            } catch(TransitDriverDispatchNotExistException ex) {
+                System.out.println(ex.getMessage());
+            }
+            
+        }
+        else if(number == 11) {
+            Date date;
+            while(true) {
+                System.out.println("Enter Date: (dd/mm/yyyy format)");
+                String currentDate = sc.nextLine();
+                SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy");
+                try { 
+                    date = format.parse(currentDate);
+                    break;
+                } catch (ParseException ex) {
+                    System.out.println("Date is not according to the right format");
+                }
+            }
+            
+            ejbTimerSessionBeanRemote.allocateCars(date);
+            System.out.println();
+            System.out.println("Today's allocation is successfully done!");    
         }
 
     }
