@@ -8,9 +8,11 @@ package ejb.session.stateless;
 import entity.Car;
 import entity.Outlet;
 import entity.TransitDriverDispatch;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -25,6 +27,7 @@ public class TransitDriverDispatchSessionBean implements TransitDriverDispatchSe
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
     
+    @Override
     public void createDispatch(TransitDriverDispatch dispatch, Long outletId, Long carId) {
         em.persist(dispatch);
         Outlet outlet = em.find(Outlet.class, outletId);
@@ -33,5 +36,16 @@ public class TransitDriverDispatchSessionBean implements TransitDriverDispatchSe
         Car car = em.find(Car.class, carId);
         dispatch.setTransitId(carId);
         car.setTransit(dispatch);
+    }
+    
+    @Override
+    public List<TransitDriverDispatch> retrieveAllDispatch(Long outletId) {
+        Outlet outlet = em.find(Outlet.class, outletId);
+        Query query = em.createQuery("SELECT t FROM TransitDriverDispatch t WHERE t.outlet = :=outlet");
+        query.setParameter("outlet", outlet);
+        
+        List<TransitDriverDispatch> transit = query.getResultList();
+        
+        return transit;
     }
 }

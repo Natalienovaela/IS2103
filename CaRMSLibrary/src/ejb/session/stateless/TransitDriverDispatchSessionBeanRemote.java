@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.TransitDriverDispatch;
+import java.util.List;
 import javax.ejb.Remote;
 
 /**
@@ -16,4 +17,6 @@ import javax.ejb.Remote;
 public interface TransitDriverDispatchSessionBeanRemote {
     
     public void createDispatch(TransitDriverDispatch dispatch, Long outletId, Long carId);
+
+    public List<TransitDriverDispatch> retrieveAllDispatch(Long outletId);
 }

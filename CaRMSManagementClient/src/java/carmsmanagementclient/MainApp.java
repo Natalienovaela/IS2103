@@ -8,8 +8,14 @@ package carmsmanagementclient;
 import ejb.session.stateless.CategorySessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.ModelSessionBeanRemote;
+import ejb.session.stateless.TransitDriverDispatchSessionBeanRemote;
 import entity.Employee;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import util.exception.CategoryNotExistException;
 import util.exception.EmployeeNotExistException;
 
@@ -21,15 +27,17 @@ public class MainApp {
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private ModelSessionBeanRemote modelSessionBeanRemote;
     private CategorySessionBeanRemote categorySessionBeanRemote;
+    private TransitDriverDispatchSessionBeanRemote transitDriverDispatchSessionBeanRemote;
     
     private Employee employee;
     
     private OperationsManagementModule operationsManagement;
 
-    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, ModelSessionBeanRemote modelSessionBeanRemote, CategorySessionBeanRemote categorySessionBeanRemote) {
+    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, ModelSessionBeanRemote modelSessionBeanRemote, CategorySessionBeanRemote categorySessionBeanRemote, TransitDriverDispatchSessionBeanRemote transitDriverDispatchSessionBeanRemote) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.modelSessionBeanRemote = modelSessionBeanRemote;
         this.categorySessionBeanRemote = categorySessionBeanRemote;
+        this.transitDriverDispatchSessionBeanRemote = transitDriverDispatchSessionBeanRemote;
     }
     
     
@@ -47,7 +55,7 @@ public class MainApp {
                     
                 } else if(employee.getRole().name().equals("OPERATIONSMANAGER")) {
                     System.out.println("You are login as Operations Manager\n");
-                    operationsManagement = new OperationsManagementModule(modelSessionBeanRemote, categorySessionBeanRemote);
+                    operationsManagement = new OperationsManagementModule(employee, modelSessionBeanRemote, categorySessionBeanRemote, transitDriverDispatchSessionBeanRemote);
                     operationsManagement.menuOperationsManagement();
                     
                 } else if(employee.getRole().name().equals("CUSTOMERSALESEXECUTIVE")) {
@@ -88,5 +96,15 @@ public class MainApp {
     
     public void doLogout() {
         employee = null;
+    }
+
+    private TransitDriverDispatchSessionBeanRemote lookupTransitDriverDispatchSessionBeanRemote() {
+        try {
+            Context c = new InitialContext();
+            return (TransitDriverDispatchSessionBeanRemote) c.lookup("java:comp/env/TransitDriverDispatchSessionBean");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
     }
 }

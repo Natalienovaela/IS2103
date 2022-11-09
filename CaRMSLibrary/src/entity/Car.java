@@ -6,6 +6,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,6 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import util.enumeration.CarStatus;
 import util.enumeration.CarAvailabilityStatus;
@@ -50,12 +53,12 @@ public class Car implements Serializable {
     @ManyToOne
     private Outlet currOutlet;
     
-    @ManyToOne
-    private Customer customer;
-    
-    @OneToOne(optional = false)
-    private Reservation reservation;
-    
+    @OneToMany(mappedBy="car")
+    private List<Reservation> reservations;
+
+    public Car() {
+        this.reservations = new ArrayList<>();
+    }
 
     public Long getCarId() {
         return carId;
@@ -178,20 +181,13 @@ public class Car implements Serializable {
         this.currOutlet = currOutlet;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public List<Reservation> getReservations() {
+        return reservations;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
-
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
-    }
+    
     
 }

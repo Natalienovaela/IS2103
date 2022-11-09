@@ -6,14 +6,13 @@
 package carmsmanagementclient;
 import ejb.session.stateless.CategorySessionBeanRemote;
 import ejb.session.stateless.ModelSessionBeanRemote;
+import ejb.session.stateless.TransitDriverDispatchSessionBeanRemote;
 import entity.Model;
 import entity.Category;
-import java.util.Collections;
-import java.util.Comparator;
+import entity.Employee;
+import entity.TransitDriverDispatch;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.validation.ConstraintViolation;
 import java.util.List;
 import javax.validation.Validation;
@@ -34,12 +33,16 @@ import util.exception.UnknownPersistenceException;
 public class OperationsManagementModule {
     private ModelSessionBeanRemote modelSessionBeanRemote;
     private CategorySessionBeanRemote categorySessionBeanRemote;
+    private TransitDriverDispatchSessionBeanRemote transitDriverDispatchSessionBeanRemote;
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
+    private final Employee employee;
     
-    public OperationsManagementModule(ModelSessionBeanRemote modelSessionBeanRemote, CategorySessionBeanRemote categorySessionBeanRemote) {
+    public OperationsManagementModule(Employee employee, ModelSessionBeanRemote modelSessionBeanRemote, CategorySessionBeanRemote categorySessionBeanRemote, TransitDriverDispatchSessionBeanRemote transitDriverDispatchSessionBeanRemote) {
+        this.employee = employee;
         this.modelSessionBeanRemote = modelSessionBeanRemote;
         this.categorySessionBeanRemote = categorySessionBeanRemote;
+        this.transitDriverDispatchSessionBeanRemote = transitDriverDispatchSessionBeanRemote;
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
@@ -70,6 +73,8 @@ public class OperationsManagementModule {
             } else if(number <= 7 && number >= 5) {
                 System.out.println();
                 doCar(number);
+            } else if(number <= 10 && number >= 8) {
+                doTransit(number);
             }
             else if(number == 11) {
                 break;
@@ -188,7 +193,18 @@ public class OperationsManagementModule {
         }
     }
     
-    public void doCar(Integer umber) {
+    public void doCar(Integer number) {
         
+    }
+    
+    public void doTransit(Integer number) {
+        if(number == 8) {
+            List<TransitDriverDispatch> transits = transitDriverDispatchSessionBeanRemote.retrieveAllDispatch(employee.getOutlet().getOutletId());
+             
+            for(TransitDriverDispatch transit : transits) {
+                System.out.println("Transit ID " + transit.getTransitId() + "with car license plate number of " + transit.getCar().getLicensePlateNumber());
+            }
+        }
+
     }
 }

@@ -8,6 +8,7 @@ package carmsmanagementclient;
 import ejb.session.stateless.CategorySessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
 import ejb.session.stateless.ModelSessionBeanRemote;
+import ejb.session.stateless.TransitDriverDispatchSessionBeanRemote;
 import javax.ejb.EJB;
 import util.exception.EmployeeNotExistException;
 
@@ -17,6 +18,9 @@ import util.exception.EmployeeNotExistException;
  * @author Natalienovaela
  */
 public class Main {
+
+    @EJB
+    private static TransitDriverDispatchSessionBeanRemote transitDriverDispatchSessionBeanRemote;
 
     @EJB
     private static CategorySessionBeanRemote categorySessionBeanRemote;
@@ -34,7 +38,7 @@ public class Main {
      */
     public static void main(String[] args) throws EmployeeNotExistException {
         // TODO code application logic here
-        MainApp mainApp = new MainApp(employeeSessionBeanRemote, modelSessionBeanRemote, categorySessionBeanRemote);
+        MainApp mainApp = new MainApp(employeeSessionBeanRemote, modelSessionBeanRemote, categorySessionBeanRemote, transitDriverDispatchSessionBeanRemote);
         mainApp.run();
     }
     

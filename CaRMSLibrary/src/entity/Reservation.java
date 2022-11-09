@@ -64,7 +64,7 @@ public class Reservation implements Serializable {
     private Partner partner;
     @ManyToOne(fetch = FetchType.LAZY)
     private Model model;
-    @OneToOne(mappedBy = "reservation", fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Car car;
             
     public Reservation() {
