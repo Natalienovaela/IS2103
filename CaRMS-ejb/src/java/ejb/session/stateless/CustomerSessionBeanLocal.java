@@ -5,16 +5,13 @@
  */
 package ejb.session.stateless;
 
-import entity.Category;
 import javax.ejb.Local;
-import util.exception.CategoryNotExistException;
 
 /**
  *
- * @author Natalienovaela
+ * @author PERSONAL
  */
 @Local
-public interface CategorySessionBeanLocal {
-    public Category retrieveCategoryByName(String name) throws CategoryNotExistException;
+public interface CustomerSessionBeanLocal {
     
 }

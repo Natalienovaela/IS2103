@@ -9,6 +9,7 @@ import entity.Reservation;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
+import util.exception.ReservationNotExistException;
 
 /**
  *
@@ -18,5 +19,7 @@ import javax.ejb.Remote;
 public interface ReservationSessionBeanRemote {
 
     public List<Reservation> retrieveCurrentDateReservation(Date date);
+
+    public Reservation retrieveReservationById(Long reservationId) throws ReservationNotExistException;
     
 }

@@ -30,9 +30,9 @@ public class Customer implements Serializable {
     private String email;
     @Column(nullable = false, length = 16)
     private String password;
-    @Column(nullable = false, length = 8)
+    @Column(nullable = false, length = 8, unique = true)
     private String phoneNumber;
-    @Column(nullable = false, length = 9)
+    @Column(nullable = false, length = 9, unique = true)
     private String passportNumber;
     
     @OneToMany(mappedBy = "customer")

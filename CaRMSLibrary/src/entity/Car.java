@@ -6,6 +6,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,6 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import util.enumeration.CarStatus;
 import util.enumeration.CarAvailabilityStatus;
@@ -50,14 +53,31 @@ public class Car implements Serializable {
     @ManyToOne
     private Outlet currOutlet;
     
-    @ManyToOne
-    private Customer customer;
-    
-    @OneToOne(optional = false)
-    private Reservation reservation;
+    @OneToMany
+    private List<Reservation> reservations;
 
-    public Car(String licensePlateNumber, String make, String model, String outlet) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Car() {
+        reservations = new ArrayList();
+    }
+    
+    public Car(String licensePlateNumber, Model model, Outlet currOutlet) {
+        this.licensePlateNumber = licensePlateNumber;
+        this.model = model;
+        this.currOutlet = currOutlet;
+        
+        
+    }
+
+    public Car(String licensePlateNumber, String colour, Boolean disabled, CarStatus status, CarAvailabilityStatus availStatus, TransitDriverDispatch transit, Model model, Outlet currOutlet) {
+        this.licensePlateNumber = licensePlateNumber;
+        this.colour = colour;
+        this.disabled = disabled;
+        this.status = status;
+        this.availStatus = availStatus;
+        this.transit = transit;
+        this.model = model;
+        this.currOutlet = currOutlet;
+        
     }
 
     public Long getCarId() {
@@ -181,20 +201,18 @@ public class Car implements Serializable {
         this.currOutlet = currOutlet;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    /**
+     * @return the reservations
+     */
+    public List<Reservation> getReservations() {
+        return reservations;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
+    /**
+     * @param reservations the reservations to set
+     */
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
     
 }

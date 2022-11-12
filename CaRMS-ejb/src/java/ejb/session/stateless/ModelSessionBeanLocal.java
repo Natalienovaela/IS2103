@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Car;
+import entity.Model;
 import entity.Outlet;
 import java.util.List;
 import javax.ejb.Local;
@@ -16,6 +17,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface ModelSessionBeanLocal {
+    public List<Model> retrieveAllModel();
 
     
 }

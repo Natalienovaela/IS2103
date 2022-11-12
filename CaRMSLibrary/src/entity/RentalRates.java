@@ -57,6 +57,16 @@ public class RentalRates implements Serializable {
         reservations = new ArrayList<>();
     }
 
+    public RentalRates(String name, String rentalRateType,  Category category,  BigDecimal ratePerDay, Date StartDateTime, Date EndDateTime) {
+        this.name = name;
+        this.rentalRateType = rentalRateType;
+        this.StartDateTime = StartDateTime;
+        this.EndDateTime = EndDateTime;
+        this.ratePerDay = ratePerDay;
+        this.category = category;
+    }
+
+    
     public RentalRates(String name, String rentalRateType, Date StartDateTime, Date EndDateTime, BigDecimal ratePerDay, Boolean disabled) {
         this.name = name;
         this.rentalRateType = rentalRateType;
