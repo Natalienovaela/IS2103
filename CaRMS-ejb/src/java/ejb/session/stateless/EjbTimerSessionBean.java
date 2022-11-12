@@ -50,8 +50,9 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
             Boolean reserved = false;
             
             if(reservation.getModel() != null) {
-                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet");
+                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet AND c.disabled = :false");
                 query.setParameter("outlet", reservation.getPickupOutlet());
+                query.setParameter("false", Boolean.FALSE);
                 List<Car> carsWithNoReservation = query.getResultList();
                     
                 for(Car car: carsWithNoReservation) {
@@ -62,8 +63,9 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 } 
                 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet");
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithReservation = query.getResultList();
 
                     for(Car car: carsWithReservation) {
@@ -83,8 +85,9 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }
                 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet");
+                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithNoReservationNotTheSameOutlet = query.getResultList();
                     
                     for(Car car: carsWithNoReservationNotTheSameOutlet) {
@@ -99,8 +102,9 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }
 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet");
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithReservationNotTheSameOutlet = query.getResultList();
 
                     for(Car car: carsWithReservationNotTheSameOutlet) {
@@ -121,9 +125,10 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }    
             }
             else {
-                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet AND c.model = :model");
+                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet AND c.model = :model AND c.disabled = :false");
                 query.setParameter("outlet", reservation.getPickupOutlet());
                 query.setParameter("model", reservation.getModel());
+                query.setParameter("false", Boolean.FALSE);
                 List<Car> carsWithNoReservation = query.getResultList();
                     
                 for(Car car: carsWithNoReservation) {
@@ -134,9 +139,10 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 } 
                 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet AND c.model = :model");
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet AND c.model = :model AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
                     query.setParameter("model", reservation.getModel());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithReservation = query.getResultList();
 
                     for(Car car: carsWithReservation) {
@@ -156,9 +162,10 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }
                 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet AND c.model :model");
+                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet AND c.model :model AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
                     query.setParameter("model", reservation.getModel());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithNoReservationNotTheSameOutlet = query.getResultList();
                     
                     for(Car car: carsWithNoReservationNotTheSameOutlet) {
@@ -173,9 +180,10 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }
 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet AND c.model = :model");
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet AND c.model = :model AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
                     query.setParameter("model", reservation.getModel());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithReservationNotTheSameOutlet = query.getResultList();
 
                     for(Car car: carsWithReservationNotTheSameOutlet) {
@@ -208,8 +216,9 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
             Boolean reserved = false;
             
             if(reservation.getModel() != null) {
-                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet");
+                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet AND c.disabled = :false");
                 query.setParameter("outlet", reservation.getPickupOutlet());
+                query.setParameter("false", Boolean.FALSE);
                 List<Car> carsWithNoReservation = query.getResultList();
                     
                 for(Car car: carsWithNoReservation) {
@@ -220,8 +229,9 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 } 
                 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet");
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithReservation = query.getResultList();
 
                     for(Car car: carsWithReservation) {
@@ -241,8 +251,9 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }
                 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet");
+                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithNoReservationNotTheSameOutlet = query.getResultList();
                     
                     for(Car car: carsWithNoReservationNotTheSameOutlet) {
@@ -257,8 +268,9 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }
 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet");
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithReservationNotTheSameOutlet = query.getResultList();
 
                     for(Car car: carsWithReservationNotTheSameOutlet) {
@@ -279,9 +291,10 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }    
             }
             else {
-                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet AND c.model = :model");
+                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet AND c.model = :model AND c.disabled = :false");
                 query.setParameter("outlet", reservation.getPickupOutlet());
                 query.setParameter("model", reservation.getModel());
+                query.setParameter("false", Boolean.FALSE);
                 List<Car> carsWithNoReservation = query.getResultList();
                     
                 for(Car car: carsWithNoReservation) {
@@ -292,9 +305,10 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 } 
                 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet AND c.model = :model");
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet AND c.model = :model AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
                     query.setParameter("model", reservation.getModel());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithReservation = query.getResultList();
 
                     for(Car car: carsWithReservation) {
@@ -314,9 +328,10 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }
                 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet AND c.model :model");
+                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet AND c.model :model AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
                     query.setParameter("model", reservation.getModel());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithNoReservationNotTheSameOutlet = query.getResultList();
                     
                     for(Car car: carsWithNoReservationNotTheSameOutlet) {
@@ -331,9 +346,10 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }
 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet AND c.model = :model");
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet AND c.model = :model AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
                     query.setParameter("model", reservation.getModel());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithReservationNotTheSameOutlet = query.getResultList();
 
                     for(Car car: carsWithReservationNotTheSameOutlet) {
