@@ -232,7 +232,9 @@ public class OperationsManagementModule {
                 String make = sc.nextLine();
                 System.out.println("Enter model: ");
                 String model = sc.nextLine();
-                CarAvailabilityStatus status = checkStatus();
+                System.out.println("Enter status: ");
+                String availStatus = sc.nextLine();
+                CarAvailabilityStatus status = checkStatus(availStatus);
                 System.out.println("Enter outlet: ");
                 String outlet = sc.nextLine();
 
@@ -265,7 +267,7 @@ public class OperationsManagementModule {
         } else if(number == 6) {
             List<Car> cars = carSessionBeanRemote.retrieveAllCar();
             for(Car car: cars) {
-                System.out.println("Car ID: " + car.getCarId() + "Model: " + car.getModel().getModel() + " Make: " + car.getModel().getMake() + "Status: " + car.getStatus() + "License Plate NUmber: " + car.getLicensePlateNumber());
+                System.out.println("Car ID: " + car.getCarId() + "Model: " + car.getModel().getModel() + " Make: " + car.getModel().getMake() + "Status: " + car.getStatus() + "License Plate Number: " + car.getLicensePlateNumber());
             }
             
         } else if(number == 7) {
@@ -274,7 +276,7 @@ public class OperationsManagementModule {
            sc.nextLine();
            Car car = carSessionBeanRemote.retrieveCarById(carId);
            while(true) {
-           System.out.println("Car ID : " + car.getCarId() + "model" + car.getModel());
+           System.out.println("Model: " + car.getModel().getModel() + " Make: " + car.getModel().getMake() + "Status: " + car.getStatus() + "License Plate Number: " + car.getLicensePlateNumber());
            System.out.println("1. Update Car");
            System.out.println("2. Delete Car");
            System.out.println("3.Back");
@@ -282,7 +284,21 @@ public class OperationsManagementModule {
            num = sc.nextInt();
            
            if(num == 1) {
-                System.out.println("Enter new  license plate nember: (blank if no change)");
+               updateCar(car);
+           } else if(num == 2) {
+               deleteCar(car.getCarId());
+           } else if(num == 3) {
+               break;
+           } else {
+               System.out.println("input invalid! please try again");
+           }
+           }
+        }
+    }
+           
+           public void updateCar(Car car) {
+                Scanner sc = new Scanner(System.in);
+                System.out.println("Enter new  license plate number: (blank if no change)");
                 String input = sc.nextLine().trim();
                 
                 if(input.length() > 0){
@@ -303,19 +319,14 @@ public class OperationsManagementModule {
                     car.getModel().setModel(input);
                 }
                 
-                 System.out.println("Enter Status: (blank if no change)");
-                input = sc.nextLine().trim();
-                
-                if(input.length() > 0){
-                    if(input.equals("Available")) {
-                        car.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
-                    } else if(input.equals("Repair")) {
-                        car.setAvailStatus(CarAvailabilityStatus.REPAIR);
-                    } else {
-                        System.out.println("Invalid option for Status, please fill again!\n");
+                    System.out.println("Enter Status: (blank if no change)");
+                    input = sc.nextLine().trim();
+                    
+                    if(input.length() > 0){
+                        CarAvailabilityStatus status = checkStatus(input);
+                        car.setAvailStatus(status);
                     }
-                }
-                
+                 
                 System.out.println("Enter new outlet: (blank if no change)");
                 input = sc.nextLine().trim();
                 
@@ -333,7 +344,10 @@ public class OperationsManagementModule {
                             System.out.println(ex.getMessage()+ "\n");
                         }
                     }
-        } else if(number == 2) {
+           }
+           
+           
+        public void deleteCar(long carId) {
             try{
                 carSessionBeanRemote.deleteCar(carId);
                 System.out.println("Car is deleted successfully!\n");
@@ -344,19 +358,10 @@ public class OperationsManagementModule {
             catch(CarNotExistException ex) {
                 System.out.println(ex.getMessage() + "\n");
             }
-        } else if(number == 3) {
-            break;
-        } else {
-            System.out.println("Invalid option! Please try again!\n");
         }
-    }
-        }
-    }
-    public CarAvailabilityStatus checkStatus() {
+ 
+    public CarAvailabilityStatus checkStatus(String status) {
         while(true) {
-            Scanner sc = new Scanner(System.in);
-            System.out.println("Enter Status: ");
-            String status = sc.nextLine();
             if(status.equals("Available"))
             {
                  return CarAvailabilityStatus.AVAILABLE;
@@ -368,6 +373,7 @@ public class OperationsManagementModule {
             else
             {
                 System.out.println("Invalid option for Status, please fill again!\n");
+                System.out.println("Enter status: ");
             }    
     }
 
