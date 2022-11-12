@@ -107,8 +107,10 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         }
     }
     
-    public List<Reservation> retrieveAllReservation() {
-        Query query = em.createQuery("SELECT r FROM Reservation r");
+    @Override
+    public List<Reservation> retrieveMyReservations(long customerId) {
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.customer.customerId :customer");
+        query.setParameter("customer", customerId);
         return query.getResultList();
     }
     
@@ -117,7 +119,18 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
     //}
     
-    public void CancelReservation(long reservationId) {
+    public void CancelReservation(long reservationId) throws ReservationNotExistException {
+        Reservation cancelReservation = retrieveReservationById(reservationId);
+        if(cancelReservation == null) {
+            throw new ReservationNotExistException("Reservation with Reservation ID " + reservationId + " does not exist");
+        }
+        
+        
+        
+    }
+    
+    public void CreateReservation(Reservation reservation) {
+        
         
     }
 }

@@ -5,12 +5,17 @@
  */
 package carmsreservationclient;
 
+import ejb.session.stateful.ReservationSessionBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import entity.Customer;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -25,15 +30,19 @@ import util.exception.UnknownPersistenceException;
  * @author PERSONAL
  */
 public class MainApp {
+    private ReservationSessionBeanRemote reservationSessionBeanRemote;
     private CustomerSessionBeanRemote customerSessionBeanRemote;
     
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
     private Customer customer;
+    private ReservationClientModule reservationClient;
     
-    public MainApp() {
+    public MainApp(CustomerSessionBeanRemote customerSessionBeanRemote,ReservationSessionBeanRemote reservationSessionBeanRemote) {
     validatorFactory = Validation.buildDefaultValidatorFactory();
     validator = validatorFactory.getValidator();
+    this.reservationSessionBeanRemote = reservationSessionBeanRemote;
+    this.customerSessionBeanRemote = customerSessionBeanRemote;
     }
     
     
@@ -43,24 +52,31 @@ public class MainApp {
         while(true) {
             System.out.println("Welcome to Car Rental Reservation System!");
 
-            if( customer == null) {
+            if(customer == null) {
                 while(true) {
-                System.out.println("1. Login /n");
-                System.out.println("2. Sign Up/n");
+                System.out.println("1. Login");
+                System.out.println("2. Sign Up");
+                System.out.println("3. Search Car");
                 Integer number = sc.nextInt();
                 
                 if(number == 1) {
                     doLogin();
+                    System.out.println();
+                    System.out.println("You are login as a member\n");
+                    reservationClient = new ReservationClientModule(customer, reservationSessionBeanRemote);
+                    reservationClient.menuReservationClient();
                 } else if(number == 2) {
                     doSignUp();
+                        System.out.println();
+                    System.out.println("You are login as a member\n");
+                    reservationClient = new ReservationClientModule(customer, reservationSessionBeanRemote);
+                    reservationClient.menuReservationClient();
+                }else if (number == 3) {
+                    //searchCar();
                 } else {
                     System.out.println("invalid option please try again! /n");
                 }
                 }
-            } else {
-                    System.out.println("You are login as " + customer.getEmail() + "/n");
-                    //reservationClient = new reservationClientModule();
-                    //reservationClient.menuReservationClient();
             }
         }
     }
@@ -115,10 +131,16 @@ public class MainApp {
                 
             }
     }
-       
-                            
-    public void doLogout() {
-        customer = null;
-    }
     
+     /*public List<Car> searchCar() {
+         Scanner sc = new Scanner(System.in); 
+         System.out.println("Enter pick up Date : ");
+         System.out.println("Enter return Date : ");
+         System.out.println("Enter pick up location : ");
+         String pickUpLocation = sc.nextLine();
+         System.out.println("Enter return location : ");
+         String returnLocation = sc.nextLine();
+         
+         
+     }*/
 }

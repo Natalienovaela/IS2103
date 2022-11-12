@@ -12,6 +12,7 @@ import entity.Model;
 import entity.Reservation;
 import static java.lang.Math.random;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
@@ -105,7 +106,6 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
         return query.getResultList();
     }
     
-     @Override
     public List<Car> retrieveAllCarByOutletandDate(String outlet, Date pickupDate) {
         Query query = em.createQuery("SELECT c FROM Car c WHERE (c.reservations IS EMPTY AND c.currOutlet :outlet) OR (c.reservations <= :pickupDate AND c.currOutlet.outletName :outlet)");
         query.setParameter("outlet", outlet);
@@ -170,22 +170,14 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
         }
     } 
     
-    public List<Car> SearchCar(Date pickupDateTime, Date returnDateTime, String pickupOutlet, String returnOutlet) { 
-        List<Car> cars = retrieveAllCarByOutletandDate(pickupOutlet, pickupDateTime); 
-        if(cars != null) {
-        Query query = em.createQuery("SELECT * FROM Car c WHERE c.reservations.pickUpDate >= :retunDate AND c.reservations.returnOutlet :pickUpOutlet");
-        query.setParameter("pickUpDate", pickupDateTime);
-        query.setParameter("returnDate", returnDateTime);
+    public Car SearchCar(Date pickupDateTime, Date returnDateTime, String pickupOutlet, String returnOutlet) {  
+        Query query = em.createQuery("SELECT c FROM Car c WHERE (c.reservations.pickUpDate >= :retunDate AND c.reservations.returnDate >= :pickupDate AND c.reservations.returnOutlet :pickUpOutlet) OR c.reservations IS EMPTY OR (c.reservations.returnDate >= :pickupDate AND c.reservations.returnDate.currentTime() >= :pikcupDate.currentTime())");
+         query.setParameter("returnDate", returnDateTime);
         query.setParameter("pickUpOutlet", pickupOutlet);
-        return query.getResultList();
-        } else if(cars{
-        Query query = em.createQuery("SELECT * FROM Car c WHERE c.reservations IS EMPTY");
-            return query.getResultList();
-            
+        query.setParameter("pickUpDate", pickupDateTime);
+        return (Car)query.getSingleResult();
         }
-        
-    }
-    
+            
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Car>>constraintViolations)
     {
         String msg = "Input data validation error!:";

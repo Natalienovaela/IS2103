@@ -21,5 +21,7 @@ public interface ReservationSessionBeanRemote {
     public List<Reservation> retrieveCurrentDateReservation(Date date);
 
     public Reservation retrieveReservationById(Long reservationId) throws ReservationNotExistException;
+
+    public List<Reservation> retrieveMyReservations(long customerId);
     
 }
