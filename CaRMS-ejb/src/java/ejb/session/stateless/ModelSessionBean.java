@@ -108,7 +108,7 @@ public class ModelSessionBean implements ModelSessionBeanRemote, ModelSessionBea
     
     @Override
     public Model retrieveModelbyMakeandModel(String make, String model) throws ModelNotExistException{
-        Query query = em.createQuery("SELECT m FROM Model m WHERE m.getMake() = :make, m.getModel() = :model");
+        Query query = em.createQuery("SELECT m FROM Model m WHERE m.make = :make AND m.model = :model");
         query.setParameter("make", make);
         query.setParameter("model", model);
         

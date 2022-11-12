@@ -7,9 +7,16 @@ package ejb.session.stateless;
 
 import ejb.session.stateful.ReservationSessionBeanLocal;
 import entity.Car;
+import entity.Category;
 import entity.Model;
 import entity.Reservation;
+import static java.lang.Math.random;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -35,7 +42,15 @@ import util.exception.UnknownPersistenceException;
 public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal {
 
     @EJB
+    private ModelSessionBeanLocal modelSessionBean;
+
+    @EJB
+    private CategorySessionBeanLocal categorySessionBean;
+
+    @EJB
     private ReservationSessionBeanLocal reservationSessionBean;
+    
+    
 
     @PersistenceContext(unitName = "CaRMS-ejbPU")
     private EntityManager em;
@@ -86,7 +101,15 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
     
     @Override
     public List<Car> retrieveAllCar() {
-        Query query = em.createQuery("SELECT c FROM Car m ORDER BY c.model.category.categoryName, c.model.make, c.model.model, c.licensePlateNumber ASC");
+        Query query = em.createQuery("SELECT c FROM Car c ORDER BY c.model.category.categoryName, c.model.make, c.model.model, c.licensePlateNumber ASC");
+        return query.getResultList();
+    }
+    
+     @Override
+    public List<Car> retrieveAllCarByOutletandDate(String outlet, Date pickupDate) {
+        Query query = em.createQuery("SELECT c FROM Car c WHERE (c.reservations IS EMPTY AND c.currOutlet :outlet) OR (c.reservations <= :pickupDate AND c.currOutlet.outletName :outlet)");
+        query.setParameter("outlet", outlet);
+        query.setParameter("pickupDate", pickupDate);
         return query.getResultList();
     }
     
@@ -95,6 +118,7 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
         Car car = em.find(Car.class, carId);
         
         if(car == null) {
+
             throw new CarNotExistException("Car with Car ID " + carId + " does not exist");
         }
         else {
@@ -145,6 +169,22 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
             throw new DeleteCarException("Car ID " + carId + " is in use and cannot be deleted! It will be disabled");
         }
     } 
+    
+    public List<Car> SearchCar(Date pickupDateTime, Date returnDateTime, String pickupOutlet, String returnOutlet) { 
+        List<Car> cars = retrieveAllCarByOutletandDate(pickupOutlet, pickupDateTime); 
+        if(cars != null) {
+        Query query = em.createQuery("SELECT * FROM Car c WHERE c.reservations.pickUpDate >= :retunDate AND c.reservations.returnOutlet :pickUpOutlet");
+        query.setParameter("pickUpDate", pickupDateTime);
+        query.setParameter("returnDate", returnDateTime);
+        query.setParameter("pickUpOutlet", pickupOutlet);
+        return query.getResultList();
+        } else if(cars{
+        Query query = em.createQuery("SELECT * FROM Car c WHERE c.reservations IS EMPTY");
+            return query.getResultList();
+            
+        }
+        
+    }
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Car>>constraintViolations)
     {

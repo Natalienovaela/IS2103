@@ -64,8 +64,6 @@ public class Car implements Serializable {
         this.licensePlateNumber = licensePlateNumber;
         this.model = model;
         this.currOutlet = currOutlet;
-        
-        
     }
 
     public Car(String licensePlateNumber, String colour, Boolean disabled, CarStatus status, CarAvailabilityStatus availStatus, TransitDriverDispatch transit, Model model, Outlet currOutlet) {
@@ -201,9 +199,6 @@ public class Car implements Serializable {
         this.currOutlet = currOutlet;
     }
 
-    /**
-     * @return the reservations
-     */
     public List<Reservation> getReservations() {
         return reservations;
     }

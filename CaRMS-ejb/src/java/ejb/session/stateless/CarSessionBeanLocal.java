@@ -15,7 +15,6 @@ import util.exception.CarNotExistException;
  */
 @Local
 public interface CarSessionBeanLocal {
-
     public Car retrieveCarById(Long carId) throws CarNotExistException;
     
 }

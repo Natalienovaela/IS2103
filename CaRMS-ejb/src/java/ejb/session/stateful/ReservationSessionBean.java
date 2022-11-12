@@ -6,6 +6,7 @@
 package ejb.session.stateful;
 
 import entity.Car;
+import entity.Customer;
 import entity.Model;
 import entity.RentalRates;
 import entity.Reservation;
@@ -20,6 +21,7 @@ import javax.persistence.Query;
 import util.exception.CarNotExistException;
 import util.exception.ModelNotExistException;
 import util.exception.RentalRateNotExistException;
+import util.exception.ReservationNotExistException;
 
 /**
  *
@@ -93,5 +95,29 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             query.setParameter("rentalRate", rentalRate);
             return query.getResultList();
         }
+    }
+    
+     @Override
+    public Reservation retrieveReservationById(Long reservationId) throws ReservationNotExistException {
+        Reservation reservation = em.find(Reservation.class, reservationId);
+        if(reservation == null) {
+            throw new ReservationNotExistException("Reservation with Reservation ID " + reservationId + " does not exist");
+        } else {
+            return reservation;
+        }
+    }
+    
+    public List<Reservation> retrieveAllReservation() {
+        Query query = em.createQuery("SELECT r FROM Reservation r");
+        return query.getResultList();
+    }
+    
+    
+    //public Reservation reserveCar(Car car, Customer customer) {
+        
+    //}
+    
+    public void CancelReservation(long reservationId) {
+        
     }
 }
