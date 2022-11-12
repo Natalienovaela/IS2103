@@ -30,5 +30,9 @@ public interface CarSessionBeanRemote {
     public Car retrieveCarById(Long carId) throws CarNotExistException;
 
     public void updateCar(Car car) throws InputDataValidationException, CarNotExistException;
+
+    public void pickUpCar(Long carId, Long reservationId);
+
+    public void returnCar(Long carId, Long reservationId);
     
 }

@@ -85,6 +85,7 @@ public class TransitDriverDispatchSessionBean implements TransitDriverDispatchSe
             transit.getTransitDriver().setTransit(null);
             transit.getCar().setTransit(null);
             transit.getOutlet().getTransits().remove(transit);
+            em.remove(transit);
         } else {
             throw new TransitDriverDispatchNotExistException("Transit driver dispatch record with the id " + transitId + " does not exist");
         }

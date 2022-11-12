@@ -68,7 +68,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
 
                     for(Car car: carsWithReservation) {
                         Calendar cal = Calendar.getInstance();
-                        cal.setTime(car.getReservations().get(car.getReservations().size() - 1).getReturnDate());
+                        cal.setTime(car.getReservations().get(0).getReturnDate());
 
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
@@ -105,7 +105,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
 
                     for(Car car: carsWithReservationNotTheSameOutlet) {
                         Calendar cal = Calendar.getInstance();
-                        cal.setTime(car.getReservations().get(car.getReservations().size() - 1).getReturnDate());
+                        cal.setTime(car.getReservations().get(0).getReturnDate());
 
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
@@ -226,7 +226,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
 
                     for(Car car: carsWithReservation) {
                         Calendar cal = Calendar.getInstance();
-                        cal.setTime(car.getReservations().get(car.getReservations().size() - 1).getReturnDate());
+                        cal.setTime(car.getReservations().get(0).getReturnDate());
 
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
@@ -263,7 +263,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
 
                     for(Car car: carsWithReservationNotTheSameOutlet) {
                         Calendar cal = Calendar.getInstance();
-                        cal.setTime(car.getReservations().get(car.getReservations().size() - 1).getReturnDate());
+                        cal.setTime(car.getReservations().get(0).getReturnDate());
 
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
@@ -299,7 +299,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
 
                     for(Car car: carsWithReservation) {
                         Calendar cal = Calendar.getInstance();
-                        cal.setTime(car.getReservations().get(car.getReservations().size() - 1).getReturnDate());
+                        cal.setTime(car.getReservations().get(0).getReturnDate());
 
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
@@ -338,7 +338,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
 
                     for(Car car: carsWithReservationNotTheSameOutlet) {
                         Calendar cal = Calendar.getInstance();
-                        cal.setTime(car.getReservations().get(car.getReservations().size() - 1).getReturnDate());
+                        cal.setTime(car.getReservations().get(0).getReturnDate());
 
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());

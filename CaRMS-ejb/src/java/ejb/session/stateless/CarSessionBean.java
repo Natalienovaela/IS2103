@@ -28,6 +28,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.enumeration.CarStatus;
 import util.exception.CarExistException;
 import util.exception.CarNotExistException;
 import util.exception.DeleteCarException;
@@ -105,7 +106,7 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
         return query.getResultList();
     }
     
-     @Override
+    @Override
     public List<Car> retrieveAllCarByOutletandDate(String outlet, Date pickupDate) {
         Query query = em.createQuery("SELECT c FROM Car c WHERE (c.reservations IS EMPTY AND c.currOutlet :outlet) OR (c.reservations <= :pickupDate AND c.currOutlet.outletName :outlet)");
         query.setParameter("outlet", outlet);
@@ -170,7 +171,7 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
         }
     } 
     
-    public List<Car> SearchCar(Date pickupDateTime, Date returnDateTime, String pickupOutlet, String returnOutlet) { 
+    public List<Car> searchCar(Date pickupDateTime, Date returnDateTime, String pickupOutlet, String returnOutlet) { 
         List<Car> cars = retrieveAllCarByOutletandDate(pickupOutlet, pickupDateTime); 
         if(cars != null) {
         Query query = em.createQuery("SELECT * FROM Car c WHERE c.reservations.pickUpDate >= :retunDate AND c.reservations.returnOutlet :pickUpOutlet");
@@ -178,7 +179,8 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
         query.setParameter("returnDate", returnDateTime);
         query.setParameter("pickUpOutlet", pickupOutlet);
         return query.getResultList();
-        } else if(cars{
+        } 
+        else if(cars{
         Query query = em.createQuery("SELECT * FROM Car c WHERE c.reservations IS EMPTY");
             return query.getResultList();
             
@@ -186,6 +188,25 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
         
     }
     
+    @Override
+    public void pickUpCar(Long carId, Long reservationId){
+        Reservation reservation = em.find(Reservation.class, reservationId);
+        Car car = em.find(Car.class, carId);
+        reservation.setPickedUp(Boolean.TRUE);
+        car.setStatus(CarStatus.ONRENTAL);
+        car.setCurrOutlet(null);
+    }
+    
+    public void returnCar(Long carId, Long reservationId) {
+        Reservation reservation = em.find(Reservation.class, reservationId);
+        Car car = em.find(Car.class, carId);
+        reservation.setReturned(Boolean.TRUE);
+        car.setStatus(CarStatus.INOUTLET);
+        car.setCurrOutlet(reservation.getReturnOutlet());
+        em.remove(reservation);
+    }
+    
+     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Car>>constraintViolations)
     {
         String msg = "Input data validation error!:";

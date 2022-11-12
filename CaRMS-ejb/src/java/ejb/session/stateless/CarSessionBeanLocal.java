@@ -6,6 +6,8 @@
 package ejb.session.stateless;
 
 import entity.Car;
+import java.util.Date;
+import java.util.List;
 import javax.ejb.Local;
 import util.exception.CarNotExistException;
 
@@ -16,5 +18,7 @@ import util.exception.CarNotExistException;
 @Local
 public interface CarSessionBeanLocal {
     public Car retrieveCarById(Long carId) throws CarNotExistException;
+
+    public List<Car> retrieveAllCarByOutletandDate(String outlet, Date pickupDate);
     
 }

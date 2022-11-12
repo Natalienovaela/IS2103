@@ -5,6 +5,7 @@
  */
 package carmsmanagementclient;
 
+import ejb.session.stateful.ReservationSessionBeanRemote;
 import ejb.session.stateless.CarSessionBeanRemote;
 import ejb.session.stateless.CategorySessionBeanRemote;
 import ejb.session.stateless.EjbTimerSessionBeanRemote;
@@ -39,14 +40,15 @@ public class MainApp {
     private RentalRateSessionBeanRemote rentalRateSessionBeanRemote;
     private TransitDriverDispatchSessionBeanRemote transitDriverDispatchSessionBeanRemote;
     private EjbTimerSessionBeanRemote ejbTimerSessionBeanRemote;
+    private ReservationSessionBeanRemote reservationSessionBeanRemote;
     
     private Employee employee;
     
     private OperationsManagementModule operationsManagement;
-    
     private SalesManagementModule salesManagement;
+    private CustomerServiceModule customerService;
 
-    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, ModelSessionBeanRemote modelSessionBeanRemote, CategorySessionBeanRemote categorySessionBeanRemote, CarSessionBeanRemote carSessionBeanRemote, RentalRateSessionBeanRemote rentalRateSessionBeanRemote, OutletSessionBeanRemote outletSessionBeanRemote, TransitDriverDispatchSessionBeanRemote transitDriverDispatchSessionBeanRemote, EjbTimerSessionBeanRemote ejbTimerSessionBeanRemote) {
+    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, ModelSessionBeanRemote modelSessionBeanRemote, CategorySessionBeanRemote categorySessionBeanRemote, CarSessionBeanRemote carSessionBeanRemote, RentalRateSessionBeanRemote rentalRateSessionBeanRemote, OutletSessionBeanRemote outletSessionBeanRemote, TransitDriverDispatchSessionBeanRemote transitDriverDispatchSessionBeanRemote, EjbTimerSessionBeanRemote ejbTimerSessionBeanRemote, ReservationSessionBeanRemote reservationSessionBeanRemote) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.modelSessionBeanRemote = modelSessionBeanRemote;
         this.categorySessionBeanRemote = categorySessionBeanRemote;
@@ -55,6 +57,7 @@ public class MainApp {
         this.outletSessionBeanRemote = outletSessionBeanRemote;
         this.transitDriverDispatchSessionBeanRemote = transitDriverDispatchSessionBeanRemote;
         this.ejbTimerSessionBeanRemote = ejbTimerSessionBeanRemote;
+        this.reservationSessionBeanRemote = reservationSessionBeanRemote;
     }
     
     public void run() throws EmployeeNotExistException, ModelNotExistException, CarNotExistException, RentalRateNotExistException {
@@ -78,7 +81,7 @@ public class MainApp {
                     
                 } else if(employee.getRole().name().equals("CUSTOMERSALESEXECUTIVE")) {
                     System.out.println("You are login as Customer Sales Executive\n");
-                    
+                    customerService = new CustomerServiceModule(employee, reservationSessionBeanRemote, carSessionBeanRemote);
                     
                 } else if(employee.getRole().name().equals("SYSTEMADMINISTRATOR")) {
                     System.out.println("You are login as System Administrator\n");

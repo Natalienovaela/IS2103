@@ -5,6 +5,7 @@
  */
 package carmsmanagementclient;
 
+import ejb.session.stateful.ReservationSessionBeanRemote;
 import ejb.session.stateless.CarSessionBeanRemote;
 import ejb.session.stateless.CategorySessionBeanRemote;
 import ejb.session.stateless.EjbTimerSessionBeanRemote;
@@ -25,6 +26,9 @@ import util.exception.RentalRateNotExistException;
  * @author Natalienovaela
  */
 public class Main {
+
+    @EJB
+    private static ReservationSessionBeanRemote reservationSessionBeanRemote;
 
     @EJB
     private static EjbTimerSessionBeanRemote ejbTimerSessionBeanRemote;
@@ -50,16 +54,12 @@ public class Main {
     @EJB
     private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
     
-    
-    
-    
-    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws EmployeeNotExistException, ModelNotExistException, CarNotExistException, RentalRateNotExistException {
         // TODO code application logic here
-        MainApp mainApp = new MainApp(employeeSessionBeanRemote, modelSessionBeanRemote, categorySessionBeanRemote, carSessionBeanRemote,rentalRateSessionBeanRemote, outletSessionBeanRemote, transitDriverDispatchSessionBeanRemote, ejbTimerSessionBeanRemote);
+        MainApp mainApp = new MainApp(employeeSessionBeanRemote, modelSessionBeanRemote, categorySessionBeanRemote, carSessionBeanRemote,rentalRateSessionBeanRemote, outletSessionBeanRemote, transitDriverDispatchSessionBeanRemote, ejbTimerSessionBeanRemote, reservationSessionBeanRemote);
         mainApp.run();
     }
     

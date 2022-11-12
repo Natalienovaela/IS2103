@@ -31,7 +31,7 @@ public class Car implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long carId;
     @Column(length = 7, unique = true)
     private String licensePlateNumber;
