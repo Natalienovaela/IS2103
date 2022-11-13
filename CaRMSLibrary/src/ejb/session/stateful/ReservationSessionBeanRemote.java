@@ -5,11 +5,19 @@
  */
 package ejb.session.stateful;
 
+import entity.Category;
+import entity.Model;
 import entity.Reservation;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
+import util.exception.CategoryNotExistException;
+import util.exception.InputDataValidationException;
+import util.exception.ModelNotAvailableException;
+import util.exception.ModelNotExistException;
+import util.exception.ReservationExistException;
 import util.exception.ReservationNotExistException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -23,5 +31,7 @@ public interface ReservationSessionBeanRemote {
     public Reservation retrieveReservationById(Long reservationId) throws ReservationNotExistException;
 
     public List<Reservation> retrieveMyReservations(long customerId);
+
+    public void createReservation(Reservation reservation) throws ReservationExistException, UnknownPersistenceException, InputDataValidationException;
     
 }

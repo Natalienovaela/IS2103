@@ -6,8 +6,11 @@
 package ejb.session.stateless;
 
 import entity.Car;
+import entity.Model;
+import java.util.List;
 import javax.ejb.Local;
 import util.exception.CarNotExistException;
+import util.exception.CategoryNotExistException;
 
 /**
  *
@@ -16,5 +19,7 @@ import util.exception.CarNotExistException;
 @Local
 public interface CarSessionBeanLocal {
     public Car retrieveCarById(Long carId) throws CarNotExistException;
+
+    public List<Car> retrieveAllSearchCarByCategory(List<Model> models, String categoryName) throws CategoryNotExistException;
     
 }

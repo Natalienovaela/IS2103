@@ -32,8 +32,10 @@ import javax.validation.ValidatorFactory;
 import util.enumeration.CarStatus;
 import util.exception.CarExistException;
 import util.exception.CarNotExistException;
+import util.exception.CategoryNotExistException;
 import util.exception.DeleteCarException;
 import util.exception.InputDataValidationException;
+import util.exception.ModelNotExistException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -107,11 +109,32 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
         return query.getResultList();
     }
     
-    public List<Car> retrieveAllCarByOutletandDate(String outlet, Date pickupDate) {
-        Query query = em.createQuery("SELECT c FROM Car c WHERE (c.reservations IS EMPTY AND c.currOutlet :outlet) OR (c.reservations <= :pickupDate AND c.currOutlet.outletName :outlet)");
-        query.setParameter("outlet", outlet);
-        query.setParameter("pickupDate", pickupDate);
+    @Override
+    public List<Car> retrieveAllSearchCarByCategory(List<Model> models, String categoryName) throws CategoryNotExistException {
+        Category category = categorySessionBean.retrieveCategoryByName(categoryName);
+        if(category == null) {
+        Query query = em.createQuery("SELECT c FROM Car c WHERE c.model.category =:category");
+        query.setParameter("category", category);
         return query.getResultList();
+        }
+        else {
+            throw new CategoryNotExistException("Category with the name " + categoryName + " does not exist");
+        }
+            
+    }
+    
+    @Override
+    public List<Car> retrieveAllSearchCarByModelandMake(List<Model> models, String model, String make) throws ModelNotExistException {
+        Model chosenModel = modelSessionBean.retrieveModelbyMakeandModel(make, model);
+        if(chosenModel == null) {
+        Query query = em.createQuery("SELECT c FROM Car c WHERE c.model =:model");
+        query.setParameter("model", chosenModel);
+        return query.getResultList();
+        }
+        else {
+            throw new ModelNotExistException("Model with the model " + model + "and with the make" + make + "does not exist");
+        }
+            
     }
     
     @Override

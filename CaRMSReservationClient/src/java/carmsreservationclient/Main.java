@@ -6,16 +6,21 @@
 package carmsreservationclient;
 
 import ejb.session.stateful.ReservationSessionBeanRemote;
+import ejb.session.stateless.CategorySessionBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.ModelSessionBeanRemote;
 import ejb.session.stateless.OutletSessionBeanRemote;
 import javax.ejb.EJB;
+import util.exception.ModelNotInTheSearchListException;
 
 /**
  *
  * @author Natalienovaela
  */
 public class Main {
+
+    @EJB
+    private static CategorySessionBeanRemote categorySessionBeanRemote;
 
     @EJB
     private static OutletSessionBeanRemote outletSessionBeanRemote;
@@ -34,9 +39,9 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args){
+    public static void main(String[] args) throws ModelNotInTheSearchListException{
         // TODO code application logic here
-        MainApp mainApp = new MainApp(customerSessionBeanRemote, reservationSessionBeanRemote, modelSessionBeanRemote, outletSessionBeanRemote);
+        MainApp mainApp = new MainApp(categorySessionBeanRemote, customerSessionBeanRemote, reservationSessionBeanRemote, modelSessionBeanRemote, outletSessionBeanRemote);
         mainApp.run();
     }
     

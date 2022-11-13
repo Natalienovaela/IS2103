@@ -6,13 +6,16 @@
 package ejb.session.stateless;
 
 import entity.Car;
+import entity.Model;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 import util.exception.CarExistException;
 import util.exception.CarNotExistException;
+import util.exception.CategoryNotExistException;
 import util.exception.DeleteCarException;
 import util.exception.InputDataValidationException;
+import util.exception.ModelNotExistException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -29,11 +32,15 @@ public interface CarSessionBeanRemote {
     public List<Car> retrieveAllCar();
     
     public Car retrieveCarById(Long carId) throws CarNotExistException;
+    
+    public List<Car> retrieveAllSearchCarByCategory(List<Model> models, String categoryName) throws CategoryNotExistException;
 
     public void updateCar(Car car) throws InputDataValidationException, CarNotExistException;
 
     public void pickUpCar(Long carId, Long reservationId);
 
     public void returnCar(Long carId, Long reservationId);
+
+    public List<Car> retrieveAllSearchCarByModelandMake(List<Model> models, String model, String make) throws ModelNotExistException;
     
 }

@@ -54,7 +54,7 @@ public class SalesManagementModule {
         this.categorySessionBeanRemote = categorySessionBeanRemote;
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
-        }
+    }
 
     public void menuSalesManagement() throws RentalRateNotExistException {
         Scanner sc = new Scanner(System.in);
@@ -85,7 +85,9 @@ public class SalesManagementModule {
     public void doRentalRate(Integer number) {
         try {
         Scanner sc = new Scanner(System.in);
-        SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        Date startDate = null;
+        Date endDate = null;
         
         if(number == 1) {
                 System.out.println("Enter Name: ");
@@ -96,13 +98,14 @@ public class SalesManagementModule {
                 String carCategory = sc.nextLine();
                 System.out.println("Enter Rate per Day: ");
                 BigDecimal ratePerDay = sc.nextBigDecimal();
-                System.out.println("Enter Start Date Time(dd/MM/yyyy hh:mm a):");
-                String dates = sc.nextLine().trim();
-                Date startDate = date.parse(dates);
-                System.out.println("Enter End Date Time(dd/MM/yyyy hh:mm a):");
-                dates = sc.nextLine().trim();
-                Date endDate = date.parse(dates);
-
+                sc.nextLine();
+                if(!rentalRateType.equals("Default")) {
+                System.out.println("Enter Start Date Time(dd/mm/yyyy hh:mm):");  
+                startDate = date.parse(sc.nextLine());
+                System.out.println(startDate);
+                System.out.println("Enter End Date Time(dd/mm/yyyy hh:mm):");
+                endDate = date.parse(sc.nextLine());
+                }
                 try{
                    Category category = categorySessionBeanRemote.retrieveCategoryByName(carCategory);
                    RentalRates newRentalRate = new RentalRates(name, rentalRateType, category, ratePerDay, startDate, endDate);
@@ -169,7 +172,7 @@ public class SalesManagementModule {
     public void updateRentalRate(RentalRates rentalRate) {
         try {
             Scanner sc = new Scanner(System.in);
-            SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             System.out.println("Enter new  Rental Rate Name: (blank if no change)");
             String input = sc.nextLine().trim();
 

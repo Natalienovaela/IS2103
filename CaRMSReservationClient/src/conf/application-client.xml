@@ -6,4 +6,9 @@
     <ejb-ref-type>Session</ejb-ref-type>
     <remote>ejb.session.stateful.ReservationSessionBeanRemote</remote>
   </ejb-ref>
+  <ejb-ref>
+    <ejb-ref-name>CategorySessionBean</ejb-ref-name>
+    <ejb-ref-type>Session</ejb-ref-type>
+    <remote>ejb.session.stateless.CategorySessionBeanRemote</remote>
+  </ejb-ref>
 </application-client>
