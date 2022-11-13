@@ -5,7 +5,9 @@
  */
 package ejb.session.stateless;
 
+import entity.Car;
 import javax.ejb.Local;
+import util.exception.CarNotExistException;
 
 /**
  *
@@ -13,5 +15,6 @@ import javax.ejb.Local;
  */
 @Local
 public interface CarSessionBeanLocal {
+    public Car retrieveCarById(Long carId) throws CarNotExistException;
     
 }
