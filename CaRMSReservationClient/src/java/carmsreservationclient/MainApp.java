@@ -211,6 +211,32 @@ public class MainApp {
         customer = null;
     }
     
+    public void checkOut(Reservation reservation) {
+        while(true) {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("1. Pay Rental Fee Upfront");
+            System.out.println("2. Pay Rental Fee Later");
+            Integer number = sc.nextInt();
+
+            if(number == 1) {
+                reservation.setPaid(Boolean.TRUE);
+                break;
+            } else if ( number == 2) {
+                reservation.setPaid(Boolean.FALSE);
+                System.out.println("Enter cVV: ");
+                String cVV = sc.nextLine();
+                System.out.println("Enter NameOnCard: ");
+                String nameOnCard = sc.nextLine();
+                System.out.println("Enter cardNumber: ");
+                String cardNumber = sc.nextLine();
+                customerSessionBeanRemote.setCreditCard(customer.getCustomerId(), cVV, nameOnCard, cardNumber);
+                
+            }else {
+                System.out.println("invalid input! please try again");
+            }
+        }
+    }
+    
     public void doReservation(Integer number) throws ModelNotInTheSearchListException {
         while(true) {
         try {
