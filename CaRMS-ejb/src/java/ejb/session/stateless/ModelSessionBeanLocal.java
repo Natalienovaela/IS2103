@@ -19,5 +19,6 @@ import util.exception.ModelNotExistException;
 @Local
 public interface ModelSessionBeanLocal {
     public List<Model> retrieveAllModel();
+
     
 }

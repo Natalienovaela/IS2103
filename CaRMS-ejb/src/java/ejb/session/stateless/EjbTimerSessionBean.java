@@ -50,8 +50,9 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
             Boolean reserved = false;
             
             if(reservation.getModel() != null) {
-                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet");
+                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet AND c.disabled = :false");
                 query.setParameter("outlet", reservation.getPickupOutlet());
+                query.setParameter("false", Boolean.FALSE);
                 List<Car> carsWithNoReservation = query.getResultList();
                     
                 for(Car car: carsWithNoReservation) {
@@ -62,81 +63,9 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 } 
                 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet");
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
-                    List<Car> carsWithReservation = query.getResultList();
-
-                    for(Car car: carsWithReservation) {
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(car.getReservations().get(car.getReservations().size() - 1).getReturnDate());
-
-                        Calendar cal2 = Calendar.getInstance();
-                        cal2.setTime(reservation.getPickUpDate());
-
-                        if(cal.get(Calendar.HOUR) * 60 + cal.get(Calendar.MINUTE) <= cal2.get(Calendar.HOUR) * 60 + cal2.get(Calendar.MINUTE)){
-                            reservation.setCar(car);
-                            car.getReservations().add(reservation);
-                            reserved = Boolean.TRUE;
-                            break;
-                        }
-                    }   
-                }
-                
-                if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet");
-                    query.setParameter("outlet", reservation.getPickupOutlet());
-                    List<Car> carsWithNoReservationNotTheSameOutlet = query.getResultList();
-                    
-                    for(Car car: carsWithNoReservationNotTheSameOutlet) {
-                            reservation.setCar(car);
-                            car.getReservations().add(reservation);
-                            reserved = Boolean.TRUE;
-                            TransitDriverDispatch dispatch = new TransitDriverDispatch(new Date(), reservation.getPickupOutlet(), car);
-                            transitDriverDispatchSessionBean.createDispatch(dispatch, reservation.getPickupOutlet().getOutletId(), car.getCarId());
-                            break;
-                    }
-
-                }
-
-                if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet");
-                    query.setParameter("outlet", reservation.getPickupOutlet());
-                    List<Car> carsWithReservationNotTheSameOutlet = query.getResultList();
-
-                    for(Car car: carsWithReservationNotTheSameOutlet) {
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(car.getReservations().get(car.getReservations().size() - 1).getReturnDate());
-
-                        Calendar cal2 = Calendar.getInstance();
-                        cal2.setTime(reservation.getPickUpDate());
-
-                        if(cal.get(Calendar.HOUR) * 60 + cal.get(Calendar.MINUTE) + 120 <= cal2.get(Calendar.HOUR) * 60 + cal2.get(Calendar.MINUTE)){
-                            reservation.setCar(car);
-                            car.getReservations().add(reservation);
-                            TransitDriverDispatch dispatch = new TransitDriverDispatch(new Date(), reservation.getPickupOutlet(), car);
-                            transitDriverDispatchSessionBean.createDispatch(dispatch, reservation.getPickupOutlet().getOutletId(), car.getCarId());
-                            break;
-                        }
-                    }
-                }    
-            }
-            else {
-                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet AND c.model = :model");
-                query.setParameter("outlet", reservation.getPickupOutlet());
-                query.setParameter("model", reservation.getModel());
-                List<Car> carsWithNoReservation = query.getResultList();
-                    
-                for(Car car: carsWithNoReservation) {
-                        reservation.setCar(car);
-                        car.getReservations().add(reservation);
-                        reserved = Boolean.TRUE;
-                        break;
-                } 
-                
-                if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet AND c.model = :model");
-                    query.setParameter("outlet", reservation.getPickupOutlet());
-                    query.setParameter("model", reservation.getModel());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithReservation = query.getResultList();
 
                     for(Car car: carsWithReservation) {
@@ -156,9 +85,9 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }
                 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet AND c.model :model");
+                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
-                    query.setParameter("model", reservation.getModel());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithNoReservationNotTheSameOutlet = query.getResultList();
                     
                     for(Car car: carsWithNoReservationNotTheSameOutlet) {
@@ -173,9 +102,88 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }
 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet AND c.model = :model");
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet AND c.disabled = :false");
+                    query.setParameter("outlet", reservation.getPickupOutlet());
+                    query.setParameter("false", Boolean.FALSE);
+                    List<Car> carsWithReservationNotTheSameOutlet = query.getResultList();
+
+                    for(Car car: carsWithReservationNotTheSameOutlet) {
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(car.getReservations().get(0).getReturnDate());
+
+                        Calendar cal2 = Calendar.getInstance();
+                        cal2.setTime(reservation.getPickUpDate());
+
+                        if(cal.get(Calendar.HOUR) * 60 + cal.get(Calendar.MINUTE) + 120 <= cal2.get(Calendar.HOUR) * 60 + cal2.get(Calendar.MINUTE)){
+                            reservation.setCar(car);
+                            car.getReservations().add(reservation);
+                            TransitDriverDispatch dispatch = new TransitDriverDispatch(new Date(), reservation.getPickupOutlet(), car);
+                            transitDriverDispatchSessionBean.createDispatch(dispatch, reservation.getPickupOutlet().getOutletId(), car.getCarId());
+                            break;
+                        }
+                    }
+                }    
+            }
+            else {
+                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet AND c.model = :model AND c.disabled = :false");
+                query.setParameter("outlet", reservation.getPickupOutlet());
+                query.setParameter("model", reservation.getModel());
+                query.setParameter("false", Boolean.FALSE);
+                List<Car> carsWithNoReservation = query.getResultList();
+                    
+                for(Car car: carsWithNoReservation) {
+                        reservation.setCar(car);
+                        car.getReservations().add(reservation);
+                        reserved = Boolean.TRUE;
+                        break;
+                } 
+                
+                if(!reserved) {
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet AND c.model = :model AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
                     query.setParameter("model", reservation.getModel());
+                    query.setParameter("false", Boolean.FALSE);
+                    List<Car> carsWithReservation = query.getResultList();
+
+                    for(Car car: carsWithReservation) {
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(car.getReservations().get(0).getReturnDate());
+
+                        Calendar cal2 = Calendar.getInstance();
+                        cal2.setTime(reservation.getPickUpDate());
+
+                        if(cal.get(Calendar.HOUR) * 60 + cal.get(Calendar.MINUTE) <= cal2.get(Calendar.HOUR) * 60 + cal2.get(Calendar.MINUTE)){
+                            reservation.setCar(car);
+                            car.getReservations().add(reservation);
+                            reserved = Boolean.TRUE;
+                            break;
+                        }
+                    }   
+                }
+                
+                if(!reserved) {
+                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet AND c.model :model AND c.disabled = :false");
+                    query.setParameter("outlet", reservation.getPickupOutlet());
+                    query.setParameter("model", reservation.getModel());
+                    query.setParameter("false", Boolean.FALSE);
+                    List<Car> carsWithNoReservationNotTheSameOutlet = query.getResultList();
+                    
+                    for(Car car: carsWithNoReservationNotTheSameOutlet) {
+                            reservation.setCar(car);
+                            car.getReservations().add(reservation);
+                            reserved = Boolean.TRUE;
+                            TransitDriverDispatch dispatch = new TransitDriverDispatch(new Date(), reservation.getPickupOutlet(), car);
+                            transitDriverDispatchSessionBean.createDispatch(dispatch, reservation.getPickupOutlet().getOutletId(), car.getCarId());
+                            break;
+                    }
+
+                }
+
+                if(!reserved) {
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet AND c.model = :model AND c.disabled = :false");
+                    query.setParameter("outlet", reservation.getPickupOutlet());
+                    query.setParameter("model", reservation.getModel());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithReservationNotTheSameOutlet = query.getResultList();
 
                     for(Car car: carsWithReservationNotTheSameOutlet) {
@@ -208,8 +216,9 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
             Boolean reserved = false;
             
             if(reservation.getModel() != null) {
-                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet");
+                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet AND c.disabled = :false");
                 query.setParameter("outlet", reservation.getPickupOutlet());
+                query.setParameter("false", Boolean.FALSE);
                 List<Car> carsWithNoReservation = query.getResultList();
                     
                 for(Car car: carsWithNoReservation) {
@@ -220,13 +229,14 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 } 
                 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet");
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithReservation = query.getResultList();
 
                     for(Car car: carsWithReservation) {
                         Calendar cal = Calendar.getInstance();
-                        cal.setTime(car.getReservations().get(car.getReservations().size() - 1).getReturnDate());
+                        cal.setTime(car.getReservations().get(0).getReturnDate());
 
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
@@ -241,8 +251,9 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }
                 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet");
+                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithNoReservationNotTheSameOutlet = query.getResultList();
                     
                     for(Car car: carsWithNoReservationNotTheSameOutlet) {
@@ -257,13 +268,14 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }
 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet");
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithReservationNotTheSameOutlet = query.getResultList();
 
                     for(Car car: carsWithReservationNotTheSameOutlet) {
                         Calendar cal = Calendar.getInstance();
-                        cal.setTime(car.getReservations().get(car.getReservations().size() - 1).getReturnDate());
+                        cal.setTime(car.getReservations().get(0).getReturnDate());
 
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
@@ -279,9 +291,10 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }    
             }
             else {
-                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet AND c.model = :model");
+                Query query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet = :outlet AND c.model = :model AND c.disabled = :false");
                 query.setParameter("outlet", reservation.getPickupOutlet());
                 query.setParameter("model", reservation.getModel());
+                query.setParameter("false", Boolean.FALSE);
                 List<Car> carsWithNoReservation = query.getResultList();
                     
                 for(Car car: carsWithNoReservation) {
@@ -292,14 +305,15 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 } 
                 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet AND c.model = :model");
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet = :outlet AND c.model = :model AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
                     query.setParameter("model", reservation.getModel());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithReservation = query.getResultList();
 
                     for(Car car: carsWithReservation) {
                         Calendar cal = Calendar.getInstance();
-                        cal.setTime(car.getReservations().get(car.getReservations().size() - 1).getReturnDate());
+                        cal.setTime(car.getReservations().get(0).getReturnDate());
 
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
@@ -314,9 +328,10 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }
                 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet AND c.model :model");
+                    query = em.createQuery("SELECT c FROM Car c WHERE c.reservations IS EMPTY AND c.currOutlet != :outlet AND c.model :model AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
                     query.setParameter("model", reservation.getModel());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithNoReservationNotTheSameOutlet = query.getResultList();
                     
                     for(Car car: carsWithNoReservationNotTheSameOutlet) {
@@ -331,14 +346,15 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                 }
 
                 if(!reserved) {
-                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet AND c.model = :model");
+                    query = em.createQuery("SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND r.returnOutlet != :outlet AND c.model = :model AND c.disabled = :false");
                     query.setParameter("outlet", reservation.getPickupOutlet());
                     query.setParameter("model", reservation.getModel());
+                    query.setParameter("false", Boolean.FALSE);
                     List<Car> carsWithReservationNotTheSameOutlet = query.getResultList();
 
                     for(Car car: carsWithReservationNotTheSameOutlet) {
                         Calendar cal = Calendar.getInstance();
-                        cal.setTime(car.getReservations().get(car.getReservations().size() - 1).getReturnDate());
+                        cal.setTime(car.getReservations().get(0).getReturnDate());
 
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());

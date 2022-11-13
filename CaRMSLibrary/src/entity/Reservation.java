@@ -45,6 +45,8 @@ public class Reservation implements Serializable {
     private Boolean returned;
     @Column(nullable = false, precision = 11, scale = 2)
     private BigDecimal totalAmount;
+    @Column(nullable = false)
+    private Boolean paid;
     
     @ManyToMany(mappedBy = "reservations")
     private List<RentalRates> rentalRates;
@@ -263,6 +265,14 @@ public class Reservation implements Serializable {
 
     public void setCar(Car car) {
         this.car = car;
+    }
+
+    public Boolean getPaid() {
+        return paid;
+    }
+
+    public void setPaid(Boolean paid) {
+        this.paid = paid;
     }
     
 }
