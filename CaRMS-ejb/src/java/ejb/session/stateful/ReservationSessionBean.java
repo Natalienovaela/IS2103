@@ -119,7 +119,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
     //}
     
-    public void CancelReservation(long reservationId) throws ReservationNotExistException {
+    public void cancelReservation(long reservationId) throws ReservationNotExistException {
         Reservation cancelReservation = retrieveReservationById(reservationId);
         if(cancelReservation == null) {
             throw new ReservationNotExistException("Reservation with Reservation ID " + reservationId + " does not exist");
@@ -129,7 +129,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
     }
     
-    public void CreateReservation(Reservation reservation) {
+    public void createReservation(Reservation reservation) {
         
         
     }

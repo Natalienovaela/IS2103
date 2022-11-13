@@ -35,7 +35,5 @@ public interface CarSessionBeanRemote {
     public void pickUpCar(Long carId, Long reservationId);
 
     public void returnCar(Long carId, Long reservationId);
-
-    public Car SearchCar(Date pickupDateTime, Date returnDateTime, String pickupOutlet, String returnOutlet);
     
 }
