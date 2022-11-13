@@ -66,6 +66,7 @@ public class MainApp {
     this.reservationSessionBeanRemote = reservationSessionBeanRemote;
     this.customerSessionBeanRemote = customerSessionBeanRemote;
     this.modelSessionBeanRemote = modelSessionBeanRemote;
+    this.outletSessionBeanRemote = outletSessionBeanRemote;
     }
     
     
@@ -166,13 +167,13 @@ public class MainApp {
         try {
             Scanner sc = new Scanner(System.in);
             SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-            System.out.println("Enter pick up Date : ");
+            System.out.println("Enter pick up Date: ");
             Date pickUpDate = date.parse(sc.nextLine());
-            System.out.println("Enter return Date : ");
+            System.out.println("Enter return Date: ");
             Date returnDate = date.parse(sc.nextLine());
-            System.out.println("Enter pick up location : ");
+            System.out.println("Enter pick up location: ");
             String pickUpLocation = sc.nextLine();
-            System.out.println("Enter return location : ");
+            System.out.println("Enter return location: ");
             String returnLocation = sc.nextLine();
          
             try{
@@ -181,12 +182,11 @@ public class MainApp {
                     Outlet returnLoc = outletSessionBeanRemote.retrieveOutletByName(returnLocation);
                     try{
                         outletSessionBeanRemote.checkOutletAvailability(pickUpDate, pickUpLoc.getOutletId());
+                        outletSessionBeanRemote.checkOutletAvailability(returnDate, returnLoc.getOutletId());
                         List<Model> models = modelSessionBeanRemote.searchCar(pickUpDate, returnDate, pickUpLoc, returnLoc);
-                        int i = 1;
                         for(Model model : models)
                            {
-                               System.out.println(i + ". " + "Car model: " + model.getModel() + ", Car make: " + model.getMake() + ", Car Category: " + model.getCategory());
-                               i++;
+                               System.out.println("Car model: " + model.getModel() + ", Car make: " + model.getMake() + ", Car Category: " + model.getCategory().getCategoryName());
                            }
                         }
                     catch(OutsideOutletAvailability ex) {
