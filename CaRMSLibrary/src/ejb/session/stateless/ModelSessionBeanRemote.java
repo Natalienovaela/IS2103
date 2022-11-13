@@ -34,6 +34,6 @@ public interface ModelSessionBeanRemote {
 
     public Model retrieveModelbyMakeandModel(String make, String model) throws ModelNotExistException;
 
-    public List<Model> SearchCar(Date pickupDateTime, String pickupOutlet, String returnOutlet);
+    public List<Model> SearchCar(Date pickupDateTime, Date returnDateTime, String pickupOutlet, String returnOutlet);
     
 }

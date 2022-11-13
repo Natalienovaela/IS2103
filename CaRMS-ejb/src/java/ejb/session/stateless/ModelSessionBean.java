@@ -164,20 +164,22 @@ public class ModelSessionBean implements ModelSessionBeanRemote, ModelSessionBea
             throw new DeleteModelException("Model ID " + modelId + " is in use and cannot be deleted! It will be disabled");
         }
     } 
-    public List<Model> SearchCar(Date pickupDateTime, String pickupOutlet, String returnOutlet) {  
+    @Override
+    public List<Model> SearchCar(Date pickupDateTime, Date returnDateTime, String pickupOutlet, String returnOutlet) {  
         Query query = em.createQuery(
-                "SELECT m "
-                        + "FROM Model m JOIN m.cars c JOIN c.reservations r "
-                        + "WHERE (r IS EMPTY AND c.currOutlet = :pickUpOutlet)"
-                        + "OR "
-                        + "(r IS NOT EMPTY AND r.returnOutlet = :pickUpOutlet "
-                        + "AND EXTRACT(YEAR FROM r.returnDate) = EXTRACT(YEAR FROM :=pickUpDate) "
-                        + "AND EXTRACT(MONTH FROM r.returnDate) = EXTRACT(MONTH FROM :=pickUpDate"
-                        + "AND EXTRACT(DAY FROM r.returnDate) = EXTRACT(DAY FROM :=pickUpDate)"
-                        + "AND EXTRACT(HOUR FROM r.returnDate) * 60 + EXTRACT(MINUTE FROM r.returnDate) + 120 <= EXTRACT(HOUR FROM :=pickUpDate) * 60 + EXTRACT(MINUTE FROM :=pickUpDate))"
-                        + "GROUP BY m.category"
+                "SELECT m FROM Model m"
+                        + "EXCEPT"
+                        + "SELECT m FROM Model m JOIN m.cars c JOIN c.reservations r"
+                        + "WHERE r.reservations IS NOT EMPTY AND "
+                        + "(((:pickUpDate < r.pickUpDate AND :returnDate > r.pickUpDate) OR (:pickUpDate > r.pickUpDate AND :returnDate < r.returnDate) OR(:pickUpDate < r.returnDate AND :returnDate > r.returnDate))"
+                        + "OR (r.returnOutlet != :pickUpOutlet"
+                        + "AND EXTRACT(YEAR FROM r.returnDate) = EXTRACT(YEAR FROM :pickUpDate) "
+                        + "AND EXTRACT(MONTH FROM r.returnDate) = EXTRACT(MONTH FROM :pickUpDate"
+                        + "AND EXTRACT(DAY FROM r.returnDate) = EXTRACT(DAY FROM :pickUpDate)"
+                        + "AND EXTRACT(HOUR FROM r.returnDate) * 60 + EXTRACT(MINUTE FROM r.returnDate) + 120 > EXTRACT(HOUR FROM :pickUpDate) * 60 + EXTRACT(MINUTE FROM :pickUpDate))))"
                         + "ORDER BY m.category ASC, m ASC");
         query.setParameter("pickUpOutlet", pickupOutlet);
+        query.setParameter("returnDate", returnDateTime);
         query.setParameter("pickUpDate", pickupDateTime);
         List<Model> models = query.getResultList();
         
