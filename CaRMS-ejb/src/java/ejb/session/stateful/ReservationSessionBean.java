@@ -231,11 +231,14 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
     
     private BigDecimal totalAmount(Reservation reservation) {
-        List <RentalRates> rentalRates = rentalRateSessionBean. 
+        List <RentalRates> rentalRates = rentalRateSessionBean.retrieveAllRentalRate();
         
-        for(Reservation reservations : reservation) {
+        Calendar pickUp = Calendar.getInstance();
+        pickUp.setTime(reservation.getPickUpDate());
+        Calendar returnCal = Calendar.getInstance();
+        returnCal.setTime(reservation.getReturnDate());
         
-        }
+        
     }
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Reservation>>constraintViolations)

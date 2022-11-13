@@ -266,7 +266,7 @@ public class MainApp {
                                    }
                             Reservation newReservation = new Reservation(pickUpDate, returnDate, pickUp, returnLoc, chosen, chosen1);
                             reservationSessionBeanRemote.createReservation(newReservation);
-                               
+                            checkOut(newReservation);
                         }catch(ReservationExistException ex) {
                            System.out.println("Reservation with that ID already exist");
                         
@@ -283,6 +283,7 @@ public class MainApp {
             }catch(OutletNotExistException ex) {
                 System.out.println("Outlet does not exist");
             }
+            
         }  else if(number == 2) {
             System.out.println();
             
@@ -298,5 +299,30 @@ public class MainApp {
             System.out.println("Invalid date input!\n");
         }
         }
+    }
+    
+    public void checkOut(Reservation reservation) {
+        while(true) {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("1. Pay Rental Fee Upfront");
+            System.out.println("2. Pay Rental Fee Later");
+            Integer number = sc.nextInt();
+
+            if(number == 1) {
+                reservation.setPaid(Boolean.TRUE);
+            } else if ( number == 2) {
+                reservation.setPaid(Boolean.FALSE);
+                System.out.println("Enter cVV: ");
+                customer.setcVV(sc.nextLine());
+                System.out.println("Enter NameOnCard: ");
+                customer.setNameOnCard(sc.nextLine());
+                System.out.println("Enter cardNumber: ");
+                customer.setCardNumber(sc.nextLine());
+                
+            }else {
+                System.out.println("invalid input! please try again");
+            }
+        }
+    }
     }
 }

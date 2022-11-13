@@ -85,7 +85,7 @@ public class SalesManagementModule {
     public void doRentalRate(Integer number) {
         try {
         Scanner sc = new Scanner(System.in);
-        SimpleDateFormat date = new SimpleDateFormat("\n dd/MM/yyyy hh:mm");
+        SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy hh:mm");
         Date startDate = null;
         Date endDate = null;
         
