@@ -136,16 +136,16 @@ public class MainApp {
     public void doSignUp() {
         Scanner sc = new Scanner(System.in);
         System.out.println("Sign up Page");
-        System.out.println("Enter Name: ");
-        String name = sc.nextLine();
         System.out.println("Enter Email: ");
         String email = sc.nextLine();
         System.out.println("Enter mobile phone number: ");
         String phoneNumber= sc.nextLine();
         System.out.println("Enter passportNumber: ");
         String passportNumber= sc.nextLine();
+        System.out.println("Enter password: ");
+        String password = sc.nextLine();
 
-            Customer customers = new Customer(name, email, phoneNumber, passportNumber);
+            Customer customers = new Customer(email, password, phoneNumber, passportNumber);
             Set<ConstraintViolation<Customer>>constraintViolations = validator.validate(customers);
             if(constraintViolations.isEmpty()) {
             try {

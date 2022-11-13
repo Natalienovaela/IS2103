@@ -5,16 +5,21 @@
  */
 package ejb.session.stateful;
 
+import ejb.session.stateless.CarSessionBeanLocal;
+import ejb.session.stateless.ModelSessionBeanLocal;
 import entity.Car;
+import entity.Category;
 import entity.Customer;
 import entity.Model;
 import entity.RentalRates;
 import entity.Reservation;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,7 +31,9 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.CarExistException;
 import util.exception.CarNotExistException;
+import util.exception.CategoryNotExistException;
 import util.exception.InputDataValidationException;
+import util.exception.ModelNotAvailableException;
 import util.exception.ModelNotExistException;
 import util.exception.RentalRateNotExistException;
 import util.exception.ReservationExistException;
@@ -40,8 +47,18 @@ import util.exception.UnknownPersistenceException;
 @Stateful
 public class ReservationSessionBean implements ReservationSessionBeanRemote, ReservationSessionBeanLocal {
 
+    @EJB
+    private ModelSessionBeanLocal modelSessionBean;
+
+    @EJB
+    private CarSessionBeanLocal carSessionBean;
+    
+    
+
     @PersistenceContext(unitName = "CaRMS-ejbPU")
     private EntityManager em;
+    
+    
     
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
@@ -136,30 +153,56 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
     //}
     
-    /*public void cancelReservation(long reservationId) throws ReservationNotExistException {
+    public BigDecimal cancelReservation(long reservationId) throws ReservationNotExistException {
         Reservation cancelReservation = retrieveReservationById(reservationId);
         if(cancelReservation == null) {
             throw new ReservationNotExistException("Reservation with Reservation ID " + reservationId + " does not exist");
         }
         
-        if(calendar.add(Calendar.DATE, 14) <= cancelReservation.getPickUpDate().get(Calendar.YEAR))
+        cancelReservation.getCustomer().getReservations().remove(cancelReservation);
+        em.remove(cancelReservation);
+            
         
-        
-        
-    }*/
-    
-    public void createReservation(Reservation reservation, long carId) throws ReservationExistException, UnknownPersistenceException, InputDataValidationException {
-        Set<ConstraintViolation<Reservation>>constraintViolations = validator.validate(reservation);
-       
-       if(constraintViolations.isEmpty()) {
-            try {
-                Car car = em.find(Car.class, carId);
-                em.persist(reservation);
-                reservation.setCar(car);
-                car.getReservations().add(reservation);
-                em.flush();
+        Calendar cancelCalendar = Calendar.getInstance();
+        Calendar pickupCalendar = Calendar.getInstance();
+        pickupCalendar.setTime(cancelReservation.getPickUpDate());
+        cancelCalendar.add(Calendar.DATE, 14);
+        BigDecimal totalAmount = cancelReservation.getTotalAmount();
+        BigDecimal penalty = new BigDecimal("0");
+
+        if(cancelCalendar.compareTo(pickupCalendar) == 0 || cancelCalendar.compareTo(pickupCalendar) == 1) {
+            return penalty;
+        } else {
+            cancelCalendar.add(Calendar.DATE, -7);
+            if(cancelCalendar.compareTo(pickupCalendar) == 0 || cancelCalendar.compareTo(pickupCalendar) == 1) {
+                penalty = totalAmount.multiply(BigDecimal.valueOf(20/100));
+                return penalty;
+            } else {
+                cancelCalendar.add(Calendar.DATE, -4);
+                if(cancelCalendar.compareTo(pickupCalendar) == 0 || cancelCalendar.compareTo(pickupCalendar) == 1) {
+                penalty = totalAmount.multiply(BigDecimal.valueOf(50/100));
+                return penalty;
+                } else {
+                    penalty = totalAmount.multiply(BigDecimal.valueOf(70/100));
+                    return penalty;
+                }
             }
-            catch(PersistenceException ex) {
+        }
+        
+        
+        
+    }
+    
+    @Override
+    public void createReservation(Reservation reservation) throws ReservationExistException, UnknownPersistenceException, InputDataValidationException {
+        Set<ConstraintViolation<Reservation>>constraintViolations = validator.validate(reservation);
+       if(constraintViolations.isEmpty()) {
+           
+        try {
+            
+                em.persist(reservation);
+                em.flush();
+        } catch(PersistenceException ex) {
                 if(ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException"))
                 {
                     if(ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException"))
