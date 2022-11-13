@@ -47,9 +47,7 @@ public class Reservation implements Serializable {
     private BigDecimal totalAmount;
     @Column(nullable = false)
     private Boolean paid;
-    
-    @ManyToMany(mappedBy = "reservations")
-    private List<RentalRates> rentalRates;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Category category;
@@ -72,7 +70,6 @@ public class Reservation implements Serializable {
             
     public Reservation() {
         this.totalAmount = new BigDecimal("0.00");
-        rentalRates = new ArrayList<>();
     }
 
     public Reservation(Date pickUpDate, Date returnDate, Boolean pickedUp, Boolean returned, BigDecimal totalAmount) {
@@ -193,20 +190,7 @@ public class Reservation implements Serializable {
     public void setModel(Model model) {
         this.model = model;
     }
-    /**
-     * @return the rentalRates
-     */
-    public List<RentalRates> getRentalRates() {
-        return rentalRates;
-    }
     
-    /**
-     * @param rentalRates the rentalRates to set
-     */
-    public void setRentalRates(List<RentalRates> rentalRates) {
-        this.rentalRates = rentalRates;
-}
-
     /**
      * @return the category
      */

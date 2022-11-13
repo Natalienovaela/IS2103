@@ -49,12 +49,8 @@ public class RentalRates implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Category category;
-    @ManyToMany
-    @JoinColumn(nullable = false)
-    private List<Reservation> reservations;
 
     public RentalRates() {
-        reservations = new ArrayList<>();
     }
 
     public RentalRates(String name, String rentalRateType,  Category category,  BigDecimal ratePerDay, Date startDateTime, Date endDateTime) {
@@ -142,20 +138,6 @@ public class RentalRates implements Serializable {
      */
     public void setCategory(Category category) {
         this.category = category;
-    }
-
-    /**
-     * @return the reservations
-     */
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    /**
-     * @param reservations the reservations to set
-     */
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
     }
 
     /**

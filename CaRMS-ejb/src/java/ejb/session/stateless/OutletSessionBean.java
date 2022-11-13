@@ -42,7 +42,7 @@ public class OutletSessionBean implements OutletSessionBeanRemote, OutletSession
             outlet.getEmployees().size();
             return outlet;
         } else {
-            throw new OutletNotExistException("Outlet with the name " + name + " does not exist\n");
+        throw new OutletNotExistException("Outlet with the name " + name + " does not exist\n");
         }
 
     }

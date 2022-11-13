@@ -6,10 +6,13 @@
 package ejb.session.stateless;
 
 import ejb.session.stateful.ReservationSessionBeanLocal;
+import entity.Car;
 import entity.Category;
 import entity.Model;
 import entity.Outlet;
 import entity.Reservation;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -167,22 +170,52 @@ public class ModelSessionBean implements ModelSessionBeanRemote, ModelSessionBea
     } 
     @Override
     public List<Model> searchCar(Date pickupDateTime, Date returnDateTime, Outlet pickupOutlet, Outlet returnOutlet) {  
-        Query query = em.createQuery(
-                "SELECT m FROM Model m"
-                        + "EXCEPT"
-                        + "SELECT m FROM Model m JOIN m.cars c JOIN c.reservations r"
-                        + "WHERE r.reservations IS NOT EMPTY AND "
-                        + "(((:pickUpDate < r.pickUpDate AND :returnDate > r.pickUpDate) OR (:pickUpDate > r.pickUpDate AND :returnDate < r.returnDate) OR(:pickUpDate < r.returnDate AND :returnDate > r.returnDate))"
-                        + "OR (r.returnOutlet != :pickUpOutlet"
-                        + "AND EXTRACT(YEAR FROM r.returnDate) = EXTRACT(YEAR FROM :pickUpDate) "
-                        + "AND EXTRACT(MONTH FROM r.returnDate) = EXTRACT(MONTH FROM :pickUpDate"
-                        + "AND EXTRACT(DAY FROM r.returnDate) = EXTRACT(DAY FROM :pickUpDate)"
-                        + "AND EXTRACT(HOUR FROM r.returnDate) * 60 + EXTRACT(MINUTE FROM r.returnDate) + 120 > EXTRACT(HOUR FROM :pickUpDate) * 60 + EXTRACT(MINUTE FROM :pickUpDate))))"
-                        + "ORDER BY m.category ASC, m ASC");
+        Query query = em.createQuery("SELECT c FROM Car c WHERE c.disabled = :false");
+        query.setParameter("false", Boolean.FALSE);
+        
+        /*Query query = em.createQuery("SELECT c FROM Car c EXCEPT SELECT c FROM Car c JOIN c.reservations r WHERE c.reservations IS NOT EMPTY AND (((:pickUpDate < r.pickUpDate AND :returnDate > r.pickUpDate) OR (:pickUpDate > r.pickUpDate AND :returnDate < r.returnDate) OR(:pickUpDate < r.returnDate AND :returnDate > r.returnDate)) OR ((r.returnOutlet != :pickUpOutlet) AND EXTRACT(YEAR FROM r.returnDate) = EXTRACT(YEAR FROM :pickUpDate) AND EXTRACT(MONTH FROM r.returnDate) = EXTRACT(MONTH FROM :pickUpDate) AND EXTRACT(DAY FROM r.returnDate) = EXTRACT(DAY FROM :pickUpDate) AND EXTRACT(HOUR FROM r.returnDate) * 60 + EXTRACT(MINUTE FROM r.returnDate) + 120 > EXTRACT(HOUR FROM :pickUpDate) * 60 + EXTRACT(MINUTE FROM :pickUpDate)))");
         query.setParameter("pickUpOutlet", pickupOutlet);
         query.setParameter("returnDate", returnDateTime);
-        query.setParameter("pickUpDate", pickupDateTime);
-        List<Model> models = query.getResultList();
+        query.setParameter("pickUpDate", pickupDateTime);*/
+        List<Car> cars = query.getResultList();
+        Calendar pickUp = Calendar.getInstance();
+        pickUp.setTime(pickupDateTime);
+        Calendar returnTime = Calendar.getInstance();
+        returnTime.setTime(returnDateTime);
+        
+        List<Model> models = new ArrayList<>();
+        
+        for(Car car: cars) {
+                if(!car.getReservations().isEmpty()) {
+                    List<Reservation> reservations =  car.getReservations();                        
+
+                    for(Reservation reservation: reservations ){
+                        Calendar rPickUp = Calendar.getInstance();
+                        rPickUp.setTime(reservation.getPickUpDate());
+                        Calendar rReturnTime = Calendar.getInstance();
+                        rReturnTime.setTime(reservation.getReturnDate());
+                        
+                        if((pickUp.before(rPickUp) && returnTime.after(rPickUp)) || (pickUp.after(rPickUp) && returnTime.before(rReturnTime)) || (pickUp.before(rReturnTime) && returnTime.after(rReturnTime))) {
+                            cars.remove(car);
+                            break;
+                        }
+                        
+                        if(reservation.getReturnOutlet() != returnOutlet) {
+                            if(pickUp.get(Calendar.YEAR) == rReturnTime.get(Calendar.YEAR) && pickUp.get(Calendar.MONTH) == rReturnTime.get(Calendar.MONTH) && pickUp.get(Calendar.DAY_OF_MONTH) == rReturnTime.get(Calendar.DAY_OF_MONTH) && pickUp.get(Calendar.HOUR) * 60 + pickUp.get(Calendar.MINUTE) < 120 + rReturnTime.get(Calendar.HOUR)*60 + rReturnTime.get(Calendar.MINUTE)){
+                                cars.remove(car);
+                                break;
+                            }
+                        }
+                    }
+                }
+                   
+        }   
+        
+        for(Car car: cars) {
+            if(!models.contains(car.getModel())){
+                models.add(car.getModel());
+            } 
+        }
         
         for(Model model : models) {
             model.getCategory().getRentalRates().size();
