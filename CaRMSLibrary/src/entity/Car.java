@@ -78,10 +78,6 @@ public class Car implements Serializable {
         
     }
 
-    public Car(String licensePlateNumber, String make, String model, String outlet) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     public Long getCarId() {
         return carId;
     }

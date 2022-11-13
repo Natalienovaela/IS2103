@@ -56,7 +56,7 @@ public class SalesManagementModule {
         validator = validatorFactory.getValidator();
         }
 
-     public void menuSalesManagement() throws RentalRateNotExistException {
+    public void menuSalesManagement() throws RentalRateNotExistException {
         Scanner sc = new Scanner(System.in);
         Integer number;
         
@@ -80,7 +80,7 @@ public class SalesManagementModule {
                 System.out.println("Invalid option! Please try again!\n");
             }
         }
-        }
+    }
      
     public void doRentalRate(Integer number) {
         try {
@@ -133,7 +133,7 @@ public class SalesManagementModule {
                 System.out.println("Rental Rate ID: " + rentalRate.getRentalRateId() +"Rental Rate Name: " + rentalRate.getName() + "Category: " + rentalRate.getCategory().getCategoryName() + " Rate per Day: " + rentalRate.getRatePerDay() + "Period of Event: " + rentalRate.getStartDateTime() + "-" + rentalRate.getEndDateTime());
             }
             
-        } else if(number == 7) {
+        } else if(number == 3) {
            System.out.println("Enter Rental Rate ID: ");
            Long rentalRateId = sc.nextLong();
            sc.nextLine();
@@ -166,90 +166,90 @@ public class SalesManagementModule {
         }
     }
            
-           public void updateRentalRate(RentalRates rentalRate) {
-               try {
-                Scanner sc = new Scanner(System.in);
-                SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-                System.out.println("Enter new  Rental Rate Name: (blank if no change)");
-                String input = sc.nextLine().trim();
-                
-                if(input.length() > 0){
-                    rentalRate.setName(input);
+    public void updateRentalRate(RentalRates rentalRate) {
+        try {
+            Scanner sc = new Scanner(System.in);
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+            System.out.println("Enter new  Rental Rate Name: (blank if no change)");
+            String input = sc.nextLine().trim();
+
+            if(input.length() > 0){
+                rentalRate.setName(input);
+            }
+
+            System.out.println("Enter new Rental Rate Type: (blank if no change)");
+            input = sc.nextLine().trim();
+
+            if(input.length() > 0){
+                rentalRate.setRentalRateType(input);
+            }
+
+            System.out.println("Enter new Car Category: (blank if no change)");
+            input = sc.nextLine().trim();
+
+            if(input.length() > 0){
+                 try{
+                    Category category = categorySessionBeanRemote.retrieveCategoryByName(input);
+                    rentalRate.setCategory(category);
+                 } catch(CategoryNotExistException ex) {
+                     System.out.println(ex.getMessage()+ "\n");
+                 }
+            }
+
+                System.out.println("Enter new Rate per Day: (blank if no change)");
+                BigDecimal input1 = sc.nextBigDecimal();
+
+                if(input1 != null){
+                    rentalRate.setRatePerDay(input1);
                 }
-                
-                System.out.println("Enter new Rental Rate Type: (blank if no change)");
+
+                System.out.println("Enter new start Date Time(dd/MM/yyyy hh:mm a): (blank if no change) ");
                 input = sc.nextLine().trim();
-                
+
                 if(input.length() > 0){
-                    rentalRate.setRentalRateType(input);
+                    try {
+                    Date startDate = inputDateFormat.parse(input);
+                    rentalRate.setStartDateTime(startDate);
+                    } catch(ParseException ex) {
+                        System.out.println("Invalid date input!\n");
+                    }
                 }
-                
-                System.out.println("Enter new Car Category: (blank if no change)");
+
+                System.out.println("Enter new end Date Time(dd/MM/yyyy hh:mm a): (blank if no change) ");
                 input = sc.nextLine().trim();
-                
+
                 if(input.length() > 0){
-                     try{
-                        Category category = categorySessionBeanRemote.retrieveCategoryByName(input);
-                        rentalRate.setCategory(category);
-                     } catch(CategoryNotExistException ex) {
-                         System.out.println(ex.getMessage()+ "\n");
-                     }
+                    Date endDate = inputDateFormat.parse(input);
+                    rentalRate.setEndDateTime(endDate);
+
                 }
-                
-                    System.out.println("Enter new Rate per Day: (blank if no change)");
-                    BigDecimal input1 = sc.nextBigDecimal();
-                    
-                    if(input1 != null){
-                        rentalRate.setRatePerDay(input1);
+                    try{
+                        rentalRateSessionBeanRemote.updateRentalRate(rentalRate);
+                        System.out.println("rentalRate is updated successfully!\n");
                     }
-                    
-                    System.out.println("Enter new start Date Time(dd/MM/yyyy hh:mm a): (blank if no change) ");
-                    input = sc.nextLine().trim();
-                    
-                    if(input.length() > 0){
-                        try {
-                        Date startDate = inputDateFormat.parse(input);
-                        rentalRate.setStartDateTime(startDate);
-                        } catch(ParseException ex) {
-                            System.out.println("Invalid date input!\n");
-                        }
+                    catch(InputDataValidationException ex) {
+                        System.out.println(ex.getMessage() + "\n");
                     }
-                    
-                    System.out.println("Enter new end Date Time(dd/MM/yyyy hh:mm a): (blank if no change) ");
-                    input = sc.nextLine().trim();
-                    
-                    if(input.length() > 0){
-                        Date endDate = inputDateFormat.parse(input);
-                        rentalRate.setEndDateTime(endDate);
-                        
+                    catch(RentalRateNotExistException ex) {
+                        System.out.println(ex.getMessage()+ "\n");
                     }
-                        try{
-                            rentalRateSessionBeanRemote.updateRentalRate(rentalRate);
-                            System.out.println("rentalRate is updated successfully!\n");
-                        }
-                        catch(InputDataValidationException ex) {
-                            System.out.println(ex.getMessage() + "\n");
-                        }
-                        catch(RentalRateNotExistException ex) {
-                            System.out.println(ex.getMessage()+ "\n");
-                        }
-                        }
-                catch(ParseException ex)
-        {
-            System.out.println("Invalid date input!\n");
-        }
                     }
+            catch(ParseException ex)
+            {
+                System.out.println("Invalid date input!\n");
+            }
+    }
      
-        public void deleteRentalRate(long rentalRateId) {
-            try{
-                rentalRateSessionBeanRemote.deleteRentalRate(rentalRateId);
-                System.out.println("Rental Rate is deleted successfully!\n");
-            } 
-            catch(DeleteRentalRateException ex) {
-                System.out.println(ex.getMessage() + "\n");
-            }
-            catch(RentalRateNotExistException ex) {
-                System.out.println(ex.getMessage() + "\n");
-            }
+    public void deleteRentalRate(long rentalRateId) {
+        try{
+            rentalRateSessionBeanRemote.deleteRentalRate(rentalRateId);
+            System.out.println("Rental Rate is deleted successfully!\n");
+        } 
+        catch(DeleteRentalRateException ex) {
+            System.out.println(ex.getMessage() + "\n");
         }
+        catch(RentalRateNotExistException ex) {
+            System.out.println(ex.getMessage() + "\n");
+        }
+    }
 }
