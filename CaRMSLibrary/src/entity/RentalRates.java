@@ -38,10 +38,10 @@ public class RentalRates implements Serializable {
     @Column(nullable = false, length = 15)
     private String rentalRateType;
     @Temporal(TemporalType.TIMESTAMP)
-    private Date StartDateTime;
+    private Date startDateTime;
     @Temporal(TemporalType.TIMESTAMP)
-    private Date EndDateTime;
-    @Column(nullable = false, length = 8)
+    private Date endDateTime;
+    @Column(nullable = false, precision = 8, scale = 2)
     private BigDecimal ratePerDay;
     @Column
     private Boolean disabled;
@@ -57,25 +57,18 @@ public class RentalRates implements Serializable {
         reservations = new ArrayList<>();
     }
 
-    public RentalRates(String name, String rentalRateType,  Category category,  BigDecimal ratePerDay, Date StartDateTime, Date EndDateTime) {
+    public RentalRates(String name, String rentalRateType,  Category category,  BigDecimal ratePerDay, Date startDateTime, Date endDateTime) {
         this.name = name;
         this.rentalRateType = rentalRateType;
-        this.StartDateTime = StartDateTime;
-        this.EndDateTime = EndDateTime;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
         this.ratePerDay = ratePerDay;
         this.category = category;
+        this.disabled = false;
     }
-
     
-    public RentalRates(String name, String rentalRateType, Date StartDateTime, Date EndDateTime, BigDecimal ratePerDay, Boolean disabled) {
-        this.name = name;
-        this.rentalRateType = rentalRateType;
-        this.StartDateTime = StartDateTime;
-        this.EndDateTime = EndDateTime;
-        this.ratePerDay = ratePerDay;
-        this.disabled = disabled;
-    }
-
+    
+    
     public Long getRentalRateId() {
         return rentalRateId;
     }
@@ -194,31 +187,31 @@ public class RentalRates implements Serializable {
     }
 
     /**
-     * @return the StartDateTime
+     * @return the startDateTime
      */
     public Date getStartDateTime() {
-        return StartDateTime;
+        return startDateTime;
     }
 
     /**
-     * @param StartDateTime the StartDateTime to set
+     * @param startDateTime the startDateTime to set
      */
-    public void setStartDateTime(Date StartDateTime) {
-        this.StartDateTime = StartDateTime;
+    public void setStartDateTime(Date startDateTime) {
+        this.startDateTime = startDateTime;
     }
 
     /**
-     * @return the EndDateTime
+     * @return the endDateTime
      */
     public Date getEndDateTime() {
-        return EndDateTime;
+        return endDateTime;
     }
 
     /**
-     * @param EndDateTime the EndDateTime to set
+     * @param endDateTime the endDateTime to set
      */
-    public void setEndDateTime(Date EndDateTime) {
-        this.EndDateTime = EndDateTime;
+    public void setEndDateTime(Date endDateTime) {
+        this.endDateTime = endDateTime;
     }
     
 }

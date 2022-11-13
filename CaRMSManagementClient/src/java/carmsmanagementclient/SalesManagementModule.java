@@ -85,9 +85,7 @@ public class SalesManagementModule {
     public void doRentalRate(Integer number) {
         try {
         Scanner sc = new Scanner(System.in);
-        SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
-        Date startDate;
-        Date endDate;
+        SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy hh:mm");
         
         if(number == 1) {
                 System.out.println("Enter Name: ");
@@ -96,12 +94,14 @@ public class SalesManagementModule {
                 String rentalRateType = sc.nextLine();
                 System.out.println("Enter Car Category: ");
                 String carCategory = sc.nextLine();
-                System.out.println("Enter rate per day: ");
+                System.out.println("Enter Rate per Day: ");
                 BigDecimal ratePerDay = sc.nextBigDecimal();
-                System.out.println("Enter start Date Time(dd/MM/yyyy hh:mm a): ");
-                startDate = inputDateFormat.parse(sc.nextLine().trim());
-                System.out.println("Enter End Date Time(dd/MM/yyyy hh:mm a): ");
-                endDate = inputDateFormat.parse(sc.nextLine().trim());
+                System.out.println("Enter Start Date Time(dd/MM/yyyy hh:mm a):");
+                String dates = sc.nextLine().trim();
+                Date startDate = date.parse(dates);
+                System.out.println("Enter End Date Time(dd/MM/yyyy hh:mm a):");
+                dates = sc.nextLine().trim();
+                Date endDate = date.parse(dates);
 
                 try{
                    Category category = categorySessionBeanRemote.retrieveCategoryByName(carCategory);

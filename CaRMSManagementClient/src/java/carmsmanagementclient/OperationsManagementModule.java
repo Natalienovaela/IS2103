@@ -267,7 +267,7 @@ public class OperationsManagementModule {
         } else if(number == 6) {
             List<Car> cars = carSessionBeanRemote.retrieveAllCar();
             for(Car car: cars) {
-                System.out.println("Car ID: " + car.getCarId() + "Model: " + car.getModel().getModel() + " Make: " + car.getModel().getMake() + "Status: " + car.getStatus() + "License Plate Number: " + car.getLicensePlateNumber());
+                System.out.println("Car ID: " + car.getCarId() + " Model: " + car.getModel().getModel() + " Make: " + car.getModel().getMake() + " License Plate Number: " + car.getLicensePlateNumber());
             }
             
         } else if(number == 7) {
@@ -276,7 +276,7 @@ public class OperationsManagementModule {
            sc.nextLine();
            Car car = carSessionBeanRemote.retrieveCarById(carId);
            while(true) {
-           System.out.println("Model: " + car.getModel().getModel() + " Make: " + car.getModel().getMake() + "Status: " + car.getStatus() + "License Plate Number: " + car.getLicensePlateNumber());
+           System.out.println("Model: " + car.getModel().getModel() + " Make: " + car.getModel().getMake() + " Status: " + car.getStatus() + " License Plate Number: " + car.getLicensePlateNumber() + " Category: " + car.getModel().getCategory().getCategoryName());
            System.out.println("1. Update Car");
            System.out.println("2. Delete Car");
            System.out.println("3.Back");

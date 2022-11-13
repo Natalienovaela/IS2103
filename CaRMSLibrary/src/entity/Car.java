@@ -33,9 +33,8 @@ public class Car implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long carId;
-    @Column(length = 7, unique = true)
+    @Column(length = 8, unique = true)
     private String licensePlateNumber;
-    private String colour;
     @Column(nullable = false)
     private Boolean disabled;
     @Enumerated(EnumType.STRING)
@@ -64,20 +63,9 @@ public class Car implements Serializable {
         this.licensePlateNumber = licensePlateNumber;
         this.model = model;
         this.currOutlet = currOutlet;
+        this.disabled = false;
     }
-
-    public Car(String licensePlateNumber, String colour, Boolean disabled, CarStatus status, CarAvailabilityStatus availStatus, TransitDriverDispatch transit, Model model, Outlet currOutlet) {
-        this.licensePlateNumber = licensePlateNumber;
-        this.colour = colour;
-        this.disabled = disabled;
-        this.status = status;
-        this.availStatus = availStatus;
-        this.transit = transit;
-        this.model = model;
-        this.currOutlet = currOutlet;
-        
-    }
-
+    
     public Long getCarId() {
         return carId;
     }
@@ -123,20 +111,6 @@ public class Car implements Serializable {
      */
     public void setLicensePlateNumber(String licensePlateNumber) {
         this.licensePlateNumber = licensePlateNumber;
-    }
-
-    /**
-     * @return the colour
-     */
-    public String getColour() {
-        return colour;
-    }
-
-    /**
-     * @param colour the colour to set
-     */
-    public void setColour(String colour) {
-        this.colour = colour;
     }
 
     /**

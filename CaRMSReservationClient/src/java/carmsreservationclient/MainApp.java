@@ -7,15 +7,15 @@ package carmsreservationclient;
 
 import ejb.session.stateful.ReservationSessionBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
+import ejb.session.stateless.ModelSessionBeanRemote;
+import entity.Car;
 import entity.Customer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -32,17 +32,19 @@ import util.exception.UnknownPersistenceException;
 public class MainApp {
     private ReservationSessionBeanRemote reservationSessionBeanRemote;
     private CustomerSessionBeanRemote customerSessionBeanRemote;
+    private ModelSessionBeanRemote modelSessionBeanRemote;
     
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
     private Customer customer;
     private ReservationClientModule reservationClient;
     
-    public MainApp(CustomerSessionBeanRemote customerSessionBeanRemote,ReservationSessionBeanRemote reservationSessionBeanRemote) {
+    public MainApp(CustomerSessionBeanRemote customerSessionBeanRemote,ReservationSessionBeanRemote reservationSessionBeanRemote, ModelSessionBeanRemote modelSessionBeanRemote) {
     validatorFactory = Validation.buildDefaultValidatorFactory();
     validator = validatorFactory.getValidator();
     this.reservationSessionBeanRemote = reservationSessionBeanRemote;
     this.customerSessionBeanRemote = customerSessionBeanRemote;
+    this.modelSessionBeanRemote = modelSessionBeanRemote;
     }
     
     
@@ -72,7 +74,7 @@ public class MainApp {
                     reservationClient = new ReservationClientModule(customer, reservationSessionBeanRemote);
                     reservationClient.menuReservationClient();
                 }else if (number == 3) {
-                    //searchCar();
+                    searchCar();
                 } else {
                     System.out.println("invalid option please try again! /n");
                 }
@@ -132,15 +134,29 @@ public class MainApp {
             }
     }
     
-     /*public List<Car> searchCar() {
-         Scanner sc = new Scanner(System.in); 
+     public void searchCar() {
+         try {
+         Scanner sc = new Scanner(System.in);
+         SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy hh:mm");
          System.out.println("Enter pick up Date : ");
+         Date pickUpDate = date.parse(sc.nextLine());
          System.out.println("Enter return Date : ");
+         Date returnDate = date.parse(sc.nextLine());
          System.out.println("Enter pick up location : ");
          String pickUpLocation = sc.nextLine();
          System.out.println("Enter return location : ");
          String returnLocation = sc.nextLine();
          
+         List<Car> cars = modelSessionBeanRemote.searchCar(pickUpDate, returnDate, pickUpLocation, returnLocation);
          
-     }*/
+         for(Car car:cars)
+            {
+                System.out.println("Car model: " + car.getModel().getModel() + " Car make: " + car.getModel().getMake() + " Car Category: " + car.getModel().getCategory());
+            }
+         }
+         catch(ParseException ex)
+        {
+            System.out.println("Invalid date input!\n");
+        }   
+     }
 }

@@ -7,6 +7,7 @@ package carmsreservationclient;
 
 import ejb.session.stateful.ReservationSessionBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
+import ejb.session.stateless.ModelSessionBeanRemote;
 import javax.ejb.EJB;
 
 /**
@@ -16,20 +17,20 @@ import javax.ejb.EJB;
 public class Main {
 
     @EJB
+    private static ModelSessionBeanRemote modelSessionBeanRemote;
+
+    @EJB
     private static CustomerSessionBeanRemote customerSessionBeanRemote;
 
     @EJB
     private static ReservationSessionBeanRemote reservationSessionBeanRemote;
-    
-    
-    
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args){
         // TODO code application logic here
-        MainApp mainApp = new MainApp(customerSessionBeanRemote, reservationSessionBeanRemote);
+        MainApp mainApp = new MainApp(customerSessionBeanRemote, reservationSessionBeanRemote, modelSessionBeanRemote);
         mainApp.run();
     }
     
