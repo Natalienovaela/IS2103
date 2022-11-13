@@ -240,26 +240,31 @@ public class OperationsManagementModule {
 
                 try{
                    Model models = modelSessionBeanRemote.retrieveModelbyMakeandModel(make, model);
-                   Outlet outlets = outletSessionBeanRemote.retrieveOutletByName(outlet);
-                   Car newCar = new Car(licensePlateNumber, models, outlets);
-                   newCar.setAvailStatus(status);
-                   Set<ConstraintViolation<Car>>constraintViolations = validator.validate(newCar);
+                    try {
+                        Outlet outlets = outletSessionBeanRemote.retrieveOutletByName(outlet);
+                        Car newCar = new Car(licensePlateNumber, models, outlets);
+                        newCar.setAvailStatus(status);
+                        Set<ConstraintViolation<Car>>constraintViolations = validator.validate(newCar);
                    
-                    if(constraintViolations.isEmpty()) {
-                        try {
-                            carSessionBeanRemote.createCar(newCar, models.getModelId());
-                            System.out.println("Car is created successfully!\n");
-                        } 
-                        catch(UnknownPersistenceException ex){
-                            System.out.println("An unknown error has occurred while creating the new car!: " + ex.getMessage() + "\n");
+                        if(constraintViolations.isEmpty()) {
+                            try {
+                                carSessionBeanRemote.createCar(newCar, models.getModelId());
+                                System.out.println("Car is created successfully!\n");
+                            } 
+                            catch(UnknownPersistenceException ex){
+                                System.out.println("An unknown error has occurred while creating the new car!: " + ex.getMessage() + "\n");
+                            }
+                            catch(InputDataValidationException ex){
+                                System.out.println(ex.getMessage() + "\n");
+                            } 
+                            catch(CarExistException ex) {
+                               System.out.println("An error has occurred while creating the new car!: The car already exist\n");
+                           }
                         }
-                        catch(InputDataValidationException ex){
-                            System.out.println(ex.getMessage() + "\n");
-                        } 
-                        catch(CarExistException ex) {
-                           System.out.println("An error has occurred while creating the new car!: The car already exist\n");
-                       }
                     }
+                    catch (OutletNotExistException ex) {
+                       System.out.println(ex.getMessage());
+                    } 
                 } 
                 catch(ModelNotExistException ex) {
                     System.out.println(ex.getMessage());
@@ -331,6 +336,7 @@ public class OperationsManagementModule {
                 input = sc.nextLine().trim();
                 
                 if(input.length() > 0){
+                    try{
                         Outlet outlet = outletSessionBeanRemote.retrieveOutletByName(input);
                         car.setCurrOutlet(outlet);
                         try{
@@ -344,6 +350,10 @@ public class OperationsManagementModule {
                             System.out.println(ex.getMessage()+ "\n");
                         }
                     }
+                    catch(OutletNotExistException ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                }
            }
            
            
