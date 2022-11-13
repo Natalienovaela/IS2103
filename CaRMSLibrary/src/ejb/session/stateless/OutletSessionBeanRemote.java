@@ -6,7 +6,10 @@
 package ejb.session.stateless;
 
 import entity.Outlet;
+import java.util.Date;
 import javax.ejb.Remote;
+import util.exception.OutletNotExistException;
+import util.exception.OutsideOutletAvailability;
 
 /**
  *
@@ -14,6 +17,8 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface OutletSessionBeanRemote {
-    public Outlet retrieveOutletByName(String name);
+    public Outlet retrieveOutletByName(String name) throws OutletNotExistException;
+
+    public void checkOutletAvailability(Date date, Long outletId) throws OutsideOutletAvailability;
     
 }

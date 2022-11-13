@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import ejb.session.stateful.ReservationSessionBeanLocal;
 import entity.Category;
 import entity.Model;
+import entity.Outlet;
 import entity.Reservation;
 import java.util.Date;
 import java.util.List;
@@ -165,7 +166,7 @@ public class ModelSessionBean implements ModelSessionBeanRemote, ModelSessionBea
         }
     } 
     @Override
-    public List<Model> SearchCar(Date pickupDateTime, Date returnDateTime, String pickupOutlet, String returnOutlet) {  
+    public List<Model> searchCar(Date pickupDateTime, Date returnDateTime, Outlet pickupOutlet, Outlet returnOutlet) {  
         Query query = em.createQuery(
                 "SELECT m FROM Model m"
                         + "EXCEPT"

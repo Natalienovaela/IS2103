@@ -8,8 +8,11 @@ package carmsreservationclient;
 import ejb.session.stateful.ReservationSessionBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.ModelSessionBeanRemote;
+import ejb.session.stateless.OutletSessionBeanRemote;
 import entity.Car;
 import entity.Customer;
+import entity.Model;
+import entity.Outlet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,6 +26,8 @@ import javax.validation.ValidatorFactory;
 import util.exception.CustomerExistException;
 import util.exception.CustomerNotExistException;
 import util.exception.InputDataValidationException;
+import util.exception.OutletNotExistException;
+import util.exception.OutsideOutletAvailability;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -33,13 +38,14 @@ public class MainApp {
     private ReservationSessionBeanRemote reservationSessionBeanRemote;
     private CustomerSessionBeanRemote customerSessionBeanRemote;
     private ModelSessionBeanRemote modelSessionBeanRemote;
+    private OutletSessionBeanRemote outletSessionBeanRemote;
     
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
     private Customer customer;
     private ReservationClientModule reservationClient;
     
-    public MainApp(CustomerSessionBeanRemote customerSessionBeanRemote,ReservationSessionBeanRemote reservationSessionBeanRemote, ModelSessionBeanRemote modelSessionBeanRemote) {
+    public MainApp(CustomerSessionBeanRemote customerSessionBeanRemote,ReservationSessionBeanRemote reservationSessionBeanRemote, ModelSessionBeanRemote modelSessionBeanRemote, OutletSessionBeanRemote outletSessionBeanRemote) {
     validatorFactory = Validation.buildDefaultValidatorFactory();
     validator = validatorFactory.getValidator();
     this.reservationSessionBeanRemote = reservationSessionBeanRemote;
@@ -134,29 +140,48 @@ public class MainApp {
             }
     }
     
-     public void searchCar() {
-         try {
-         Scanner sc = new Scanner(System.in);
-         SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-         System.out.println("Enter pick up Date : ");
-         Date pickUpDate = date.parse(sc.nextLine());
-         System.out.println("Enter return Date : ");
-         Date returnDate = date.parse(sc.nextLine());
-         System.out.println("Enter pick up location : ");
-         String pickUpLocation = sc.nextLine();
-         System.out.println("Enter return location : ");
-         String returnLocation = sc.nextLine();
+    public void searchCar() {
+        try {
+            Scanner sc = new Scanner(System.in);
+            SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+            System.out.println("Enter pick up Date : ");
+            Date pickUpDate = date.parse(sc.nextLine());
+            System.out.println("Enter return Date : ");
+            Date returnDate = date.parse(sc.nextLine());
+            System.out.println("Enter pick up location : ");
+            String pickUpLocation = sc.nextLine();
+            System.out.println("Enter return location : ");
+            String returnLocation = sc.nextLine();
          
-         List<Car> cars = modelSessionBeanRemote.searchCar(pickUpDate, returnDate, pickUpLocation, returnLocation);
-         
-         for(Car car:cars)
-            {
-                System.out.println("Car model: " + car.getModel().getModel() + " Car make: " + car.getModel().getMake() + " Car Category: " + car.getModel().getCategory());
+            try{
+                Outlet pickUpLoc = outletSessionBeanRemote.retrieveOutletByName(pickUpLocation);
+                try {
+                    Outlet returnLoc = outletSessionBeanRemote.retrieveOutletByName(returnLocation);
+                    try{
+                        outletSessionBeanRemote.checkOutletAvailability(pickUpDate, pickUpLoc.getOutletId());
+                        List<Model> models = modelSessionBeanRemote.searchCar(pickUpDate, returnDate, pickUpLoc, returnLoc);
+                        int i = 1;
+                        for(Model model : models)
+                           {
+                               System.out.println(i + ". " + "Car model: " + model.getModel() + ", Car make: " + model.getMake() + ", Car Category: " + model.getCategory());
+                               i++;
+                           }
+                        }
+                    catch(OutsideOutletAvailability ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                }
+                catch(OutletNotExistException ex) {
+                    System.out.println(ex.getMessage());
+                }
             }
-         }
+            catch(OutletNotExistException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
          catch(ParseException ex)
         {
             System.out.println("Invalid date input!\n");
         }   
-     }
+    }
 }

@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Model;
+import entity.Outlet;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
@@ -34,6 +35,6 @@ public interface ModelSessionBeanRemote {
 
     public Model retrieveModelbyMakeandModel(String make, String model) throws ModelNotExistException;
 
-    public List<Model> SearchCar(Date pickupDateTime, Date returnDateTime, String pickupOutlet, String returnOutlet);
+    public List<Model> searchCar(Date pickupDateTime, Date returnDateTime, Outlet pickupOutlet, Outlet returnOutlet);
     
 }
