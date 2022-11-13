@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Car;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 import util.exception.CarExistException;
@@ -34,5 +35,7 @@ public interface CarSessionBeanRemote {
     public void pickUpCar(Long carId, Long reservationId);
 
     public void returnCar(Long carId, Long reservationId);
+
+    public Car SearchCar(Date pickupDateTime, Date returnDateTime, String pickupOutlet, String returnOutlet);
     
 }
