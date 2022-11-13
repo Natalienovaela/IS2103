@@ -23,12 +23,12 @@ public interface CarSessionBeanRemote {
 
     public void createCar(Car car, Long modelId) throws CarExistException, UnknownPersistenceException, InputDataValidationException;
 
+    public void deleteCar(Long carId) throws CarNotExistException, DeleteCarException;
+
     public List<Car> retrieveAllCar();
+    
+    public Car retrieveCarById(Long carId) throws CarNotExistException;
 
-    public Car retrieveCarById(long carId) throws CarNotExistException;
-
-    public void updateCar(Car car) throws CarNotExistException, InputDataValidationException;
-
-    public void deleteCar(long carId) throws CarNotExistException, DeleteCarException;
+    public void updateCar(Car car) throws InputDataValidationException, CarNotExistException;
     
 }
