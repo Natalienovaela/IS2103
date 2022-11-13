@@ -179,8 +179,12 @@ public class ModelSessionBean implements ModelSessionBeanRemote, ModelSessionBea
                         + "ORDER BY m.category ASC, m ASC");
         query.setParameter("pickUpOutlet", pickupOutlet);
         query.setParameter("pickUpDate", pickupDateTime);
-        List<Model> model = query.getResultList();
-        return model;
+        List<Model> models = query.getResultList();
+        
+        for(Model model : models) {
+            model.getCategory().getRentalRates().size();
+        }
+        return models;
     }
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Model>>constraintViolations)
     {
