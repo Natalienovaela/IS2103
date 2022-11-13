@@ -7,6 +7,7 @@ package ejb.session.stateful;
 
 import ejb.session.stateless.CarSessionBeanLocal;
 import ejb.session.stateless.ModelSessionBeanLocal;
+import ejb.session.stateless.RentalRateSessionBeanLocal;
 import entity.Car;
 import entity.Category;
 import entity.Customer;
@@ -47,6 +48,9 @@ import util.exception.UnknownPersistenceException;
 @Stateful
 public class ReservationSessionBean implements ReservationSessionBeanRemote, ReservationSessionBeanLocal {
 
+    @EJB
+    private RentalRateSessionBeanLocal rentalRateSessionBean;
+    
     @EJB
     private ModelSessionBeanLocal modelSessionBean;
 
@@ -224,6 +228,14 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
        }
         
         
+    }
+    
+    private BigDecimal totalAmount(Reservation reservation) {
+        List <RentalRates> rentalRates = rentalRateSessionBean. 
+        
+        for(Reservation reservations : reservation) {
+        
+        }
     }
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Reservation>>constraintViolations)
