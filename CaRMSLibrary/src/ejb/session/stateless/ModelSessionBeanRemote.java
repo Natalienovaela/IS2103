@@ -30,6 +30,6 @@ public interface ModelSessionBeanRemote {
     public void updateModel(Model model) throws InputDataValidationException, ModelNotExistException;
 
     public void deleteModel(Long modelId) throws ModelNotExistException, DeleteModelException;
-    
-    public Model retrieveModelbyModelandMake(String model, String make) throws ModelNotExistException;
+
+    public Model retrieveModelbyMakeandModel(String make, String model) throws ModelNotExistException;
 }
