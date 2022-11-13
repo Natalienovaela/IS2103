@@ -170,16 +170,7 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
             throw new DeleteCarException("Car ID " + carId + " is in use and cannot be deleted! It will be disabled");
         }
     } 
-    
-    @Override
-    public Car SearchCar(Date pickupDateTime, Date returnDateTime, String pickupOutlet, String returnOutlet) {  
-        Query query = em.createQuery("SELECT c FROM Car c WHERE (c.reservations.pickUpDate >= :retunDate AND c.reservations.returnDate >= :pickupDate AND c.reservations.returnOutlet :pickUpOutlet) OR c.reservations IS EMPTY OR (c.reservations.returnDate >= :pickupDate AND c.reservations.returnDate.currentTime() >= :pikcupDate.currentTime())");
-         query.setParameter("returnDate", returnDateTime);
-        query.setParameter("pickUpOutlet", pickupOutlet);
-        query.setParameter("pickUpDate", pickupDateTime);
-        return (Car)query.getSingleResult();
-        }
-    
+     
     @Override
     public void pickUpCar(Long carId, Long reservationId){
         Reservation reservation = em.find(Reservation.class, reservationId);

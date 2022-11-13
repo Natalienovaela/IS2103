@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Model;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 import util.exception.DeleteModelException;
@@ -32,5 +33,7 @@ public interface ModelSessionBeanRemote {
     public void deleteModel(Long modelId) throws ModelNotExistException, DeleteModelException;
 
     public Model retrieveModelbyMakeandModel(String make, String model) throws ModelNotExistException;
+
+    public List<Model> SearchCar(Date pickupDateTime, Date returnDateTime, String pickupOutlet, String returnOutlet);
     
 }

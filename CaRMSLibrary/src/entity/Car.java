@@ -77,7 +77,7 @@ public class Car implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (carId != null ? carId.hashCode() : 0);
+        hash += (getCarId() != null ? getCarId().hashCode() : 0);
         return hash;
     }
 
@@ -88,7 +88,7 @@ public class Car implements Serializable {
             return false;
         }
         Car other = (Car) object;
-        if ((this.carId == null && other.carId != null) || (this.carId != null && !this.carId.equals(other.carId))) {
+        if ((this.getCarId() == null && other.getCarId() != null) || (this.getCarId() != null && !this.carId.equals(other.carId))) {
             return false;
         }
         return true;
@@ -96,7 +96,7 @@ public class Car implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Car[ id=" + carId + " ]";
+        return "entity.Car[ id=" + getCarId() + " ]";
     }
 
     /**

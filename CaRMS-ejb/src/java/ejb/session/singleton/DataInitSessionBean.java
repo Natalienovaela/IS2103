@@ -62,7 +62,7 @@ public class DataInitSessionBean {
         Outlet outlet2 = new Outlet("Outlet B", "address B", null, null);
         em.persist(outlet2);
         em.flush();
-        Outlet outlet3 = new Outlet("Outlet C","address C", "10:00", "22:00");
+        Outlet outlet3 = new Outlet("Outlet C","address C", "08:00", "22:00");
         em.persist(outlet3); 
         em.flush();
     }

@@ -136,8 +136,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
     //}
     
-    /*public void cancelReservation(long reservationId, Date cancelDate) throws ReservationNotExistException {
-        Calendar calendar = Calendar.getInstance();
+    /*public void cancelReservation(long reservationId) throws ReservationNotExistException {
         Reservation cancelReservation = retrieveReservationById(reservationId);
         if(cancelReservation == null) {
             throw new ReservationNotExistException("Reservation with Reservation ID " + reservationId + " does not exist");
