@@ -6,9 +6,13 @@
 package ejb.session.stateful;
 
 import entity.Car;
+import entity.Customer;
 import entity.Model;
 import entity.RentalRates;
 import entity.Reservation;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -16,7 +20,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exception.CarNotExistException;
 import util.exception.ModelNotExistException;
-import util.exception.RentalRatesNotExistException;
+import util.exception.RentalRateNotExistException;
+import util.exception.ReservationNotExistException;
 
 /**
  *
@@ -44,10 +49,47 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
     
     @Override
-    public List<Reservation> retrieveReservationByRentalRateId(Long rentalRateId) throws RentalRatesNotExistException {
+    public List<Reservation> retrieveCurrentDateReservation(Date date) {
+        Calendar todayCalendar = Calendar.getInstance();
+        todayCalendar.setTime(date);
+        
+        Calendar pickUpCalendar = Calendar.getInstance();
+        
+        Query query = em.createQuery("SELECT r From Reservation r");
+        List<Reservation> reservations = query.getResultList();
+        
+        List<Reservation> returnedReservation = new ArrayList<>();
+        
+        for(Reservation reservation: reservations) {
+            pickUpCalendar.setTime(reservation.getPickUpDate());
+            if(pickUpCalendar.get(Calendar.YEAR) == todayCalendar.get(Calendar.YEAR)
+                    && pickUpCalendar.get(Calendar.MONTH) == todayCalendar.get(Calendar.MONTH)
+                    && pickUpCalendar.get(Calendar.DAY_OF_MONTH) == todayCalendar.get(Calendar.DAY_OF_MONTH)){
+                returnedReservation.add(reservation);
+            }
+        }
+        
+        return returnedReservation;
+        
+    }
+    
+    @Override
+    public List<Reservation> retrieveReservationByCarId(Long carId) throws CarNotExistException {
+        Car car = em.find(Car.class, carId);
+        if(car == null) {
+            throw new CarNotExistException("Car with Car ID " + carId + " does not exist");
+        } else {
+            Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.car = :car");
+            query.setParameter("car", car);
+            return query.getResultList();
+        }
+    }
+    
+    @Override
+    public List<Reservation> retrieveReservationByRentalRateId(Long rentalRateId) throws RentalRateNotExistException {
         RentalRates rentalRate = em.find(RentalRates.class, rentalRateId);
         if(rentalRate == null) {
-            throw new RentalRatesNotExistException("Rental Rate with Rental Rate ID " + rentalRateId + " does not exist");
+            throw new RentalRateNotExistException("Rental Rate with Rental Rate ID " + rentalRateId + " does not exist");
         } else {
             Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.rentalRates = :rentalRate");
             query.setParameter("rentalRate", rentalRate);
@@ -55,15 +97,40 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         }
     }
     
-    @Override
-    public List<Reservation> retrieveReservationByCarId(Long carId) throws CarNotExistException {
-        Car car = em.find(Car.class, carId);
-        if(car == null) {
-            throw new CarNotExistException("Car with car ID " + carId + " does not exist");
+     @Override
+    public Reservation retrieveReservationById(Long reservationId) throws ReservationNotExistException {
+        Reservation reservation = em.find(Reservation.class, reservationId);
+        if(reservation == null) {
+            throw new ReservationNotExistException("Reservation with Reservation ID " + reservationId + " does not exist");
         } else {
-            Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.model.car = :car");
-            query.setParameter("car", car);
-            return query.getResultList();
+            return reservation;
         }
+    }
+    
+    @Override
+    public List<Reservation> retrieveMyReservations(long customerId) {
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.customer.customerId :customer");
+        query.setParameter("customer", customerId);
+        return query.getResultList();
+    }
+    
+    
+    //public Reservation reserveCar(Car car, Customer customer) {
+        
+    //}
+    
+    public void CancelReservation(long reservationId) throws ReservationNotExistException {
+        Reservation cancelReservation = retrieveReservationById(reservationId);
+        if(cancelReservation == null) {
+            throw new ReservationNotExistException("Reservation with Reservation ID " + reservationId + " does not exist");
+        }
+        
+        
+        
+    }
+    
+    public void CreateReservation(Reservation reservation) {
+        
+        
     }
 }
