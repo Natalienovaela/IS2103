@@ -29,6 +29,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.enumeration.CarStatus;
 import util.exception.CarExistException;
 import util.exception.CarNotExistException;
 import util.exception.DeleteCarException;
@@ -177,6 +178,25 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
         query.setParameter("pickUpDate", pickupDateTime);
         return (Car)query.getSingleResult();
         }
+    
+    @Override
+    public void pickUpCar(Long carId, Long reservationId){
+        Reservation reservation = em.find(Reservation.class, reservationId);
+        Car car = em.find(Car.class, carId);
+        reservation.setPickedUp(Boolean.TRUE);
+        car.setStatus(CarStatus.ONRENTAL);
+        car.setCurrOutlet(null);
+    }
+    
+    public void returnCar(Long carId, Long reservationId) {
+        Reservation reservation = em.find(Reservation.class, reservationId);
+        Car car = em.find(Car.class, carId);
+        reservation.setReturned(Boolean.TRUE);
+        car.setStatus(CarStatus.INOUTLET);
+        car.setCurrOutlet(reservation.getReturnOutlet());
+        em.remove(reservation);
+    }
+    
             
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Car>>constraintViolations)
     {
