@@ -75,13 +75,15 @@ public class Reservation implements Serializable {
         rentalRates = new ArrayList<>();
     }
 
-    public Reservation(Date pickUpDate, Date returnDate, Boolean pickedUp, Boolean returned, BigDecimal totalAmount) {
+    public Reservation(Date pickUpDate, Date returnDate, Outlet pickupOutlet, Outlet returnOutlet,  Category category, Model model) {
         this.pickUpDate = pickUpDate;
         this.returnDate = returnDate;
-        this.pickedUp = pickedUp;
-        this.returned = returned;
-        this.totalAmount = totalAmount;
+        this.category = category;
+        this.pickupOutlet = pickupOutlet;
+        this.returnOutlet = returnOutlet;
+        this.model = model;
     }
+    
 
     public Long getReservationId() {
         return reservationId;
