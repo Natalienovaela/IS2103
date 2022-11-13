@@ -230,13 +230,47 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
     }
     
-    /*private BigDecimal totalAmount(Reservation reservation) {
-        List <RentalRates> rentalRates = rentalRateSessionBean. 
+    public BigDecimal totalAmount(Reservation reservation) {
+        Category category = reservation.getCategory();
         
-        for(Reservation reservations : reservation) {
+        List<RentalRates> rentals = category.getRentalRates();
+        RentalRates finalRent = rentals.get(0);
+        Calendar cal = Calendar.getInstance();
+        Calendar pic = Calendar.getInstance();
+        pic.setTime(reservation.getPickUpDate());
+        Calendar ret = Calendar.getInstance();
+        ret.setTime(reservation.getReturnDate());
+        BigDecimal amount = BigDecimal.valueOf(0);
         
+        while(pic.before(ret)) {
+            for(int i = 0; i <= rentals.size(); i++) {
+                cal.setTime(rentals.get(i).getStartDateTime());
+                if(pic.after(cal) || pic.equals(cal)) {
+                    if(rentals.get(i).getRentalRateType().equals("Promotion") && (finalRent.getRentalRateType().equals("Default") || finalRent.getRentalRateType().equals("Peak"))) {
+                        finalRent = rentals.get(i);
+                    }  
+                    else if(rentals.get(i).getRentalRateType().equals("Promotion") && finalRent.getRentalRateType().equals("Promotion") && rentals.get(i).getRatePerDay().compareTo(finalRent.getRatePerDay()) < 0) {
+                        finalRent = rentals.get(i);
+                    }
+                    else if(rentals.get(i).getRentalRateType().equals("Peak") && (rentals.get(i).getRentalRateType().equals("Default"))) {
+                        finalRent = rentals.get(i);
+                    } else if(rentals.get(i).getRentalRateType().equals("Peak") && finalRent.getRentalRateType().equals("Peak") && rentals.get(i).getRatePerDay().compareTo(finalRent.getRatePerDay()) < 0) {
+                        finalRent = rentals.get(i);
+                    }
+                    else if(rentals.get(i).getRentalRateType().equals("Default") && finalRent.getRentalRateType().equals("Default") && rentals.get(i).getRatePerDay().compareTo(finalRent.getRatePerDay()) < 0) {
+                        finalRent = rentals.get(i);
+                    }
+                    else {
+                        finalRent = rentals.get(i);
+                    }
+                }
+            }
+            
+            amount.add(finalRent.getRatePerDay());
+            pic.add(Calendar.DATE, 1);
         }
-    }*/
+        return amount;
+    }
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Reservation>>constraintViolations)
     {

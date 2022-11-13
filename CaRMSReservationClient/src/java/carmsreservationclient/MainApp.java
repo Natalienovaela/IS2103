@@ -10,12 +10,14 @@ import ejb.session.stateless.CategorySessionBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.ModelSessionBeanRemote;
 import ejb.session.stateless.OutletSessionBeanRemote;
+import ejb.session.stateless.RentalRateSessionBeanRemote;
 import entity.Car;
 import entity.Category;
 import entity.Customer;
 import entity.Model;
 import entity.Outlet;
 import entity.Reservation;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -53,13 +55,14 @@ public class MainApp {
     private ModelSessionBeanRemote modelSessionBeanRemote;
     private OutletSessionBeanRemote outletSessionBeanRemote;
     private CategorySessionBeanRemote categorySessionBeanRemote;
+    private RentalRateSessionBeanRemote rentalRateSessionBeanRemote;
     
     
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
     private Customer customer;
     
-    public MainApp(CategorySessionBeanRemote categorySessionBeanrRemote, CustomerSessionBeanRemote customerSessionBeanRemote,ReservationSessionBeanRemote reservationSessionBeanRemote, ModelSessionBeanRemote modelSessionBeanRemote, OutletSessionBeanRemote outletSessionBeanRemote) {
+    public MainApp(CategorySessionBeanRemote categorySessionBeanrRemote, CustomerSessionBeanRemote customerSessionBeanRemote,ReservationSessionBeanRemote reservationSessionBeanRemote, ModelSessionBeanRemote modelSessionBeanRemote, OutletSessionBeanRemote outletSessionBeanRemote, RentalRateSessionBeanRemote rentalRateSessionBeanRemote) {
     validatorFactory = Validation.buildDefaultValidatorFactory();
     validator = validatorFactory.getValidator();
     this.categorySessionBeanRemote = categorySessionBeanRemote;
@@ -67,6 +70,7 @@ public class MainApp {
     this.customerSessionBeanRemote = customerSessionBeanRemote;
     this.modelSessionBeanRemote = modelSessionBeanRemote;
     this.outletSessionBeanRemote = outletSessionBeanRemote;
+    this.rentalRateSessionBeanRemote = rentalRateSessionBeanRemote;
     }
     
     
@@ -219,6 +223,9 @@ public class MainApp {
             Integer number = sc.nextInt();
 
             if(number == 1) {
+                BigDecimal totalAmount = reservationSessionBeanRemote.totalAmount(reservation);
+                
+                System.out.println("Total amount to pay is " + totalAmount);
                 reservation.setPaid(Boolean.TRUE);
                 break;
             } else if ( number == 2) {
@@ -230,6 +237,11 @@ public class MainApp {
                 System.out.println("Enter cardNumber: ");
                 String cardNumber = sc.nextLine();
                 customerSessionBeanRemote.setCreditCard(customer.getCustomerId(), cVV, nameOnCard, cardNumber);
+                
+                BigDecimal totalAmount = reservationSessionBeanRemote.totalAmount(reservation);
+                
+                System.out.println("Total amount to pay is " + totalAmount);
+                break;
                 
             }else {
                 System.out.println("invalid input! please try again");

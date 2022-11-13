@@ -22,5 +22,7 @@ public interface CustomerSessionBeanRemote {
     public void registerCustomer(Customer customer) throws CustomerExistException, UnknownPersistenceException, InputDataValidationException;
 
     public Customer retrieveCustomerByEmail(String email) throws CustomerNotExistException;
+
+    public void setCreditCard(Long customerId, String cVV, String nameOnCard, String cardNumber);
     
 }

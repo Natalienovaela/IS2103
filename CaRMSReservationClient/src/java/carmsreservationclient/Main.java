@@ -10,6 +10,7 @@ import ejb.session.stateless.CategorySessionBeanRemote;
 import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.ModelSessionBeanRemote;
 import ejb.session.stateless.OutletSessionBeanRemote;
+import ejb.session.stateless.RentalRateSessionBeanRemote;
 import javax.ejb.EJB;
 import util.exception.ModelNotInTheSearchListException;
 
@@ -18,6 +19,9 @@ import util.exception.ModelNotInTheSearchListException;
  * @author Natalienovaela
  */
 public class Main {
+
+    @EJB
+    private static RentalRateSessionBeanRemote rentalRateSessionBeanRemote;
 
     @EJB
     private static CategorySessionBeanRemote categorySessionBeanRemote;
@@ -41,7 +45,7 @@ public class Main {
      */
     public static void main(String[] args) throws ModelNotInTheSearchListException{
         // TODO code application logic here
-        MainApp mainApp = new MainApp(categorySessionBeanRemote, customerSessionBeanRemote, reservationSessionBeanRemote, modelSessionBeanRemote, outletSessionBeanRemote);
+        MainApp mainApp = new MainApp(categorySessionBeanRemote, customerSessionBeanRemote, reservationSessionBeanRemote, modelSessionBeanRemote, outletSessionBeanRemote, rentalRateSessionBeanRemote);
         mainApp.run();
     }
     

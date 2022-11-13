@@ -34,6 +34,12 @@ public class Customer implements Serializable {
     private String phoneNumber;
     @Column(nullable = false, length = 9, unique = true)
     private String passportNumber;
+    @Column(length = 3, unique = true)
+    private String cVV;
+    @Column(length = 64, unique = true)
+    private String nameOnCard;
+    @Column(length = 64, unique = true)
+    private String cardNumber;
     
     @OneToMany(mappedBy = "customer")
     private List<Reservation> reservations;
@@ -150,6 +156,30 @@ public class Customer implements Serializable {
      */
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    public String getcVV() {
+        return cVV;
+    }
+
+    public void setcVV(String cVV) {
+        this.cVV = cVV;
+    }
+
+    public String getNameOnCard() {
+        return nameOnCard;
+    }
+
+    public void setNameOnCard(String nameOnCard) {
+        this.nameOnCard = nameOnCard;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
     
 }

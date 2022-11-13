@@ -41,6 +41,7 @@ public class CustomerSessionBean implements CustomerSessionBeanRemote, CustomerS
         validator = validatorFactory.getValidator();
     } 
     
+    @Override
     public void registerCustomer(Customer customer) throws CustomerExistException, UnknownPersistenceException, InputDataValidationException{
         Set<ConstraintViolation<Customer>>constraintViolations = validator.validate(customer);
         if(constraintViolations.isEmpty()) {
@@ -85,6 +86,14 @@ public class CustomerSessionBean implements CustomerSessionBeanRemote, CustomerS
             throw new CustomerNotExistException("Customer with the eamil " + email + " does not exist\n");
         }
     }
+    
+    public void setCreditCard(Long customerId, String cVV, String nameOnCard, String cardNumber) {
+        Customer customer = em.find(Customer.class, customerId);
+        customer.setcVV(cVV);
+        customer.setNameOnCard(nameOnCard);
+        customer.setCardNumber(cardNumber);
+    }
+
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Customer>>constraintViolations)
     {
         String msg = "Input data validation error!:";

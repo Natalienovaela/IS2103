@@ -41,7 +41,7 @@ public class DataInitSessionBean {
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
     @PostConstruct
-    public void postConstruct(){
+    public void postConstruct() {
         
         
         if(em.find(Outlet.class, 1l) == null) {
@@ -68,7 +68,12 @@ public class DataInitSessionBean {
             initialiseCar();
         }
         
-        
+        if(em.find(RentalRates.class, 1l) == null) {
+            try {
+                initialiseRentalRates();
+            } catch (ParseException ex) {
+            }
+        }
     }
     
     
