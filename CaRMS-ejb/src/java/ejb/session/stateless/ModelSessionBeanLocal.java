@@ -5,7 +5,10 @@
  */
 package ejb.session.stateless;
 
+import entity.Car;
 import entity.Model;
+import entity.Outlet;
+import java.util.List;
 import javax.ejb.Local;
 import util.exception.ModelNotExistException;
 
@@ -15,7 +18,6 @@ import util.exception.ModelNotExistException;
  */
 @Local
 public interface ModelSessionBeanLocal {
-
-    public Model retrieveModelbyModelandMake(String model, String make) throws ModelNotExistException;
+    public List<Model> retrieveAllModel();
     
 }
