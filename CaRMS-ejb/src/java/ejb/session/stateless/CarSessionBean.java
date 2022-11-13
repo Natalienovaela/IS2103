@@ -7,9 +7,17 @@ package ejb.session.stateless;
 
 import ejb.session.stateful.ReservationSessionBeanLocal;
 import entity.Car;
+import entity.Category;
 import entity.Model;
 import entity.Reservation;
+import static java.lang.Math.random;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -24,9 +32,7 @@ import javax.validation.ValidatorFactory;
 import util.exception.CarExistException;
 import util.exception.CarNotExistException;
 import util.exception.DeleteCarException;
-import util.exception.DeleteRentalRateException;
 import util.exception.InputDataValidationException;
-import util.exception.RentalRatesNotExistException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -37,7 +43,15 @@ import util.exception.UnknownPersistenceException;
 public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal {
 
     @EJB
+    private ModelSessionBeanLocal modelSessionBean;
+
+    @EJB
+    private CategorySessionBeanLocal categorySessionBean;
+
+    @EJB
     private ReservationSessionBeanLocal reservationSessionBean;
+    
+    
 
     @PersistenceContext(unitName = "CaRMS-ejbPU")
     private EntityManager em;
@@ -50,18 +64,21 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
         validator = validatorFactory.getValidator();
     }
     
+    // Add business logic below. (Right-click in editor and choose
+    // "Insert Code > Add Business Method")
     @Override
-  public void createCar(Car car, Long modelId) throws CarExistException, UnknownPersistenceException, InputDataValidationException {
-        Set<ConstraintViolation<Car>>constraintViolations = validator.validate(car);
-        
-        if(constraintViolations.isEmpty()) {
-        try {
-            Model model = em.find(Model.class, modelId); 
-            em.persist(model);
-            car.setModel(model);
-            model.getCars().add(car);
-        } 
-        catch(PersistenceException ex) {
+    public void createCar(Car car, Long modelId) throws CarExistException, UnknownPersistenceException, InputDataValidationException {
+       Set<ConstraintViolation<Car>>constraintViolations = validator.validate(car);
+       
+       if(constraintViolations.isEmpty()) {
+            try {
+                Model model = em.find(Model.class, modelId);
+                em.persist(car);
+                car.setModel(model);
+                model.getCars().add(car);
+                em.flush();
+            }
+            catch(PersistenceException ex) {
                 if(ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException"))
                 {
                     if(ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException"))
@@ -85,25 +102,33 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
     
     @Override
     public List<Car> retrieveAllCar() {
-        Query query = em.createQuery("SELECT c FROM Car c ORDER BY c.model.category.categoryName, c.model.make,c.model.model, c.licensePlateNumber ASC");
+        Query query = em.createQuery("SELECT c FROM Car c ORDER BY c.model.category.categoryName, c.model.make, c.model.model, c.licensePlateNumber ASC");
+        return query.getResultList();
+    }
+    
+    public List<Car> retrieveAllCarByOutletandDate(String outlet, Date pickupDate) {
+        Query query = em.createQuery("SELECT c FROM Car c WHERE (c.reservations IS EMPTY AND c.currOutlet :outlet) OR (c.reservations <= :pickupDate AND c.currOutlet.outletName :outlet)");
+        query.setParameter("outlet", outlet);
+        query.setParameter("pickupDate", pickupDate);
         return query.getResultList();
     }
     
     @Override
-    public Car retrieveCarById(long carId) throws CarNotExistException {
+    public Car retrieveCarById(Long carId) throws CarNotExistException{
         Car car = em.find(Car.class, carId);
         
         if(car == null) {
-            throw new CarNotExistException("Car for the  Car ID " + carId + " does not exist");
+
+            throw new CarNotExistException("Car with Car ID " + carId + " does not exist");
         }
         else {
             return car;
         }
-    
     }
     
-    public void updateCar(Car car) throws CarNotExistException, InputDataValidationException {
-         if(car != null && car.getCarId()!= null)
+    @Override
+    public void updateCar(Car car) throws InputDataValidationException, CarNotExistException {
+        if(car != null && car.getCarId()!= null)
         {
             Set<ConstraintViolation<Car>>constraintViolations = validator.validate(car);
         
@@ -111,10 +136,10 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
             {
                 Car updateCar = retrieveCarById(car.getCarId());
                 updateCar.setLicensePlateNumber(car.getLicensePlateNumber());
-                updateCar.setColour(car.getColour());
+                updateCar.setAvailStatus(car.getAvailStatus());
                 updateCar.getModel().getCars().remove(updateCar);
                 updateCar.setModel(car.getModel());
-                updateCar.getModel().getCars().add(updateCar);
+                updateCar.getModel().getCars().add(car);
             }
             else
             {
@@ -127,28 +152,33 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
         }
     }
     
-    public void deleteCar(long carId) throws CarNotExistException, DeleteCarException {
-       Car deleteCar = em.find(Car.class, carId);
-       List<Reservation> reservations = reservationSessionBean.retrieveReservationByCarId(carId);
+    @Override
+    public void deleteCar(Long carId) throws CarNotExistException, DeleteCarException
+    {
+        Car removeCar = retrieveCarById(carId);
+        List<Reservation> reservations = reservationSessionBean.retrieveReservationByCarId(carId);
         
         if(reservations.isEmpty())
         {
-            deleteCar.getModel().getCars().remove(deleteCar);
-            em.remove(deleteCar);
+            removeCar.getModel().getCars().remove(removeCar);
+            em.remove(removeCar);
         }
         else
         {
-            deleteCar.setDisabled(Boolean.TRUE);
+            removeCar.setDisabled(Boolean.TRUE);
             throw new DeleteCarException("Car ID " + carId + " is in use and cannot be deleted! It will be disabled");
         }
-        
-        
-    }
-
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    } 
     
-     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Car>>constraintViolations)
+    public Car SearchCar(Date pickupDateTime, Date returnDateTime, String pickupOutlet, String returnOutlet) {  
+        Query query = em.createQuery("SELECT c FROM Car c WHERE (c.reservations.pickUpDate >= :retunDate AND c.reservations.returnDate >= :pickupDate AND c.reservations.returnOutlet :pickUpOutlet) OR c.reservations IS EMPTY OR (c.reservations.returnDate >= :pickupDate AND c.reservations.returnDate.currentTime() >= :pikcupDate.currentTime())");
+         query.setParameter("returnDate", returnDateTime);
+        query.setParameter("pickUpOutlet", pickupOutlet);
+        query.setParameter("pickUpDate", pickupDateTime);
+        return (Car)query.getSingleResult();
+        }
+            
+    private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Car>>constraintViolations)
     {
         String msg = "Input data validation error!:";
             
@@ -159,9 +189,4 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
         
         return msg;
     }
-    
-
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
-    
 }

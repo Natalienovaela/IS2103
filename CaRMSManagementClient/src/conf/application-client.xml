@@ -6,4 +6,9 @@
     <ejb-ref-type>Session</ejb-ref-type>
     <remote>ejb.session.stateless.ModelSessionBeanRemote</remote>
   </ejb-ref>
+  <ejb-ref>
+    <ejb-ref-name>CarSessionBean</ejb-ref-name>
+    <ejb-ref-type>Session</ejb-ref-type>
+    <remote>ejb.session.stateless.CarSessionBeanRemote</remote>
+  </ejb-ref>
 </application-client>

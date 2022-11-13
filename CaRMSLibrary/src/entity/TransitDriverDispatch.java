@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -26,11 +28,11 @@ public class TransitDriverDispatch implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transitId;
-    private Long travelDuration;
     private Date transitDate;
+    @Column(nullable = false)
+    private Boolean completed;
     
-    @JoinColumn(nullable = false)
-    @OneToOne(optional = false)
+    @OneToOne
     private Employee transitDriver;
     
     @JoinColumn(nullable = false)
@@ -40,6 +42,16 @@ public class TransitDriverDispatch implements Serializable {
     @JoinColumn(nullable = false)
     @OneToOne(optional = false)
     private Car car;
+
+    public TransitDriverDispatch(Date transitDate, Outlet outlet, Car car) {
+        this.completed = false;
+        this.transitDate = transitDate;
+        this.outlet = outlet;
+        this.car = car;
+    }
+
+    public TransitDriverDispatch() {
+    }
 
     public Long getTransitId() {
         return transitId;
@@ -72,6 +84,46 @@ public class TransitDriverDispatch implements Serializable {
     @Override
     public String toString() {
         return "entity.TransitDriverDispatch[ id=" + transitId + " ]";
+    }
+
+    public Date getTransitDate() {
+        return transitDate;
+    }
+
+    public void setTransitDate(Date transitDate) {
+        this.transitDate = transitDate;
+    }
+
+    public Employee getTransitDriver() {
+        return transitDriver;
+    }
+
+    public void setTransitDriver(Employee transitDriver) {
+        this.transitDriver = transitDriver;
+    }
+
+    public Outlet getOutlet() {
+        return outlet;
+    }
+
+    public void setOutlet(Outlet outlet) {
+        this.outlet = outlet;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
+
+    public Boolean getCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(Boolean completed) {
+        this.completed = completed;
     }
     
 }

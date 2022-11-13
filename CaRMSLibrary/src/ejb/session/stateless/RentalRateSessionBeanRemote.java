@@ -11,7 +11,7 @@ import javax.ejb.Remote;
 import util.exception.DeleteRentalRateException;
 import util.exception.InputDataValidationException;
 import util.exception.RentalRateExistException;
-import util.exception.RentalRatesNotExistException;
+import util.exception.RentalRateNotExistException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -21,14 +21,14 @@ import util.exception.UnknownPersistenceException;
 @Remote
 public interface RentalRateSessionBeanRemote {
 
-    public void createRentalRate(RentalRates rentalRate, Long categoryId) throws RentalRateExistException, UnknownPersistenceException, InputDataValidationException;
+    public void deleteRentalRate(Long rentalRateId) throws RentalRateNotExistException, DeleteRentalRateException;
+
+    public void updateRentalRate(RentalRates rentalRate) throws InputDataValidationException, RentalRateNotExistException;
+
+    public RentalRates retrieveRentalRateById(Long rentalRateId) throws RentalRateNotExistException;
 
     public List<RentalRates> retrieveAllRentalRate();
 
-    public RentalRates retrieveRentalRateById(long rentalRateId) throws RentalRatesNotExistException;
-
-    public void updateRentalRate(RentalRates rentalRate) throws RentalRatesNotExistException, InputDataValidationException;
-
-    public void deleteRentalRate(long rentalRateId) throws RentalRatesNotExistException, DeleteRentalRateException;
+    public void createRentalRate(RentalRates rentalRate, Long categoryId) throws RentalRateExistException, UnknownPersistenceException, InputDataValidationException;
     
 }

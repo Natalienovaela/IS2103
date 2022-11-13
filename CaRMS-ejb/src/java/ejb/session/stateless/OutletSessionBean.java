@@ -31,7 +31,7 @@ public class OutletSessionBean implements OutletSessionBeanRemote, OutletSession
 
     @Override
     public Outlet retrieveOutletByName(String name) {
-        Query query = em.createQuery("SELECT o FROM Outlet o WHERE o.name = :name");
+        Query query = em.createQuery("SELECT o FROM Outlet o WHERE o.outletName = :name");
         query.setParameter("name", name);
         Outlet outlet = (Outlet)query.getSingleResult();
         outlet.getEmployees().size();

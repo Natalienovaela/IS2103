@@ -8,6 +8,7 @@ package entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -32,9 +35,13 @@ public class RentalRates implements Serializable {
     private Long rentalRateId;
     @Column(nullable = false, length = 10)
     private String name;
-    @Column(nullable = false, length = 10)
-    private String validityPeriod;
-    @Column(precision = 5, scale = 2)
+    @Column(nullable = false, length = 15)
+    private String rentalRateType;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date StartDateTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date EndDateTime;
+    @Column(nullable = false, length = 8)
     private BigDecimal ratePerDay;
     @Column
     private Boolean disabled;
@@ -50,10 +57,23 @@ public class RentalRates implements Serializable {
         reservations = new ArrayList<>();
     }
 
-    public RentalRates(String name, String validityPeriod, BigDecimal ratePerDay) {
+    public RentalRates(String name, String rentalRateType,  Category category,  BigDecimal ratePerDay, Date StartDateTime, Date EndDateTime) {
         this.name = name;
-        this.validityPeriod = validityPeriod;
+        this.rentalRateType = rentalRateType;
+        this.StartDateTime = StartDateTime;
+        this.EndDateTime = EndDateTime;
         this.ratePerDay = ratePerDay;
+        this.category = category;
+    }
+
+    
+    public RentalRates(String name, String rentalRateType, Date StartDateTime, Date EndDateTime, BigDecimal ratePerDay, Boolean disabled) {
+        this.name = name;
+        this.rentalRateType = rentalRateType;
+        this.StartDateTime = StartDateTime;
+        this.EndDateTime = EndDateTime;
+        this.ratePerDay = ratePerDay;
+        this.disabled = disabled;
     }
 
     public Long getRentalRateId() {
@@ -101,20 +121,6 @@ public class RentalRates implements Serializable {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * @return the validityPeriod
-     */
-    public String getValidityPeriod() {
-        return validityPeriod;
-    }
-
-    /**
-     * @param validityPeriod the validityPeriod to set
-     */
-    public void setValidityPeriod(String validityPeriod) {
-        this.validityPeriod = validityPeriod;
     }
 
     /**
@@ -171,6 +177,48 @@ public class RentalRates implements Serializable {
      */
     public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
+    }
+
+    /**
+     * @return the rentalRateType
+     */
+    public String getRentalRateType() {
+        return rentalRateType;
+    }
+
+    /**
+     * @param rentalRateType the rentalRateType to set
+     */
+    public void setRentalRateType(String rentalRateType) {
+        this.rentalRateType = rentalRateType;
+    }
+
+    /**
+     * @return the StartDateTime
+     */
+    public Date getStartDateTime() {
+        return StartDateTime;
+    }
+
+    /**
+     * @param StartDateTime the StartDateTime to set
+     */
+    public void setStartDateTime(Date StartDateTime) {
+        this.StartDateTime = StartDateTime;
+    }
+
+    /**
+     * @return the EndDateTime
+     */
+    public Date getEndDateTime() {
+        return EndDateTime;
+    }
+
+    /**
+     * @param EndDateTime the EndDateTime to set
+     */
+    public void setEndDateTime(Date EndDateTime) {
+        this.EndDateTime = EndDateTime;
     }
     
 }
