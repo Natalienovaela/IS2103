@@ -6,8 +6,10 @@
 package ejb.session.stateless;
 
 import ejb.session.stateful.ReservationSessionBeanLocal;
+import entity.Car;
 import entity.Category;
 import entity.Model;
+import entity.Outlet;
 import entity.Reservation;
 import java.util.List;
 import java.util.Set;
@@ -105,17 +107,18 @@ public class ModelSessionBean implements ModelSessionBeanRemote, ModelSessionBea
     }
     
     @Override
-    public Model retrieveModelbyModelandMake(String model, String make) throws ModelNotExistException{
-        Query query = em.createQuery("Select m from Model m WHERE m.getMake() = :make, m.getModel() = :model");
+    public Model retrieveModelbyMakeandModel(String make, String model) throws ModelNotExistException{
+        Query query = em.createQuery("SELECT m FROM Model m WHERE m.make = :make AND m.model = :model");
         query.setParameter("make", make);
         query.setParameter("model", model);
-        query.getSingleResult();
         
-        if(query == null) {
-            throw new ModelNotExistException("Model with model " + model + " and make " + make + " does not exist");
+        Model retrieveModel = (Model)query.getSingleResult();
+        
+        if(retrieveModel == null) {
+            throw new ModelNotExistException("Model with the make " + make + "and model" + model + " does not exist");
         }
         else {
-            return (Model)query;
+            return retrieveModel;
         }
     }
     
