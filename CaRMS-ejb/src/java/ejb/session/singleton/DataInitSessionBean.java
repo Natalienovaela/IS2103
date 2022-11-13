@@ -146,10 +146,10 @@ public class DataInitSessionBean {
         outletC.getEmployees().add(employeeC3);
         em.flush();
         
-        /*Employee systemAdmin = new Employee("SystemAdmin", "systemAdmin@gmail.com", "admin", EmployeeRole.SYSTEMADMINISTRATOR);
+        Employee systemAdmin = new Employee("SystemAdmin", "systemAdmin@gmail.com", "admin", EmployeeRole.SYSTEMADMINISTRATOR);
         em.persist(systemAdmin);
         systemAdmin.setOutlet(outletA);
-        em.flush();*/
+        em.flush();
     }
     
     public void initialisePartner() {
@@ -172,4 +172,3 @@ public class DataInitSessionBean {
         em.flush();
     }
 }
-
