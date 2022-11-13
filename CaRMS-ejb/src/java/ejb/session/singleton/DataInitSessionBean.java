@@ -30,7 +30,7 @@ public class DataInitSessionBean {
 
     @PersistenceContext(unitName = "CaRMS-ejbPU")
     private EntityManager em;
-
+    
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
     @PostConstruct
@@ -53,6 +53,7 @@ public class DataInitSessionBean {
             initialiseCategory();
         }
     }
+    
     
     public void initialiseOutlet() {
         Outlet outlet = new Outlet("Outlet A", "address A", null, null);
@@ -170,5 +171,5 @@ public class DataInitSessionBean {
         em.persist(category);
         em.flush();
     }
-
 }
+
