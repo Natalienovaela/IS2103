@@ -9,7 +9,7 @@ package util.exception;
  *
  * @author PERSONAL
  */
-public class DeleteRentalRateException extends Exception{
+public class DeleteRentalRateException extends Exception {
 
     /**
      * Creates a new instance of <code>DeleteRentalRateException</code> without
