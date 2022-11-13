@@ -6,13 +6,18 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import util.enumeration.CarStatus;
 import util.enumeration.CarAvailabilityStatus;
@@ -33,7 +38,9 @@ public class Car implements Serializable {
     private String colour;
     @Column(nullable = false)
     private Boolean disabled;
+    @Enumerated(EnumType.STRING)
     private CarStatus status;
+    @Enumerated(EnumType.STRING)
     private CarAvailabilityStatus availStatus;
     
     @OneToOne(mappedBy = "car")
@@ -46,11 +53,30 @@ public class Car implements Serializable {
     @ManyToOne
     private Outlet currOutlet;
     
-    @ManyToOne
-    private Customer customer;
+    @OneToMany
+    private List<Reservation> reservations;
+
+    public Car() {
+        reservations = new ArrayList();
+    }
     
-    @OneToOne(optional = false)
-    private Reservation reservation;
+    public Car(String licensePlateNumber, Model model, Outlet currOutlet) {
+        this.licensePlateNumber = licensePlateNumber;
+        this.model = model;
+        this.currOutlet = currOutlet;
+    }
+
+    public Car(String licensePlateNumber, String colour, Boolean disabled, CarStatus status, CarAvailabilityStatus availStatus, TransitDriverDispatch transit, Model model, Outlet currOutlet) {
+        this.licensePlateNumber = licensePlateNumber;
+        this.colour = colour;
+        this.disabled = disabled;
+        this.status = status;
+        this.availStatus = availStatus;
+        this.transit = transit;
+        this.model = model;
+        this.currOutlet = currOutlet;
+        
+    }
 
     public Car(String licensePlateNumber, String make, String model, String outlet) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -205,32 +231,15 @@ public class Car implements Serializable {
         this.currOutlet = currOutlet;
     }
 
-    /**
-     * @return the customer
-     */
-    public Customer getCustomer() {
-        return customer;
+    public List<Reservation> getReservations() {
+        return reservations;
     }
 
     /**
-     * @param customer the customer to set
+     * @param reservations the reservations to set
      */
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    /**
-     * @return the reservation
-     */
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    /**
-     * @param reservation the reservation to set
-     */
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
     
 }
