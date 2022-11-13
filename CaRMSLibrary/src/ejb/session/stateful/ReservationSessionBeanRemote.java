@@ -8,6 +8,7 @@ package ejb.session.stateful;
 import entity.Category;
 import entity.Model;
 import entity.Reservation;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
@@ -33,5 +34,7 @@ public interface ReservationSessionBeanRemote {
     public List<Reservation> retrieveMyReservations(long customerId);
 
     public void createReservation(Reservation reservation) throws ReservationExistException, UnknownPersistenceException, InputDataValidationException;
+
+    public BigDecimal cancelReservation(long reservationId) throws ReservationNotExistException;
     
 }

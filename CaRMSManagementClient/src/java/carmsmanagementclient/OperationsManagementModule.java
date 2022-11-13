@@ -62,7 +62,7 @@ public class OperationsManagementModule {
     private EjbTimerSessionBeanRemote ejbTimerSessionBeanRemote;
     private final ValidatorFactory validatorFactory;
     private final Validator validator;   
-    private final Employee employee;
+    private Employee employee;
     
     public OperationsManagementModule(Employee employee, ModelSessionBeanRemote modelSessionBeanRemote, CategorySessionBeanRemote categorySessionBeanRemote, TransitDriverDispatchSessionBeanRemote transitDriverDispatchSessionBeanRemote, EjbTimerSessionBeanRemote ejbTimerSessionBeanRemote, CarSessionBeanRemote carSessionBeanRemote, OutletSessionBeanRemote outletSessionBeanRemote) {
         this.employee = employee;
@@ -107,6 +107,7 @@ public class OperationsManagementModule {
                 doTransit(number);
             }
             else if(number == 12) {
+                employee = null;
                 break;
             }
             else{

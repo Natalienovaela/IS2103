@@ -157,6 +157,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
     //}
     
+    @Override
     public BigDecimal cancelReservation(long reservationId) throws ReservationNotExistException {
         Reservation cancelReservation = retrieveReservationById(reservationId);
         if(cancelReservation == null) {
@@ -198,7 +199,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
     
     @Override
-    public void createReservation(Reservation reservation) throws ReservationExistException, UnknownPersistenceException, InputDataValidationException {
+    public void createReservation(Reservation reservation) throws UnknownPersistenceException, InputDataValidationException, ReservationExistException {
         Set<ConstraintViolation<Reservation>>constraintViolations = validator.validate(reservation);
        if(constraintViolations.isEmpty()) {
            
@@ -230,7 +231,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
     }
     
-    private BigDecimal totalAmount(Reservation reservation) {
+    /*private BigDecimal totalAmount(Reservation reservation) {
         List <RentalRates> rentalRates = rentalRateSessionBean.retrieveAllRentalRate();
         
         Calendar pickUp = Calendar.getInstance();
@@ -239,7 +240,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         returnCal.setTime(reservation.getReturnDate());
         
         
-    }
+    }*/
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Reservation>>constraintViolations)
     {
