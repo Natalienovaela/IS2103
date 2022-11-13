@@ -166,7 +166,7 @@ public class MainApp {
     public void searchCar() {
         try {
             Scanner sc = new Scanner(System.in);
-            SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+            SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             System.out.println("Enter pick up Date: ");
             Date pickUpDate = date.parse(sc.nextLine());
             System.out.println("Enter return Date: ");
@@ -218,7 +218,7 @@ public class MainApp {
         if(number == 1) {
             Model chosen1 = null;
             Category chosen = null;
-            SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+            SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             System.out.println("Enter pick up Date : ");
             Date pickUpDate = date.parse(sc.nextLine());
             System.out.println("Enter return Date : ");

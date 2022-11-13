@@ -209,6 +209,8 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
         reservation.setReturned(Boolean.TRUE);
         car.setStatus(CarStatus.INOUTLET);
         car.setCurrOutlet(reservation.getReturnOutlet());
+        reservation.getCustomer().getReservations().remove(reservation);
+        reservation.setCustomer(null);
         em.remove(reservation);
     }
     

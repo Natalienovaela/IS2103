@@ -33,9 +33,9 @@ public class RentalRates implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long rentalRateId;
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 64)
     private String name;
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 64)
     private String rentalRateType;
     @Temporal(TemporalType.TIMESTAMP)
     private Date startDateTime;
