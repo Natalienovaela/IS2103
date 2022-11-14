@@ -43,6 +43,7 @@ import util.exception.ModelNotInTheSearchListException;
 import util.exception.OutletNotExistException;
 import util.exception.OutsideOutletAvailability;
 import util.exception.ReservationExistException;
+import util.exception.ReservationNotExistException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -75,7 +76,7 @@ public class MainApp {
     
     
     
-    public void run() throws ModelNotInTheSearchListException {
+    public void run() throws ModelNotInTheSearchListException, ReservationExistException, ReservationNotExistException {
         Scanner sc = new Scanner(System.in);
         while(true) {
             System.out.println("Welcome to Car Rental Reservation System!");
@@ -253,7 +254,7 @@ public class MainApp {
         while(true) {
         try {
         Scanner sc = new Scanner(System.in);
-        if(number == 1) {
+        if(number == 4) {
             Model chosen1 = null;
             Category chosen = null;
             SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -303,11 +304,13 @@ public class MainApp {
                                            
                                    }
                             Reservation newReservation = new Reservation(pickUpDate, returnDate, pickUp, returnLoc, chosen, chosen1);
-                            reservationSessionBeanRemote.createReservation(newReservation);
-                               
-                        }catch(ReservationExistException ex) {
-                           System.out.println("Reservation with that ID already exist");
-                        
+                            try {
+                                reservationSessionBeanRemote.createReservation(newReservation);
+                            }
+                            catch(ReservationExistException ex) {
+                                System.out.println(ex.getMessage());
+                            }
+                            checkOut(newReservation);
                         } catch (InputDataValidationException ex) {
                         System.out.println(ex.getMessage() + "\n");
                         
@@ -321,10 +324,33 @@ public class MainApp {
             }catch(OutletNotExistException ex) {
                 System.out.println("Outlet does not exist");
             }
-        }  else if(number == 2) {
-            System.out.println();
             
-        } else if(number == 3) {
+        }  else if(number == 5) {
+            System.out.println("Enter Reservation ID : ");
+           Long reservationId = sc.nextLong();
+           sc.nextLine();
+           try{
+               Reservation reservation = reservationSessionBeanRemote.retrieveReservationById(reservationId);
+                while(true) {
+                    System.out.println("pickUp Date: " + reservation.getPickUpDate() + " Return Date: " + reservation.getReturnDate() + " pickup Outlet: " + reservation.getPickupOutlet() + "return Outlet: " + reservation.getReturnOutlet() + "total Amount" + reservation.getTotalAmount());
+                    System.out.println("1. Delete Reservations"); 
+                    System.out.println("2.Back");
+                    Integer num;
+                    num = sc.nextInt();
+
+                    if(num == 1) {
+                        deleteReservation(reservationId);
+                    } else if(num == 2) {
+                        break;
+                    } else {
+                        System.out.println("input invalid! please try again");
+                    }
+                }  
+           } catch (ReservationNotExistException ex) {
+               System.out.println(ex.getMessage());
+           }
+             
+        } else if(number == 6) {
                     List<Reservation> reservations = reservationSessionBeanRemote.retrieveMyReservations(customer.getCustomerId());
                     for(Reservation reservation: reservations) {
                     System.out.println("Reservation ID: " + reservation.getReservationId() + " period: " + reservation.getPickUpDate() + "-" + reservation.getReturnDate() + " total Amount: " + reservation.getTotalAmount());
@@ -337,4 +363,23 @@ public class MainApp {
         }
         }
     }
-}
+    
+    public void deleteReservation(long reservationId) {
+        try {
+            Reservation reservation = reservationSessionBeanRemote.retrieveReservationById(reservationId);
+            BigDecimal penalty = reservationSessionBeanRemote.cancelReservation(reservationId);
+            System.out.println("Reservation is cancelled successfully!\n");
+            if(reservation.getPaid()) {
+            System.out.print("We will refund you " + (reservation.getTotalAmount().subtract(penalty)));
+        } else {
+            System.out.print("We will deduct from your credit card " + penalty);  
+            }
+        } catch (ReservationNotExistException ex) {
+            System.out.println(ex.getMessage() + "\n");
+        }
+           
+            
+        }
+    
+    
+    }

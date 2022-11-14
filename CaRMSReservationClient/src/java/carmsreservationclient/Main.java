@@ -13,6 +13,8 @@ import ejb.session.stateless.OutletSessionBeanRemote;
 import ejb.session.stateless.RentalRateSessionBeanRemote;
 import javax.ejb.EJB;
 import util.exception.ModelNotInTheSearchListException;
+import util.exception.ReservationExistException;
+import util.exception.ReservationNotExistException;
 
 /**
  *
@@ -43,7 +45,7 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws ModelNotInTheSearchListException{
+    public static void main(String[] args) throws ModelNotInTheSearchListException, ReservationExistException, ReservationNotExistException{
         // TODO code application logic here
         MainApp mainApp = new MainApp(categorySessionBeanRemote, customerSessionBeanRemote, reservationSessionBeanRemote, modelSessionBeanRemote, outletSessionBeanRemote, rentalRateSessionBeanRemote);
         mainApp.run();

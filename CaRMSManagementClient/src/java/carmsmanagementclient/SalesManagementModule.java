@@ -9,6 +9,7 @@ import ejb.session.stateless.CategorySessionBeanRemote;
 import ejb.session.stateless.RentalRateSessionBeanRemote;
 import entity.Car;
 import entity.Category;
+import entity.Employee;
 import entity.Model;
 import entity.Outlet;
 import entity.RentalRates;
@@ -44,14 +45,16 @@ public class SalesManagementModule {
     private CategorySessionBeanRemote categorySessionBeanRemote;
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
+    private Employee employee;
 
 
 
 
 
-    public SalesManagementModule(RentalRateSessionBeanRemote rentalRateSessionBeanRemote, CategorySessionBeanRemote categorySessionBeanRemote) {
+    public SalesManagementModule(Employee employee, RentalRateSessionBeanRemote rentalRateSessionBeanRemote, CategorySessionBeanRemote categorySessionBeanRemote) {
         this.rentalRateSessionBeanRemote = rentalRateSessionBeanRemote;
         this.categorySessionBeanRemote = categorySessionBeanRemote;
+        this.employee = employee;
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
@@ -74,6 +77,7 @@ public class SalesManagementModule {
                 doRentalRate(number);
             }
             else if(number == 4) {
+                employee = null;
                 break;
             }
             else{
@@ -86,8 +90,8 @@ public class SalesManagementModule {
         try {
         Scanner sc = new Scanner(System.in);
         SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        Date startDate = null;
-        Date endDate = null;
+        Date startDate;
+        Date endDate;
         
         if(number == 1) {
                 System.out.println("Enter Name: ");
@@ -99,13 +103,22 @@ public class SalesManagementModule {
                 System.out.println("Enter Rate per Day: ");
                 BigDecimal ratePerDay = sc.nextBigDecimal();
                 sc.nextLine();
-                if(!rentalRateType.equals("Default")) {
-                System.out.println("Enter Start Date Time(dd/mm/yyyy hh:mm):");  
-                startDate = date.parse(sc.nextLine());
-                System.out.println(startDate);
-                System.out.println("Enter End Date Time(dd/mm/yyyy hh:mm):");
-                endDate = date.parse(sc.nextLine());
+                System.out.println("Enter Start Date Time(dd/mm/yyyy hh:mm):");
+                String dates = sc.nextLine();
+                if(dates.length() == 0) {
+                    startDate = null;
+                } else {
+                startDate = date.parse(dates);
                 }
+                System.out.println("Enter End Date Time(dd/mm/yyyy hh:mm):");
+                dates = sc.nextLine();
+                if(dates.length() == 0) {
+                    endDate = null;
+                } else {
+                endDate = date.parse(dates);
+                }
+                
+                
                 try{
                    Category category = categorySessionBeanRemote.retrieveCategoryByName(carCategory);
                    RentalRates newRentalRate = new RentalRates(name, rentalRateType, category, ratePerDay, startDate, endDate);
@@ -133,16 +146,35 @@ public class SalesManagementModule {
         } else if(number == 2) {
             List<RentalRates> rentalRates = rentalRateSessionBeanRemote.retrieveAllRentalRate();
             for(RentalRates rentalRate: rentalRates) {
-                System.out.println("Rental Rate ID: " + rentalRate.getRentalRateId() +"Rental Rate Name: " + rentalRate.getName() + "Category: " + rentalRate.getCategory().getCategoryName() + " Rate per Day: " + rentalRate.getRatePerDay() + "Period of Event: " + rentalRate.getStartDateTime() + "-" + rentalRate.getEndDateTime());
+                System.out.println("Rental Rate ID: " + rentalRate.getRentalRateId() +" Rental Rate Name: " + rentalRate.getName() + " Category: " + rentalRate.getCategory().getCategoryName() + " Rate per Day: " + rentalRate.getRatePerDay() + " Start Date: " + rentalRate.getStartDateTime() + " End Date: " + rentalRate.getEndDateTime());
+                
             }
             
         } else if(number == 3) {
            System.out.println("Enter Rental Rate ID: ");
            Long rentalRateId = sc.nextLong();
-           sc.nextLine();
            try {
            RentalRates rentalRate = rentalRateSessionBeanRemote.retrieveRentalRateById(rentalRateId);
-           System.out.println("Rental Rate Name: " + rentalRate.getName() + "Category: " + rentalRate.getCategory().getCategoryName() + " Rate per Day: " + rentalRate.getRatePerDay() + "Period of Event: " + rentalRate.getStartDateTime() + "-" + rentalRate.getEndDateTime());
+           try {
+               rentalRate.getName();
+           } catch(NullPointerException ex) {
+               System.out.println("name");
+           }
+           
+           try{
+               rentalRate.getCategory();
+           }
+           catch(NullPointerException q) {
+               System.out.println("category");
+           }
+           
+           try {
+               rentalRate.getRatePerDay();
+           } catch (NullPointerException e) {
+               System.out.println("Rate per day");
+           }
+           System.out.println("Rental Rate Name: " + rentalRate.getName()+ " Category: " + rentalRate.getCategory().getCategoryName() + " Rate per Day: " + rentalRate.getRatePerDay());
+           
            while(true) {
                 System.out.println("1. Update Rental Rate");
                 System.out.println("2. Delete Rental Rate");

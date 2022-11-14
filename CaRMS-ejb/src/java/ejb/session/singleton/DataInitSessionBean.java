@@ -328,7 +328,7 @@ public class DataInitSessionBean {
         model = (Model)query.getSingleResult();
         
         car = new Car("LS00A4ME", model, outletA);
-        car.setAvailStatus(CarAvailabilityStatus.REPAIR);
+        car.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
         model.getCars().add(car);
         em.persist(car);
         em.flush();
@@ -339,7 +339,7 @@ public class DataInitSessionBean {
         model = (Model)query.getSingleResult();
         
         car = new Car("LS00B4B5", model, outletB);
-        car.setAvailStatus(CarAvailabilityStatus.REPAIR);
+        car.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
         model.getCars().add(car);
         em.persist(car);
         em.flush();
@@ -350,7 +350,7 @@ public class DataInitSessionBean {
         model = (Model)query.getSingleResult();
         
         car = new Car("LS00C4A6", model, outletC);
-        car.setAvailStatus(CarAvailabilityStatus.REPAIR);
+        car.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
         model.getCars().add(car);
         em.persist(car);
         em.flush();

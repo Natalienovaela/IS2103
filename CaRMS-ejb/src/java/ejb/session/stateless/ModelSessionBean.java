@@ -16,6 +16,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -26,6 +28,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.CategoryNotExistException;
 import util.exception.DeleteModelException;
 import util.exception.InputDataValidationException;
 import util.exception.MakeOrModelExistException;
@@ -40,7 +43,12 @@ import util.exception.UnknownPersistenceException;
 public class ModelSessionBean implements ModelSessionBeanRemote, ModelSessionBeanLocal {
 
     @EJB
+    private CategorySessionBeanLocal categorySessionBean;
+
+    @EJB
     private ReservationSessionBeanLocal reservationSessionBean;
+    
+    
 
     @PersistenceContext(unitName = "CaRMS-ejbPU")
     private EntityManager em;
@@ -105,6 +113,7 @@ public class ModelSessionBean implements ModelSessionBeanRemote, ModelSessionBea
             throw new ModelNotExistException("Model with Model ID " + modelId + " does not exist");
         }
         else {
+            model.getCategory().getModels();
             return model;
         }
     }
@@ -138,7 +147,14 @@ public class ModelSessionBean implements ModelSessionBeanRemote, ModelSessionBea
                 modelToUpdate.setModel(model.getModel());
                 modelToUpdate.getCategory().getModels().remove(modelToUpdate);
                 modelToUpdate.setCategory(model.getCategory());
-                modelToUpdate.getCategory().getModels().add(modelToUpdate);
+                Category category;
+                try {
+                    category = categorySessionBean.retrieveCategoryByName(modelToUpdate.getCategory().getCategoryName());
+                    category.getModels().add(modelToUpdate);
+                } catch (CategoryNotExistException ex) {
+                    Logger.getLogger(ModelSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
             }
             else
             {

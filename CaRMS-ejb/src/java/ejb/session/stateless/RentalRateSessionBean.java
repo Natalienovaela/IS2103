@@ -88,12 +88,23 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
     
     @Override
     public List<RentalRates> retrieveAllRentalRate() {
-        Query query = em.createQuery("SELECT r FROM RentalRates r ORDER BY r.category.categoryName, r.startDateTime, r.endDateTime ASC");
+        Query query = em.createQuery("SELECT r FROM RentalRates r ORDER BY r.category.categoryName ASC, r.startDateTime ASC, r.endDateTime ASC");
+        //Query query = em.createNativeQuery("SELECT * FROM RentalRates r WHERE r.startDateTime IS NULL AND r.endDateTime IS NULL UNION SELECT * FROM RentalRates r WHERE r.startDateTime IS NOT NULL AND r.endDateTime IS NOT NULL ORDER BY r.category.categoryName ASC, r.startDateTime ASC, r.endDateTime ASC");
+        /*Query query = em.createQuery("SELECT r "
+                + "FROM RentalRates r "
+                + "WHERE r.startDateTime is null AND r.endDateTime is null "
+                + "ORDER BY r.category.categoryName ASC "
+                + "UNION  "
+                + "SELECT r "
+                + "FROM RentalRates r "
+                + "WHERE r.startDateTime IS NOT NULL AND r.endDateTime := IS NOT NULL"
+                + "ORDER BY r.category.categoryName, r.startDateTime, r.endDateTime ASC");
+*/
         return query.getResultList();
     }
     
     @Override
-    public RentalRates retrieveRentalRateById(Long rentalRateId) throws RentalRateNotExistException{
+    public RentalRates retrieveRentalRateById(Long rentalRateId) throws RentalRateNotExistException {
         RentalRates rentalRate = em.find(RentalRates.class, rentalRateId);
         
         if(rentalRate == null) {

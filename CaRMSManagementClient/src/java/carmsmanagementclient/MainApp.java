@@ -71,7 +71,7 @@ public class MainApp {
             } else {
                 if(employee.getRole().name().equals("SALESMANAGER")) {
                     System.out.println("You are login as Sales Manager\n");
-                    salesManagement = new SalesManagementModule(rentalRateSessionBeanRemote, categorySessionBeanRemote);
+                    salesManagement = new SalesManagementModule(employee, rentalRateSessionBeanRemote, categorySessionBeanRemote);
                     salesManagement.menuSalesManagement();
                     
                 } else if(employee.getRole().name().equals("OPERATIONSMANAGER")) {

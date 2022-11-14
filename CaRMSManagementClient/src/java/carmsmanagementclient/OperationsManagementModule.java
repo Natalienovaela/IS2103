@@ -62,7 +62,7 @@ public class OperationsManagementModule {
     private EjbTimerSessionBeanRemote ejbTimerSessionBeanRemote;
     private final ValidatorFactory validatorFactory;
     private final Validator validator;   
-    private final Employee employee;
+    private Employee employee;
     
     public OperationsManagementModule(Employee employee, ModelSessionBeanRemote modelSessionBeanRemote, CategorySessionBeanRemote categorySessionBeanRemote, TransitDriverDispatchSessionBeanRemote transitDriverDispatchSessionBeanRemote, EjbTimerSessionBeanRemote ejbTimerSessionBeanRemote, CarSessionBeanRemote carSessionBeanRemote, OutletSessionBeanRemote outletSessionBeanRemote) {
         this.employee = employee;
@@ -107,6 +107,7 @@ public class OperationsManagementModule {
                 doTransit(number);
             }
             else if(number == 12) {
+                employee = null;
                 break;
             }
             else{
@@ -186,21 +187,22 @@ public class OperationsManagementModule {
                 if(input.length() > 0){
                     try{
                         Category category = categorySessionBeanRemote.retrieveCategoryByName(input);
-                        model.setCategory(category);
-                        try{
-                            modelSessionBeanRemote.updateModel(model);
-                            System.out.println("Model is updated successfully!\n");
-                        }
-                        catch(InputDataValidationException ex) {
-                            System.out.println(ex.getMessage() + "\n");
-                        }
-                        catch(ModelNotExistException ex) {
-                            System.out.println(ex.getMessage()+ "\n");
-                        }
+                        model.setCategory(category);            
                     }
                     catch(CategoryNotExistException ex) {
                         System.out.println(ex.getMessage()+ "\n");
                     }
+                }
+                
+                try{
+                    modelSessionBeanRemote.updateModel(model);
+                    System.out.println("Model is updated successfully!\n");
+                }
+                catch(InputDataValidationException ex) {
+                    System.out.println(ex.getMessage() + "\n");
+                }
+                catch(ModelNotExistException ex) {
+                    System.out.println(ex.getMessage()+ "\n");
                 }
                 
             } catch(ModelNotExistException ex) {

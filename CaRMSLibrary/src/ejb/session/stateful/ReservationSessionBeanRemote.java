@@ -34,6 +34,8 @@ public interface ReservationSessionBeanRemote {
     public List<Reservation> retrieveMyReservations(long customerId);
 
     public void createReservation(Reservation reservation) throws ReservationExistException, UnknownPersistenceException, InputDataValidationException;
+
+    public BigDecimal cancelReservation(long reservationId) throws ReservationNotExistException;
     
     public BigDecimal totalAmount(Reservation reservation);
     

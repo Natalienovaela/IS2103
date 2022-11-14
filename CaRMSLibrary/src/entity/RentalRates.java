@@ -46,7 +46,7 @@ public class RentalRates implements Serializable {
     @Column
     private Boolean disabled;
     
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private Category category;
 

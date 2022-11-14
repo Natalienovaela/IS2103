@@ -10,7 +10,6 @@ import ejb.session.stateless.ModelSessionBeanLocal;
 import ejb.session.stateless.RentalRateSessionBeanLocal;
 import entity.Car;
 import entity.Category;
-import entity.Customer;
 import entity.Model;
 import entity.RentalRates;
 import entity.Reservation;
