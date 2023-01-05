@@ -22,6 +22,7 @@ public interface ModelSessionBeanLocal {
     public List<Model> retrieveAllModel();
     public Model retrieveModelbyMakeandModel(String make, String model) throws ModelNotExistException;
     public List<Model> searchCar(Date pickupDateTime, Date returnDateTime, Outlet pickupOutlet, Outlet returnOutlet);
+    
 
     
 }

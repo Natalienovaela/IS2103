@@ -30,5 +30,7 @@ public interface RentalRateSessionBeanRemote {
     public List<RentalRates> retrieveAllRentalRate();
 
     public void createRentalRate(RentalRates rentalRate, Long categoryId) throws RentalRateExistException, UnknownPersistenceException, InputDataValidationException;
+
+    public RentalRates retrieveRentalRateByName(String rentalRateName) throws RentalRateNotExistException;
     
 }

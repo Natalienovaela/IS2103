@@ -23,6 +23,6 @@ public interface ReservationSessionBeanLocal {
     public List<Reservation> retrieveReservationByModelId(Long modelId) throws ModelNotExistException;
     public List<Reservation> retrieveCurrentDateReservation(Date date);
     public List<Reservation> retrieveReservationByCarId(Long CarId) throws CarNotExistException;
-    public List<Reservation> retrieveReservationByRentalRateId(Long rentalRateId) throws RentalRateNotExistException;
     public List<Reservation> retrieveMyReservations(long customerId); 
+    public List<Reservation> retrieveAllReservationsWithThisRentalRate(Long RentalRateId);
 }

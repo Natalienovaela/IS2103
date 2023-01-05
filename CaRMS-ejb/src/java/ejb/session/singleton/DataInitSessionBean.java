@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import javax.persistence.Query;
 import util.enumeration.EmployeeRole;
 import util.enumeration.CarAvailabilityStatus;
+import util.enumeration.CarStatus;
 
 
 /**
@@ -252,18 +253,21 @@ public class DataInitSessionBean {
         
         Car car = new Car("SS00A1TC", model, outletA);
         car.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
+        car.setStatus(CarStatus.INOUTLET);
         model.getCars().add(car);
         em.persist(car);
         em.flush();
         
         car = new Car("SS00A2TC", model, outletA);
         car.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
+        car.setStatus(CarStatus.INOUTLET);
         model.getCars().add(car);
         em.persist(car);
         em.flush();
         
         car = new Car("SS00A3TC", model, outletA);
         car.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
+        car.setStatus(CarStatus.INOUTLET);
         model.getCars().add(car);
         em.persist(car);
         em.flush();
@@ -279,18 +283,21 @@ public class DataInitSessionBean {
         
         car = new Car("SS00B1HC", model, outletB);
         car.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
+        car.setStatus(CarStatus.INOUTLET);
         model.getCars().add(car);
         em.persist(car);
         em.flush();
         
         car = new Car("SS00B2HC", model, outletB);
         car.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
+        car.setStatus(CarStatus.INOUTLET);
         model.getCars().add(car);
         em.persist(car);
         em.flush();
         
         car = new Car("SS00B3HC", model, outletB);
         car.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
+        car.setStatus(CarStatus.INOUTLET);
         model.getCars().add(car);
         em.persist(car);
         em.flush();
@@ -306,18 +313,21 @@ public class DataInitSessionBean {
         
         car = new Car("SS00C1NS", model, outletC);
         car.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
+        car.setStatus(CarStatus.INOUTLET);
         model.getCars().add(car);
         em.persist(car);
         em.flush();
         
         car = new Car("SS00C2NS", model, outletC);
         car.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
+        car.setStatus(CarStatus.INOUTLET);
         model.getCars().add(car);
         em.persist(car);
         em.flush();
         
         car = new Car("SS00C3NS", model, outletC);
         car.setAvailStatus(CarAvailabilityStatus.REPAIR);
+        car.setStatus(CarStatus.INOUTLET);
         model.getCars().add(car);
         em.persist(car);
         em.flush();
@@ -329,6 +339,7 @@ public class DataInitSessionBean {
         
         car = new Car("LS00A4ME", model, outletA);
         car.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
+        car.setStatus(CarStatus.INOUTLET);
         model.getCars().add(car);
         em.persist(car);
         em.flush();
@@ -340,6 +351,7 @@ public class DataInitSessionBean {
         
         car = new Car("LS00B4B5", model, outletB);
         car.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
+        car.setStatus(CarStatus.INOUTLET);
         model.getCars().add(car);
         em.persist(car);
         em.flush();
@@ -351,6 +363,7 @@ public class DataInitSessionBean {
         
         car = new Car("LS00C4A6", model, outletC);
         car.setAvailStatus(CarAvailabilityStatus.AVAILABLE);
+        car.setStatus(CarStatus.INOUTLET);
         model.getCars().add(car);
         em.persist(car);
         em.flush();

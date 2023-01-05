@@ -9,7 +9,6 @@ import ejb.session.stateless.CategorySessionBeanRemote;
 import ejb.session.stateless.RentalRateSessionBeanRemote;
 import entity.Car;
 import entity.Category;
-import entity.Employee;
 import entity.Model;
 import entity.Outlet;
 import entity.RentalRates;
@@ -45,16 +44,14 @@ public class SalesManagementModule {
     private CategorySessionBeanRemote categorySessionBeanRemote;
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
-    private Employee employee;
 
 
 
 
 
-    public SalesManagementModule(Employee employee, RentalRateSessionBeanRemote rentalRateSessionBeanRemote, CategorySessionBeanRemote categorySessionBeanRemote) {
+    public SalesManagementModule(RentalRateSessionBeanRemote rentalRateSessionBeanRemote, CategorySessionBeanRemote categorySessionBeanRemote) {
         this.rentalRateSessionBeanRemote = rentalRateSessionBeanRemote;
         this.categorySessionBeanRemote = categorySessionBeanRemote;
-        this.employee = employee;
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
@@ -68,7 +65,7 @@ public class SalesManagementModule {
             System.out.println("1. Create New Rental Rate");
             System.out.println("2. View All Rental Rates");
             System.out.println("3. View Rental Rates Detail");
-            System.out.println("4. Back");
+            System.out.println("4. Log Out");
             
             number = sc.nextInt();
             
@@ -77,7 +74,6 @@ public class SalesManagementModule {
                 doRentalRate(number);
             }
             else if(number == 4) {
-                employee = null;
                 break;
             }
             else{
@@ -151,10 +147,10 @@ public class SalesManagementModule {
             }
             
         } else if(number == 3) {
-           System.out.println("Enter Rental Rate ID: ");
-           Long rentalRateId = sc.nextLong();
+           System.out.println("Enter Rental Rate Name: ");
+           String rentalRateName = sc.nextLine();
            try {
-           RentalRates rentalRate = rentalRateSessionBeanRemote.retrieveRentalRateById(rentalRateId);
+           RentalRates rentalRate = rentalRateSessionBeanRemote.retrieveRentalRateByName(rentalRateName);
            try {
                rentalRate.getName();
            } catch(NullPointerException ex) {
@@ -185,7 +181,7 @@ public class SalesManagementModule {
                 if(num == 1) {
                     updateRentalRate(rentalRate);
                 } else if(num == 2) {
-                    deleteRentalRate(rentalRateId);
+                    deleteRentalRate(rentalRate.getRentalRateId());
                 } else if(num == 3) {
                     break;
                 } else {
@@ -237,8 +233,10 @@ public class SalesManagementModule {
                 if(input1 != null){
                     rentalRate.setRatePerDay(input1);
                 }
+                
+                sc.nextLine();
 
-                System.out.println("Enter new start Date Time(dd/MM/yyyy hh:mm a): (blank if no change) ");
+                System.out.println("Enter new start Date Time(dd/MM/yyyy HH:mm a): (blank if no change) ");
                 input = sc.nextLine().trim();
 
                 if(input.length() > 0){
@@ -249,7 +247,7 @@ public class SalesManagementModule {
                         System.out.println("Invalid date input!\n");
                     }
                 }
-
+                
                 System.out.println("Enter new end Date Time(dd/MM/yyyy hh:mm a): (blank if no change) ");
                 input = sc.nextLine().trim();
 
@@ -258,17 +256,17 @@ public class SalesManagementModule {
                     rentalRate.setEndDateTime(endDate);
 
                 }
-                    try{
-                        rentalRateSessionBeanRemote.updateRentalRate(rentalRate);
-                        System.out.println("rentalRate is updated successfully!\n");
-                    }
-                    catch(InputDataValidationException ex) {
-                        System.out.println(ex.getMessage() + "\n");
-                    }
-                    catch(RentalRateNotExistException ex) {
-                        System.out.println(ex.getMessage()+ "\n");
-                    }
-                    }
+                try{
+                    rentalRateSessionBeanRemote.updateRentalRate(rentalRate);
+                    System.out.println("rentalRate is updated successfully!\n");
+                }
+                catch(InputDataValidationException ex) {
+                    System.out.println(ex.getMessage() + "\n");
+                }
+                catch(RentalRateNotExistException ex) {
+                    System.out.println(ex.getMessage()+ "\n");
+                }
+            }
             catch(ParseException ex)
             {
                 System.out.println("Invalid date input!\n");

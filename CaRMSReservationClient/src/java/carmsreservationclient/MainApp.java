@@ -85,11 +85,11 @@ public class MainApp {
                 if(customer == null) {
                     System.out.println("1. Login");
                     System.out.println("2. Sign Up");
+                    System.out.println("3. Search Car");
                     
                 } 
-                System.out.println("3. Search Car");
                 if(customer != null) {
-                    System.out.println("You are login as a member\n");
+                    System.out.println("3. Search Car");
                     System.out.println("4. Create Reservation");
                     System.out.println("5. View Reservation Details");
                     System.out.println("6. View All My Reservation");
@@ -130,6 +130,7 @@ public class MainApp {
             String password = sc.nextLine();
             if(password.equals(customers.getPassword())) {
                 customer = customers;
+                System.out.println("You are login as a member\n");
             } else {
                 System.out.println("Wrong password!\n");
             }
@@ -305,6 +306,7 @@ public class MainApp {
                                    }
                             Reservation newReservation = new Reservation(pickUpDate, returnDate, pickUp, returnLoc, chosen, chosen1);
                             try {
+                                newReservation.setTotalAmount(reservationSessionBeanRemote.totalAmount(newReservation));
                                 reservationSessionBeanRemote.createReservation(newReservation);
                             }
                             catch(ReservationExistException ex) {

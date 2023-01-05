@@ -13,6 +13,8 @@ import entity.RentalRates;
 import entity.Reservation;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -23,6 +25,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.CategoryNotExistException;
 import util.exception.DeleteRentalRateException;
 import util.exception.InputDataValidationException;
 import util.exception.RentalRateExistException;
@@ -36,6 +39,9 @@ import util.exception.UnknownPersistenceException;
 @Stateless
 public class RentalRateSessionBean implements RentalRateSessionBeanRemote, RentalRateSessionBeanLocal {
 
+    @EJB
+    private CategorySessionBeanLocal categorySessionBean;
+    
     @EJB
     private ReservationSessionBeanLocal reservationSessionBean;
 
@@ -104,6 +110,18 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
     }
     
     @Override
+    public RentalRates retrieveRentalRateByName(String rentalRateName) throws RentalRateNotExistException {
+        RentalRates rentalRate = (RentalRates) em.createQuery("SELECT r FROM RentalRates r WHERE r.name = :rentalRateName").setParameter("rentalRateName", rentalRateName).getSingleResult();
+        
+        if(rentalRate == null) {
+            throw new RentalRateNotExistException("Rental Rate with Rental Rate name " + rentalRateName + " does not exist");
+        }
+        else {
+            return rentalRate;
+        }
+    }
+    
+    @Override
     public RentalRates retrieveRentalRateById(Long rentalRateId) throws RentalRateNotExistException {
         RentalRates rentalRate = em.find(RentalRates.class, rentalRateId);
         
@@ -131,7 +149,13 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
                 updateRentalRate.setEndDateTime(rentalRate.getEndDateTime());
                 updateRentalRate.getCategory().getRentalRates().remove(updateRentalRate);
                 updateRentalRate.setCategory(rentalRate.getCategory());
-                updateRentalRate.getCategory().getRentalRates().add(rentalRate);
+                Category category;
+                try {
+                    category = categorySessionBean.retrieveCategoryByName(updateRentalRate.getCategory().getCategoryName());
+                    category.getRentalRates().add(updateRentalRate);
+                } catch (CategoryNotExistException ex) {
+                    Logger.getLogger(RentalRateSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             else
             {
@@ -147,13 +171,19 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
     @Override
     public void deleteRentalRate(Long rentalRateId) throws RentalRateNotExistException, DeleteRentalRateException
     {
-        RentalRates removeRentalRate = retrieveRentalRateById(rentalRateId);
-        List<Reservation> reservations = reservationSessionBean.retrieveReservationByRentalRateId(rentalRateId);
+        RentalRates removeRentalRate = em.find(RentalRates.class, rentalRateId);
+        List<Reservation> reservations = reservationSessionBean.retrieveAllReservationsWithThisRentalRate(rentalRateId);
         
         if(reservations.isEmpty())
         {
-            removeRentalRate.getCategory().getRentalRates().remove(removeRentalRate);
-            em.remove(removeRentalRate);
+            Category category;
+            try {
+                category = categorySessionBean.retrieveCategoryByName(removeRentalRate.getCategory().getCategoryName());
+                category.getRentalRates().remove(removeRentalRate);            
+                em.remove(removeRentalRate);
+            } catch (CategoryNotExistException ex) {
+                Logger.getLogger(RentalRateSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else
         {

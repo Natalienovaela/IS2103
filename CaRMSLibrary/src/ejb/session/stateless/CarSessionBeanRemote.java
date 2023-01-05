@@ -42,5 +42,9 @@ public interface CarSessionBeanRemote {
     public void returnCar(Long carId, Long reservationId);
 
     public List<Car> retrieveAllSearchCarByModelandMake(List<Model> models, String model, String make) throws ModelNotExistException;
+
+    public Car retrieveCarByPlate(String carPlate);
+
+    public List<Car> retrieveCarByModelId(Long modelId) throws ModelNotExistException;
     
 }

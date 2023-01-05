@@ -53,7 +53,7 @@ public class OutletSessionBean implements OutletSessionBeanRemote, OutletSession
         if(outlet.getOpeningHours() != null) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
-            if(cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE) < Integer.parseInt(outlet.getOpeningHours().substring(0, 2)) * 60 + Integer.parseInt(outlet.getOpeningHours().substring(3,5)) && cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE) > Integer.parseInt(outlet.getClosingHours().substring(0, 2)) * 60 + Integer.parseInt(outlet.getClosingHours().substring(3,5))) {
+            if(cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE) < Integer.parseInt(outlet.getOpeningHours().substring(0, 2)) * 60 + Integer.parseInt(outlet.getOpeningHours().substring(3,5)) || cal.get(Calendar.HOUR)*60 + cal.get(Calendar.MINUTE) > Integer.parseInt(outlet.getClosingHours().substring(0, 2)) * 60 + Integer.parseInt(outlet.getClosingHours().substring(3,5))) {
                 throw new OutsideOutletAvailability("Your chosen time to pickup or return car is outside of Outlet's opening hour and closing hour: " + outlet.getOpeningHours() + " and " + outlet.getClosingHours() + " respectively.\n");
             }
         }

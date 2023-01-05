@@ -48,6 +48,9 @@ public class ModelSessionBean implements ModelSessionBeanRemote, ModelSessionBea
     @EJB
     private ReservationSessionBeanLocal reservationSessionBean;
     
+    @EJB
+    private CarSessionBeanLocal carSessionBean;
+    
     
 
     @PersistenceContext(unitName = "CaRMS-ejbPU")
@@ -130,6 +133,7 @@ public class ModelSessionBean implements ModelSessionBeanRemote, ModelSessionBea
             throw new ModelNotExistException("Model with the make " + make + "and model" + model + " does not exist");
         }
         else {
+            retrieveModel.getCars().size();
             return retrieveModel;
         }
     }
@@ -171,12 +175,18 @@ public class ModelSessionBean implements ModelSessionBeanRemote, ModelSessionBea
     public void deleteModel(Long modelId) throws ModelNotExistException, DeleteModelException
     {
         Model modelToRemove = retrieveModelbyId(modelId);
-        List<Reservation> reservations = reservationSessionBean.retrieveReservationByModelId(modelId);
+        List<Car> cars = carSessionBean.retrieveCarByModelId(modelId);
         
-        if(reservations.isEmpty())
+        if(cars.isEmpty())
         {
-            modelToRemove.getCategory().getModels().remove(modelToRemove);
-            em.remove(modelToRemove);
+            Category category;
+            try {
+                category = categorySessionBean.retrieveCategoryByName(modelToRemove.getCategory().getCategoryName());
+                category.getModels().remove(modelToRemove);
+                em.remove(modelToRemove);
+            } catch (CategoryNotExistException ex) {
+                Logger.getLogger(ModelSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else
         {

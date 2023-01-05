@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -104,6 +106,11 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
     }
     
     @Override
+    public Car retrieveCarByPlate(String carPlate) {
+        return (Car) em.createQuery("SELECT c FROM Car c WHERE c.licensePlateNumber = :carPlate").setParameter("carPlate", carPlate).getSingleResult();
+    }
+    
+    @Override
     public List<Car> retrieveAllCar() {
         Query query = em.createQuery("SELECT c FROM Car c ORDER BY c.model.category.categoryName, c.model.make, c.model.model, c.licensePlateNumber ASC");
         return query.getResultList();
@@ -137,6 +144,11 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
             
     }
     
+    @Override 
+    public List<Car> retrieveCarByModelId(Long modelId) throws ModelNotExistException{
+        return em.createQuery("SELECT c FROM Car c WHERE c.model.modelId = :modelId").setParameter("modelId", modelId).getResultList();
+    }
+    
     @Override
     public Car retrieveCarById(Long carId) throws CarNotExistException{
         Car car = em.find(Car.class, carId);
@@ -163,7 +175,14 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
                 updateCar.setAvailStatus(car.getAvailStatus());
                 updateCar.getModel().getCars().remove(updateCar);
                 updateCar.setModel(car.getModel());
-                updateCar.getModel().getCars().add(car);
+                
+                try {
+                    Model model = modelSessionBean.retrieveModelbyMakeandModel(updateCar.getModel().getMake(), updateCar.getModel().getModel());
+                    model.getCars().add(car);
+                } catch (ModelNotExistException ex) {
+                    Logger.getLogger(CarSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
             }
             else
             {

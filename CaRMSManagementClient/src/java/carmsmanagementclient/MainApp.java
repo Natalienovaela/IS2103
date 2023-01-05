@@ -71,24 +71,46 @@ public class MainApp {
             } else {
                 if(employee.getRole().name().equals("SALESMANAGER")) {
                     System.out.println("You are login as Sales Manager\n");
-                    salesManagement = new SalesManagementModule(employee, rentalRateSessionBeanRemote, categorySessionBeanRemote);
+                    salesManagement = new SalesManagementModule(rentalRateSessionBeanRemote, categorySessionBeanRemote);
                     salesManagement.menuSalesManagement();
-                    
+                    employee = null;                           
                 } else if(employee.getRole().name().equals("OPERATIONSMANAGER")) {
                     System.out.println("You are login as Operations Manager\n");
                     operationsManagement = new OperationsManagementModule(employee, modelSessionBeanRemote, categorySessionBeanRemote, transitDriverDispatchSessionBeanRemote, ejbTimerSessionBeanRemote, carSessionBeanRemote, outletSessionBeanRemote);
                     operationsManagement.menuOperationsManagement();
+                    employee = null;
                     
                 } else if(employee.getRole().name().equals("CUSTOMERSALESEXECUTIVE")) {
                     System.out.println("You are login as Customer Sales Executive\n");
                     customerService = new CustomerServiceModule(employee, reservationSessionBeanRemote, carSessionBeanRemote);
+                    customerService.menuCustomerService();
+                    employee = null;
                     
                 } else if(employee.getRole().name().equals("SYSTEMADMINISTRATOR")) {
                     System.out.println("You are login as System Administrator\n");
+                    System.out.println("*** CaRMS Management Module ***\n");
+                    System.out.println("1. Sales Management Module\n");
+                    System.out.println("2. Operations Management Module\n");
+                    System.out.println("3. Customer Service Management Module\n");
+                    int number = sc.nextInt();
+                    if(number == 1) {
+                        System.out.println("You are login as Sales Manager\n");
+                        salesManagement = new SalesManagementModule(rentalRateSessionBeanRemote, categorySessionBeanRemote);
+                        salesManagement.menuSalesManagement();
+                    } else if(number == 2) {
+                        System.out.println("You are login as Operations Manager\n");
+                        operationsManagement = new OperationsManagementModule(employee, modelSessionBeanRemote, categorySessionBeanRemote, transitDriverDispatchSessionBeanRemote, ejbTimerSessionBeanRemote, carSessionBeanRemote, outletSessionBeanRemote);
+                        operationsManagement.menuOperationsManagement();
+                    } else if(number == 3) {
+                        System.out.println("You are login as Customer Sales Executive\n");
+                        customerService = new CustomerServiceModule(employee, reservationSessionBeanRemote, carSessionBeanRemote);
+                        customerService.menuCustomerService();
+                    } else {
+                        System.out.println("Invalid input option! Try again!\n");
+                    }
                     
-                    
-                } else if(employee.getRole() == null) {
-                    
+                } else {
+                    System.out.println("No such role! Try again!\n");
                 }
             }
         }

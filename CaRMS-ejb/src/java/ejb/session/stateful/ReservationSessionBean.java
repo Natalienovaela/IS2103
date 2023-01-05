@@ -7,6 +7,7 @@ package ejb.session.stateful;
 
 import ejb.session.stateless.CarSessionBeanLocal;
 import ejb.session.stateless.ModelSessionBeanLocal;
+import ejb.session.stateless.RentalRateSessionBean;
 import ejb.session.stateless.RentalRateSessionBeanLocal;
 import entity.Car;
 import entity.Category;
@@ -19,6 +20,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -86,6 +89,24 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     }
     
     @Override
+    public List<Reservation> retrieveAllReservationsWithThisRentalRate(Long RentalRateId) {
+        List<Reservation> reservations = em.createQuery("Select r FROM Reservation r").getResultList();
+        
+        RentalRates rentalRate = em.find(RentalRates.class, RentalRateId);
+        
+        for(Reservation r : reservations) {
+            List<RentalRates> rentalRates = r.getRentalRates();
+            for(RentalRates re: rentalRates) {
+                if(!re.getName().equals(rentalRate.getName())) {
+                    reservations.remove(r);
+                    break;
+                }
+            }
+        } 
+        return reservations;
+    }
+    
+    @Override
     public List<Reservation> retrieveCurrentDateReservation(Date date) {
         Calendar todayCalendar = Calendar.getInstance();
         todayCalendar.setTime(date);
@@ -122,18 +143,6 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         }
     }
     
-    @Override
-    public List<Reservation> retrieveReservationByRentalRateId(Long rentalRateId) throws RentalRateNotExistException {
-        RentalRates rentalRate = em.find(RentalRates.class, rentalRateId);
-        if(rentalRate == null) {
-            throw new RentalRateNotExistException("Rental Rate with Rental Rate ID " + rentalRateId + " does not exist");
-        } else {
-            Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.rentalRates = :rentalRate");
-            query.setParameter("rentalRate", rentalRate);
-            return query.getResultList();
-        }
-    }
-    
      @Override
     public Reservation retrieveReservationById(Long reservationId) throws ReservationNotExistException {
         Reservation reservation = em.find(Reservation.class, reservationId);
@@ -162,8 +171,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             throw new ReservationNotExistException("Reservation with Reservation ID " + reservationId + " does not exist");
         }
         
-        cancelReservation.getCustomer().getReservations().remove(cancelReservation);
-        em.remove(cancelReservation);
+        
             
         
         Calendar cancelCalendar = Calendar.getInstance();
@@ -172,6 +180,9 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         cancelCalendar.add(Calendar.DATE, 14);
         BigDecimal totalAmount = cancelReservation.getTotalAmount();
         BigDecimal penalty = new BigDecimal("0");
+        
+        cancelReservation.getCustomer().getReservations().remove(cancelReservation);
+        em.remove(cancelReservation);
 
         if(cancelCalendar.compareTo(pickupCalendar) == 0 || cancelCalendar.compareTo(pickupCalendar) == 1) {
             return penalty;
@@ -194,6 +205,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
         
         
+        
     }
     
     @Override
@@ -202,7 +214,6 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
        if(constraintViolations.isEmpty()) {
            
         try {
-            
                 em.persist(reservation);
                 em.flush();
         } catch(PersistenceException ex) {
@@ -229,6 +240,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
     }
     
+    @Override
     public BigDecimal totalAmount(Reservation reservation) {
         Category category = reservation.getCategory();
         
@@ -244,7 +256,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         while(pic.before(ret)) {
             for(int i = 0; i <= rentals.size(); i++) {
                 cal.setTime(rentals.get(i).getStartDateTime());
-                if(pic.after(cal) || pic.equals(cal)) {
+                if(cal == null || pic.after(cal) || pic.equals(cal)) {
                     if(rentals.get(i).getRentalRateType().equals("Promotion") && (finalRent.getRentalRateType().equals("Default") || finalRent.getRentalRateType().equals("Peak"))) {
                         finalRent = rentals.get(i);
                     }  

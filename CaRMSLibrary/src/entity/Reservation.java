@@ -67,6 +67,9 @@ public class Reservation implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Car car;
+    @ManyToMany
+    private List<RentalRates> rentalRates;
+    
             
     public Reservation() {
         this.totalAmount = new BigDecimal("0.00");
@@ -80,6 +83,8 @@ public class Reservation implements Serializable {
         this.returnOutlet = returnOutlet;
         this.model = model;
     }
+    
+    
     
 
     public Long getReservationId() {
@@ -259,6 +264,14 @@ public class Reservation implements Serializable {
 
     public void setPaid(Boolean paid) {
         this.paid = paid;
+    }
+
+    public List<RentalRates> getRentalRates() {
+        return rentalRates;
+    }
+
+    public void setRentalRates(List<RentalRates> rentalRates) {
+        this.rentalRates = rentalRates;
     }
     
 }
