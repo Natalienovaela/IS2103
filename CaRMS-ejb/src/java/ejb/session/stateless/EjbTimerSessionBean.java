@@ -75,7 +75,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
 
-                        if(cal.get(Calendar.HOUR) * 60 + cal.get(Calendar.MINUTE) <= cal2.get(Calendar.HOUR) * 60 + cal2.get(Calendar.MINUTE)){
+                        if(cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE) <= cal2.get(Calendar.HOUR_OF_DAY) * 60 + cal2.get(Calendar.MINUTE)){
                             reservation.setCar(car);
                             car.getReservations().add(reservation);
                             reserved = Boolean.TRUE;
@@ -114,7 +114,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
 
-                        if(cal.get(Calendar.HOUR) * 60 + cal.get(Calendar.MINUTE) + 120 <= cal2.get(Calendar.HOUR) * 60 + cal2.get(Calendar.MINUTE)){
+                        if(cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE) + 120 <= cal2.get(Calendar.HOUR_OF_DAY) * 60 + cal2.get(Calendar.MINUTE)){
                             reservation.setCar(car);
                             car.getReservations().add(reservation);
                             TransitDriverDispatch dispatch = new TransitDriverDispatch(new Date(), reservation.getPickupOutlet(), car);
@@ -152,7 +152,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
 
-                        if(cal.get(Calendar.HOUR) * 60 + cal.get(Calendar.MINUTE) <= cal2.get(Calendar.HOUR) * 60 + cal2.get(Calendar.MINUTE)){
+                        if(cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE) <= cal2.get(Calendar.HOUR_OF_DAY) * 60 + cal2.get(Calendar.MINUTE)){
                             reservation.setCar(car);
                             car.getReservations().add(reservation);
                             reserved = Boolean.TRUE;
@@ -193,7 +193,8 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
 
-                        if(cal.get(Calendar.HOUR) * 60 + cal.get(Calendar.MINUTE) + 120 <= cal2.get(Calendar.HOUR) * 60 + cal2.get(Calendar.MINUTE)){
+                        if(cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE) + 120 <= cal2.get(Calendar.HOUR_OF_DAY
+                        ) * 60 + cal2.get(Calendar.MINUTE)){
                             reservation.setCar(car);
                             car.getReservations().add(reservation);
                             TransitDriverDispatch dispatch = new TransitDriverDispatch(new Date(), reservation.getPickupOutlet(), car);
@@ -241,7 +242,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
 
-                        if(cal.get(Calendar.HOUR) * 60 + cal.get(Calendar.MINUTE) <= cal2.get(Calendar.HOUR) * 60 + cal2.get(Calendar.MINUTE)){
+                        if(cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE) <= cal2.get(Calendar.HOUR_OF_DAY) * 60 + cal2.get(Calendar.MINUTE)){
                             reservation.setCar(car);
                             car.getReservations().add(reservation);
                             reserved = Boolean.TRUE;
@@ -280,7 +281,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
 
-                        if(cal.get(Calendar.HOUR) * 60 + cal.get(Calendar.MINUTE) + 120 <= cal2.get(Calendar.HOUR) * 60 + cal2.get(Calendar.MINUTE)){
+                        if(cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE) + 120 <= cal2.get(Calendar.HOUR_OF_DAY) * 60 + cal2.get(Calendar.MINUTE)){
                             reservation.setCar(car);
                             car.getReservations().add(reservation);
                             TransitDriverDispatch dispatch = new TransitDriverDispatch(new Date(), reservation.getPickupOutlet(), car);
@@ -318,7 +319,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
 
-                        if(cal.get(Calendar.HOUR) * 60 + cal.get(Calendar.MINUTE) <= cal2.get(Calendar.HOUR) * 60 + cal2.get(Calendar.MINUTE)){
+                        if(cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE) <= cal2.get(Calendar.HOUR_OF_DAY) * 60 + cal2.get(Calendar.MINUTE)){
                             reservation.setCar(car);
                             car.getReservations().add(reservation);
                             reserved = Boolean.TRUE;
@@ -359,7 +360,7 @@ public class EjbTimerSessionBean implements EjbTimerSessionBeanRemote, EjbTimerS
                         Calendar cal2 = Calendar.getInstance();
                         cal2.setTime(reservation.getPickUpDate());
 
-                        if(cal.get(Calendar.HOUR) * 60 + cal.get(Calendar.MINUTE) + 120 <= cal2.get(Calendar.HOUR) * 60 + cal2.get(Calendar.MINUTE)){
+                        if(cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE) + 120 <= cal2.get(Calendar.HOUR_OF_DAY) * 60 + cal2.get(Calendar.MINUTE)){
                             reservation.setCar(car);
                             car.getReservations().add(reservation);
                             TransitDriverDispatch dispatch = new TransitDriverDispatch(new Date(), reservation.getPickupOutlet(), car);
